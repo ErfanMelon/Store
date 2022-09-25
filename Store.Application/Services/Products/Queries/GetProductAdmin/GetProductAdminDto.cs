@@ -1,0 +1,15 @@
+﻿namespace Store.Application.Services.Products.Queries.GetProductAdmin
+{
+    public class GetProductAdminDto
+    {
+        public string ProductTitle { get; set; }
+        public int Price { get; set; }
+        public string Category { get; set; }
+        public string Brand { get; set; }
+        public string Description { get; set; }
+        public int Inventory { get; set; }
+        public bool Displayed { get; set; }
+        public List<string> Images { get; set; }
+        public List<GetProductFeatureDto> Features { get; set; }
+    }
+}

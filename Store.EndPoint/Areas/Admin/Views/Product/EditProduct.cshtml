@@ -1,0 +1,236 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@using Store.Application.Services.Products.Commands.AddProduct
+@model RequestProductDto
+@{
+    ViewData["Title"] = "ویرایش محصول ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Css{
+
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/admintemplate/assets/plugins/drag-and-drop/dist/imageuploadify.min.css" rel="stylesheet" />
+
+}
+    <input type="hidden" value="@TempData["ProductId"]" id="inputProductId" />
+    <div class="card">
+        <div class="card-body p-4">
+            <h5 class="card-title">ویرایش محصول</h5>
+            <hr>
+            <div class="form-body mt-4">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="border border-3 p-4 rounded">
+                            <div class="mb-3">
+                                <label for="inputProductTitle" class="form-label">عنوان محصول</label>
+                                <input type="text" class="form-control" asp-for="ProductTitle" id="inputProductTitle" placeholder="عنوان محصول را وارد کنید">
+                            </div>
+                            <div class="mb-3">
+                                <label for="inputProductDescription" class="form-label">توضیحات</label>
+                                <textarea class="form-control" asp-for="Description" id="inputProductDescription" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image-uploadify" class="form-label">تصویر محصول</label>
+                                <input id="image-uploadify" asp-for="Images" type="file" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="border border-3 p-4 rounded">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="inputPrice" class="form-label">قیمت</label>
+                                    <input type="number" class="form-control" asp-for="Price" id="inputPrice" placeholder="1">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputInventory" class="form-label">تعداد موجود</label>
+                                    <input type="text" class="form-control" asp-for="Inventory" id="inputInventory" placeholder="10">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="inputBrand" class="form-label">برند</label>
+                                    <input type="text" class="form-control" asp-for="Brand" id="inputBrand" placeholder="">
+                                </div>
+                                <div class="col-md-6">
+                                    @*<label for="inputStarPoints" class="form-label">نمایش در سایت</label>
+                                <input type="checkbox" class="form-control" asp-for="Displayed" id="inputStarPoints">*@
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" asp-for="Displayed" value="" id="inputDisplayOnSite">
+                                        <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="inputCategory" class="form-label">دسته بندی</label>
+                                    <select class="form-select" id="inputCategory" asp-items="@ViewBag.Categories">
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="button" class="btn btn-primary" id="btnEditProduct">ویرایش محصول</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="border border-3 p-4 rounded">
+                            <div class="row g-3">
+                                <div class="col-3">
+                                    <label for="txtFeature" class="form-label">ویژگی</label>
+                                    <input type="text" class="form-control" id="txtFeature" placeholder="حافظه داخلی">
+                                </div>
+                                <div class="col-3">
+                                    <label for="txtFeatureValue" class="form-label">مقدار ویژگی</label>
+                                    <input type="text" class="form-control" id="txtFeatureValue" placeholder="8 گیگابایت رم">
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" id="btnAddFeature" class="btn btn-outline-success px-5">افزودن</button>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table class="table table-borderless mb-0" id="tbl_Features">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">ویژگی</th>
+                                                        <th scope="col">مقدار</th>
+                                                        <th scope="col"> </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                @if (Model.ProductFeatures.Any())
+                                                {
+                                                    foreach (var item in Model.ProductFeatures)
+                                                    {
+                                                        <tr>
+                                                            <td> @item.Feature</td>
+                                                            <td> @item.Value
+                                                            <td>
+                                                                <button type="button" class="btn btn-outline-danger px-5 idFeatures">حذف</button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end row-->
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/admintemplate/assets/plugins/drag-and-drop/dist/imageuploadify.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#image-uploadify').imageuploadify();
+        })
+        $("#inputCategory").val(@Model.CategoryId).change();
+    </script>
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        $("#btnAddFeature").on("click", function () {
+
+            var txtDisplayName = $("#txtFeature").val();
+            var txtValue = $("#txtFeatureValue").val();
+
+            if (txtDisplayName == "" || txtValue == "") {
+                swal.fire(
+                    'هشدار!',
+                    "نام و مقدار را باید وارد کنید",
+                    'warning'
+                );
+            }
+            else {
+                $('#tbl_Features tbody').append('<tr> <td>' + txtDisplayName + '</td>  <td>' + txtValue + '<td><button type="button" class="btn btn-outline-danger px-5 idFeatures">حذف</button></td> </tr>');
+                $("#txtFeature").val('');
+                $("#txtFeatureValue").val('');
+            }
+        });
+
+        $("#tbl_Features").on('click', '.idFeatures', function () {
+            $(this).closest('tr').remove();
+        });
+
+    </script>
+    <script>
+        $("#btnEditProduct").on("click", function () {
+            //Data For Post To Controller
+            var fdata = new FormData();
+            fdata.append("ProductTitle", $("#inputProductTitle").val());
+            fdata.append("Brand", $("#inputBrand").val());
+            fdata.append("Description", $("#inputProductDescription").val());
+            fdata.append("Price", $("#inputPrice").val());
+            fdata.append("Inventory", $("#inputInventory").val());
+            fdata.append("Displayed", $('#inputDisplayOnSite').attr("checked") ? true : false);
+            fdata.append("CategoryId", $("#inputCategory").find('option:selected').val());
+            fdata.append("ProductId", $("#inputProductId").val());
+
+            // Images
+            var productImages = document.getElementById("image-uploadify");
+
+            if (productImages.files.length > 0) {
+                for (var i = 0; i < productImages.files.length; i++) {
+                    fdata.append('Images-' + i, productImages.files[i]);
+                }
+            }
+            // Features
+            var dataFeaturesViewModel = $('#tbl_Features tr:gt(0)').map(function () {
+                return {
+                    Feature: $(this.cells[0]).text(),
+                    Value: $(this.cells[1]).text(),
+                };
+            }).get();
+
+            $.each(dataFeaturesViewModel, function (i, val) {
+                fdata.append('[' + i + '].Feature', val.Feature);
+                fdata.append('[' + i + '].Value', val.Value);
+
+            });
+
+            $.ajax({
+                type: "POST",
+                url: 'EditProduct',
+                contentType: false,
+                processData: false,
+                data: fdata,
+                success: function (data) {
+
+                    if (data.isSuccess == true) {
+
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            window.location.href = "/admin/product/ProductList";
+
+                        });
+                    }
+                    else {
+
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+
+            });
+        })
+    </script>
+}
+
+

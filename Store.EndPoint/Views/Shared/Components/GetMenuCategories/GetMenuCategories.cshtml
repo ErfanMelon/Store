@@ -1,0 +1,31 @@
+﻿@using Store.Application.Services.Common.Queries.GetMenuCategories;
+@model List<MenuCategoriesDto>
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model)
+{
+
+    <li id="nav-menu-item" class="menu-item nav-overlay">
+        <a href="#" class="current-link-menu">
+            @item.CategoryTitle
+        </a>
+
+        @if (item.HasChild)
+        {
+            <ul class="sub-menu is-mega-menu-small">
+
+                @foreach (var itemChild in item.Childs)
+                {
+                    <li class="menu-mega-item menu-item-type-mega-menu item-small">
+                        <a href="~/product/index?CategoryId=@itemChild.CategoryId" class="mega-menu-link">
+                            @itemChild.CategoryTitle
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+
+    </li>
+}

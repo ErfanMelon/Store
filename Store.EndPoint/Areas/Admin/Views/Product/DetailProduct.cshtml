@@ -1,0 +1,213 @@
+﻿@model Store.Application.Services.Products.Queries.GetProductAdmin.GetProductAdminDto
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "جزئیات محصول";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+    @section Scripts{
+        <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        function DeleteProduct(id) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-info me-2'
+                },
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'حذف محصول',
+                text: "آیا میخواهید این کالا را حذف کنید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+
+                    var postData = {
+                        'productid': id,
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        contentType: 'application/x-www-form-urlencoded',
+                        dataType: 'json',
+                        type: "POST",
+                        url: "DeleteProduct",
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    window.location.href = "/admin/product/ProductList";
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        }
+                    });
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'لغو شد',
+                        'شما عملیات را لغو کردید :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
+}
+<div class="card">
+    <div class="row g-0">
+        @if (Model.Images.Any())
+        {
+            <div class="col-md-4 border-end">
+                <img src="~/@Model.Images[0]" class="img-fluid" alt="...">
+                <div class="row mb-3 row-cols-auto g-2 justify-content-center mt-3">
+                    @foreach (var item in Model.Images)
+                    {
+                        if (item == Model.Images[0])
+                        {
+                            continue;
+                        }
+                        <div class="col"><img src="~/@item" width="70" class="border rounded cursor-pointer" alt=""></div>
+                    }
+                </div>
+            </div>
+        }
+        <div class="col-md-8">
+            <div class="card-body">
+                <h4 class="card-title">@Model.ProductTitle</h4>
+                <div class="d-flex gap-3 py-3">
+                    <div class="cursor-pointer">
+                        <i class="bx bxs-star text-warning"></i>
+                        <i class="bx bxs-star text-warning"></i>
+                        <i class="bx bxs-star text-warning"></i>
+                        <i class="bx bxs-star text-warning"></i>
+                        <i class="bx bxs-star text-secondary"></i>
+                    </div>
+                    <div>142 بررسی</div>
+                    <div class="text-success">
+                        <i class="bx bxs-cart-alt align-middle"></i> 134 سفارش
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <span class="price h4">@Model.Price.ToString("n0") تومان</span>
+                    <span class="text-muted">/هر عدد</span>
+                </div>
+                <p class="card-text fs-6">ویژگی ها :</p>
+                @if (Model.Features != null)
+                {
+                    <dl class="row">
+                        @foreach (var item in Model.Features)
+                        {
+                            <dt class="col-sm-3">@item.Feature</dt>
+                            <dd class="col-sm-9">@item.FeatureValue</dd>
+                        }
+                    </dl>
+                }
+                <hr>
+                <div class="row row-cols-auto row-cols-1 row-cols-md-3 align-items-center">
+                    <div class="col">
+                        <label class="form-label">تعداد</label>
+                        <div class="input-group input-spinner">
+                            <input type="text" class="form-control" value="@Model.Inventory" disabled>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                            @{
+                                string displayed = Model.Displayed == true ? "true" : "false";
+                            }
+                            <input class="form-check-input" type="checkbox" value="" id="inputDisplayOnSite" data-val="true" data-val-required="The Displayed field is required." name="Displayed" disabled><input name="Displayed" type="hidden" value="@displayed">
+                            <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-3 mt-3">
+                    <a href="/admin/Product/EditProduct?productId=@TempData["productId"]" class="btn btn-primary">ویرایش محصول</a>
+                    <a href="#" class="btn btn-outline-primary" onclick="DeleteProduct('@TempData["productId"]')">
+                        <span class="text">
+                            حذف
+                        </span> <i class="bx bxs-cart-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="card-body">
+        <ul class="nav nav-tabs nav-primary mb-0" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-bs-toggle="tab" href="#primaryhome" role="tab" aria-selected="true">
+                    <div class="d-flex align-items-center">
+                        <div class="tab-icon">
+                            <i class="bx bx-comment-detail font-18 me-1"></i>
+                        </div>
+                        <div class="tab-title"> توضیحات محصول </div>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="#primaryprofile" role="tab" aria-selected="false">
+                    <div class="d-flex align-items-center">
+                        <div class="tab-icon">
+                            <i class="bx bx-bookmark-alt font-18 me-1"></i>
+                        </div>
+                        <div class="tab-title">برچسب ها</div>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" data-bs-toggle="tab" href="#primarycontact" role="tab" aria-selected="false">
+                    <div class="d-flex align-items-center">
+                        <div class="tab-icon">
+                            <i class="bx bx-star font-18 me-1"></i>
+                        </div>
+                        <div class="tab-title">نظرات</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content pt-3">
+            <div class="tab-pane fade active show" id="primaryhome" role="tabpanel">
+                <p>
+                    @Model.Description
+                </p>
+            </div>
+            <div class="tab-pane fade" id="primaryprofile" role="tabpanel">
+                <p>
+                    برچسب ها
+                </p>
+            </div>
+            <div class="tab-pane fade" id="primarycontact" role="tabpanel">
+                <p>
+                    نظرات کاربران
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>

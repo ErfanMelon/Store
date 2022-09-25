@@ -1,0 +1,360 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, LazZiya.TagHelpers
+
+
+@using Store.Application.Services.Users.Queries.GetUsers
+@model ResultGetUserDto
+@{
+    ViewData["Title"] = "لیست کاربران";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Css{
+    <link href="~/admintemplate/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap5">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-striped table-bordered dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="نام: activate to sort column descending" style="width: 138.047px;">نام</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="ایمیل: activate to sort column ascending" style="width: 225.422px;">ایمیل</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="عملیات: activate to sort column ascending" style="width: 107.609px;">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var item in Model.Users)
+                                {
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">@item.UserFullName</td>
+                                        <td>@item.Email</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditUserModal" onclick="EditUserModal('@item.UserId','@item.UserFullName','@item.Email','@item.UserRoleId')">ویرایش</button>
+                                                <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">عملیات ها</span>
+                                                </button>
+                                                <ul class="dropdown-menu" style="">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" onclick="DeleteUser('@item.UserId')">حذف</a>
+                                                    </li>
+                                                    <li>
+                                                        @if (item.IsActive)
+                                                        {
+                                                            <a class="dropdown-item" onclick="ChangeUserState('@item.UserId')" href="#">غیرفعال</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="dropdown-item" onclick="ChangeUserState('@item.UserId')" href="#">فعال</a>
+                                                        }
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th rowspan="1" colspan="1">نام</th>
+                                    <th rowspan="1" colspan="1">ایمیل</th>
+                                    <th rowspan="1" colspan="1">عملیات</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="text-center pagination round-pagination">
+                    <paging total-records="Model.RowsCount"
+                            page-no="Model.CurrentPage"
+                            page-size="Model.PageSize"
+                            show-prev-next="true"
+                            sr-text-first="ابتدا"
+                            sr-text-last="انتها"
+                            sr-text-next="بعدی"
+                            sr-text-previous="قبلی"
+                            show-total-pages="false"
+                            show-total-records="true"
+                            show-page-size-nav="true"
+                            show-first-numbered-page="true"
+                            show-last-numbered-page="true"
+                            query-string-key-page-no="Page"
+                            query-string-key-page-size="PageSize"
+                            gap-size="2">
+                    </paging>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/admintemplate/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#example2').DataTable({
+                lengthChange: false,
+                buttons: ['copy', 'excel', 'pdf', 'print'],
+                paging: false
+            });
+
+            table.buttons().container()
+                .appendTo('#example2_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        function EditUserModal(UserId, fullName, email, userroleid) {
+            $('#Edit_FullName').val(fullName);
+            $('#Edit_UserId').val(UserId);
+            $('#Edit_EmailAddress').val(email);
+            $('#Edit_RoleIdSelect').val(userroleid).change();
+
+            $('#EditUser').modal('show');
+
+        }
+        function Edituser() {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger me-2'
+                },
+                buttonsStyling: false,
+            })
+
+            var userId = $("#Edit_UserId").val();
+            var fullName = $("#Edit_FullName").val();
+            var email = $("#Edit_EmailAddress").val();
+            var roleId = $("#Edit_RoleIdSelect").val();
+
+            var postData = {
+                'UserId': userId,
+                'FullName': fullName,
+                'Email': email,
+                'RoleId': roleId
+            };
+
+
+
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: "Edit",
+                data: postData,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
+
+            $('#EditUserModal').modal('hide');
+
+
+        }
+    </script>
+
+    <script>
+        function DeleteUser(userid) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-info me-2'
+                },
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'حذف کاربر',
+                text: "آیا میخواهید کاربر را حذف کنید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+                    var userId = userid;
+
+
+                    var postData = {
+                        'userId': userId,
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        contentType: 'application/x-www-form-urlencoded',
+                        dataType: 'json',
+                        type: "POST",
+                        url: "Delete",
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        }
+                    });
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'لغو شد',
+                        'شما عملیات را لغو کردید :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
+
+    <script>
+        function ChangeUserState(userid) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger me-2'
+                },
+                buttonsStyling: false,
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'تغییر وضعیت کاربر',
+                text: "آیا میخواهید وضعیت کاربر را تغییر دهید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله ',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+                    var userId = userid;
+
+
+                    var postData = {
+                        'userId': userId,
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        contentType: 'application/x-www-form-urlencoded',
+                        dataType: 'json',
+                        type: "POST",
+                        url: "ChangeAccountState",
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        }
+                    });
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'لغو شد',
+                        'شما عملیات را لغو کردید :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
+}
+    @section Modals{
+    <!-- Modal -->
+    <div class="modal fade" id="EditUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ویرایش کاربر</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input hidden id="Edit_UserId" />
+                    <section class="row g-3">
+                        <div class="col-md-6">
+                            <label for="Edit_FullName" class="form-label">نام</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+                                <input type="text" class="form-control border-start-0" id="Edit_FullName" placeholder="نام">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="Edit_EmailAddress" class="form-label">آدرس ایمیل</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent"><i class="bx bxs-message"></i></span>
+                                <input type="text" class="form-control border-start-0" id="Edit_EmailAddress" placeholder="آدرس ایمیل">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label for="Edit_RoleIdSelect" class="form-label">نقش</label>
+                            <div class="input-group">
+                                <select class="form-select form-select-sm mb-3" aria-label="مثال ورودی انتخاب کوچک" id="Edit_RoleIdSelect" asp-items="@ViewBag.Roles">
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" onclick="Edituser()">
+                        ذخیره
+                        تغییرات
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
