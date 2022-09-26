@@ -5,6 +5,7 @@ using Store.Application.Interfaces.Context;
 using Store.Application.Services.Products.Commands.AddProduct;
 using Store.Common.Dto;
 using Store.Domain.Entities.Products;
+using Store.Application.Validations.Product;
 
 namespace Store.Application.Services.Products.Commands.EditProduct
 {
@@ -98,17 +99,24 @@ namespace Store.Application.Services.Products.Commands.EditProduct
 
         public ResultDto Execute(RequestEditProductDto request)
         {
+            var Validation = new RequestEditProductDtoValidation();
+            var Valid = Validation.Validate(request);
+            if (!Valid.IsValid)
+            {
+                return new ResultDto { Message = Valid.Errors[0].ErrorMessage };
+            }
             try
             {
                 var product = _context.Products.Where(p => p.ProductId == request.ProductId)
                     .Include(p => p.ProductImages)
                     .Include(p => p.ProductFeatures)
                     .Include(p => p.Category)
+                    .Include(p=>p.Brand)
                     .FirstOrDefault();
                 // Update Operation
                 
                 product.ProductTitle = request.ProductTitle;
-                product.Brand = request.Brand;
+                product.Brand = _context.ProductBrands.Find(request.BrandId);
                 product.Category = _context.Categories.Find(request.CategoryId);
                 product.Inventory = request.Inventory;
                 product.Price = request.Price;

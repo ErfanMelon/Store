@@ -9,7 +9,7 @@ namespace Store.Application.Validations.Product
         public RequestProductDtoValidation()
         {
             RuleFor(e => e.ProductTitle).NotEmpty().WithMessage("عنوان محصول نمیتواند خالی باشد !");
-            RuleFor(e => e.Brand).NotEmpty().WithMessage("مدل محصول نمیتواند خالی باشد !");
+            RuleFor(e => e.BrandId).NotEmpty().WithMessage("مدل محصول نمیتواند خالی باشد !");
             RuleFor(e => e.Description).NotEmpty().WithMessage("توضیحات نمیتواند خالی باشد !");
             RuleFor(e => e.Price).GreaterThanOrEqualTo(0).WithMessage("مبلغ وارد شده صحیح نمیباشد !");
             RuleFor(e => e.Inventory).GreaterThanOrEqualTo(0).WithMessage("موجودی صحیح نمیباشد !");
@@ -28,7 +28,7 @@ namespace Store.Application.Validations.Product
         public RequestEditProductDtoValidation()
         {
             RuleFor(e => e.ProductTitle).NotEmpty().WithMessage("عنوان محصول نمیتواند خالی باشد !");
-            RuleFor(e => e.Brand).NotEmpty().WithMessage("مدل محصول نمیتواند خالی باشد !");
+            RuleFor(e => e.BrandId).NotEmpty().WithMessage("مدل محصول نمیتواند خالی باشد !");
             RuleFor(e => e.Description).NotEmpty().WithMessage("توضیحات نمیتواند خالی باشد !");
             RuleFor(e => e.Price).GreaterThanOrEqualTo(0).WithMessage("مبلغ وارد شده صحیح نمیباشد !");
             RuleFor(e => e.Inventory).GreaterThanOrEqualTo(0).WithMessage("موجودی صحیح نمیباشد !");

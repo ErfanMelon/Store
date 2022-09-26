@@ -20,6 +20,8 @@ namespace Store.Persistance.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductFeatures> ProductFeatures { get; set; }
         public DbSet<ProductImages> ProductImages { get; set; }
+        public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<ProductLikes> ProductLikes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,8 +29,15 @@ namespace Store.Persistance.Context
 
             FilterDataBase(modelBuilder);
 
+            RulesDataBase(modelBuilder);
+        }
+
+        private static void RulesDataBase(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ProductFeatures>().HasKey(e => e.ProductId);
             modelBuilder.Entity<ProductImages>().HasKey(e => e.ProductId);
+            modelBuilder.Entity<ProductBrand>().HasKey(e => e.BrandId);
+            modelBuilder.Entity<ProductLikes>().HasKey(e => e.LikeId);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
         }
@@ -38,6 +47,7 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<Role>().HasData(new Role { RoleId = ((int)BaseRoles.Admin), RoleName = Enum.GetName(typeof(BaseRoles), BaseRoles.Admin) });
             modelBuilder.Entity<Role>().HasData(new Role { RoleId = ((int)BaseRoles.Operator), RoleName = Enum.GetName(typeof(BaseRoles), BaseRoles.Operator) });
             modelBuilder.Entity<Role>().HasData(new Role { RoleId = ((int)BaseRoles.Customer), RoleName = Enum.GetName(typeof(BaseRoles), BaseRoles.Customer) });
+            modelBuilder.Entity<ProductBrand>().HasData(new ProductBrand { BrandId = 1, Brand = "متفرقه" });
         }
 
         private static void FilterDataBase(ModelBuilder modelBuilder)
@@ -49,6 +59,8 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsRemoved);
             modelBuilder.Entity<ProductFeatures>().HasQueryFilter(pf => !pf.IsRemoved);
             modelBuilder.Entity<ProductImages>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<ProductLikes>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<ProductBrand>().HasQueryFilter(pi => !pi.IsRemoved);
         }
     }
 }

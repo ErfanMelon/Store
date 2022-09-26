@@ -20,6 +20,7 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                 var product = _context.Products.Where(p => p.ProductId == productid)
                     .Include(p => p.ProductFeatures)
                     .Include(p => p.ProductImages)
+                    .Include(p=>p.Brand)
                     .Include(p=>p.Category)
                     .ThenInclude(p=>p.ParentCategory)
                     .FirstOrDefault();
@@ -29,8 +30,10 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                     {
                         Data = new GetProductAdminDto
                         {
-                            Brand = product.Brand,
+                            Brand = product.Brand.Brand,
                             Category = GetCategory(product.Category),
+                            TotalViews=product.Views,
+                            Stars=GetStars(productid),
                             Description = product.Description,
                             Displayed = product.Displayed,
                             Features = product.ProductFeatures.ToList().Select(f => new GetProductFeatureDto
@@ -44,7 +47,6 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                             ProductTitle = product.ProductTitle,
                         },
                         IsSuccess=true,
-                        Message="",
                     };
                 }
                 return new ResultDto<GetProductAdminDto> { Message = "محصولی پیدا نشد !" };
@@ -59,6 +61,15 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
             if (category.ParentCategory != null)
                 return $"{GetCategory(category.ParentCategory)} - {category.CategoryTitle}";
             return category.CategoryTitle;
+        }
+        int GetStars(long productid)
+        {
+            var ListRate=_context.ProductLikes.Where(p => p.ProductId == productid).Select(p => p.Score);
+            if (ListRate.Any())
+            {
+                return (int)Math.Round(ListRate.Average(), MidpointRounding.AwayFromZero);
+            }
+            return 0;
         }
     }
 }

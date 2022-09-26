@@ -29,8 +29,9 @@ namespace Store.Application.Services.Products.Commands.AddProduct
             {
                 Product product = new Product()
                 {
-                    Brand = request.Brand,
-                    CategoryId = request.CategoryId,
+                    Category = _dataBaseContext.Categories.Find(request.CategoryId),
+                    Brand = _dataBaseContext.ProductBrands.Find(request.BrandId),
+                    Views = 0,
                     Description = request.Description,
                     Displayed = request.Displayed,
                     Inventory = request.Inventory,
@@ -45,7 +46,7 @@ namespace Store.Application.Services.Products.Commands.AddProduct
                     var uploadedimg = UploadFile(item);
                     images.Add(new ProductImages
                     {
-                        Product = product ,
+                        Product = product,
                         Src = uploadedimg.FileNameAddress
                     });
                 }
@@ -61,11 +62,11 @@ namespace Store.Application.Services.Products.Commands.AddProduct
                     });
                 }
 
-                if (images.Count > 0)
+                if (images.Any())
                     _dataBaseContext.ProductImages.AddRange(images);
-                if (features.Count>0)
+                if (features.Any())
                     _dataBaseContext.ProductFeatures.AddRange(features);
-              
+
                 _dataBaseContext.SaveChanges();
                 return new ResultDto { IsSuccess = true, Message = $"{product.ProductTitle} با موفقیت ثبت شد !" };
 
@@ -112,5 +113,5 @@ namespace Store.Application.Services.Products.Commands.AddProduct
             return null;
         }
     }
-   
+
 }

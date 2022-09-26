@@ -18,9 +18,9 @@ namespace Store.Application.Services.Products.Queries.GetProductsAdmin
             try
             {
                 int rowscount = 0;
-                var Result = _context.Products.
-                    Include(p => p.Category).
-                    ToPaged(page, pagesize, out rowscount).
+                var Result = _context.Products
+                    .Include(p => p.Category)
+                    .ToPaged(page, pagesize, out rowscount).
                     Select(p => new ProductAdminDto
                     {
                         Category = p.Category.CategoryTitle,
@@ -38,7 +38,6 @@ namespace Store.Application.Services.Products.Queries.GetProductsAdmin
                         RowsCount = rowscount,
                     },
                     IsSuccess = true,
-                    Message = ""
                 };
             }
             catch (Exception)

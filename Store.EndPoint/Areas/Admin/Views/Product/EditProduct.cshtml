@@ -49,13 +49,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputBrand" class="form-label">برند</label>
-                                    <input type="text" class="form-control" asp-for="Brand" id="inputBrand" placeholder="">
+                                    <select class="form-select" id="inputBrand" asp-items="@ViewBag.Brands">
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
-                                    @*<label for="inputStarPoints" class="form-label">نمایش در سایت</label>
-                                <input type="checkbox" class="form-control" asp-for="Displayed" id="inputStarPoints">*@
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" asp-for="Displayed" value="" id="inputDisplayOnSite">
+                                        <input class="form-check-input" type="checkbox" asp-for="Displayed" id="inputDisplayOnSite">
                                         <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
                                     </div>
                                 </div>
@@ -132,6 +131,7 @@
             $('#image-uploadify').imageuploadify();
         })
         $("#inputCategory").val(@Model.CategoryId).change();
+        $("#inputBrand").val(@Model.BrandId).change();
     </script>
     <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
@@ -164,7 +164,7 @@
             //Data For Post To Controller
             var fdata = new FormData();
             fdata.append("ProductTitle", $("#inputProductTitle").val());
-            fdata.append("Brand", $("#inputBrand").val());
+            fdata.append("BrandId", $("#inputBrand").find('option:selected').val());
             fdata.append("Description", $("#inputProductDescription").val());
             fdata.append("Price", $("#inputPrice").val());
             fdata.append("Inventory", $("#inputInventory").val());

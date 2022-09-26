@@ -48,7 +48,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputBrand" class="form-label">برند</label>
-                                    <input type="text" class="form-control" asp-for="Brand" id="inputBrand" placeholder="">
+                                    <select class="form-select" id="inputBrand" asp-items="@ViewBag.Brands">
+                                    </select>
                                 </div>
                                 <div class="col-md-6">
                                     @*<label for="inputStarPoints" class="form-label">نمایش در سایت</label>
@@ -133,8 +134,8 @@
             }
             else {
                 $('#tbl_Features tbody').append('<tr> <td>' + txtDisplayName + '</td>  <td>' + txtValue + '<td><button type="button" class="btn btn-outline-danger px-5 idFeatures">حذف</button></td> </tr>');
-                $("#txtDisplayName").val('');
-                $("#txtValue").val('');
+                $("#txtFeature").val('');
+                $("#txtFeatureValue").val('');
             }
         });
 
@@ -148,7 +149,7 @@
             //Data For Post To Controller
             var fdata = new FormData();
             fdata.append("ProductTitle", $("#inputProductTitle").val());
-            fdata.append("Brand", $("#inputBrand").val());
+            fdata.append("BrandId", $("#inputBrand").find('option:selected').val());
             fdata.append("Description", $("#inputProductDescription").val());
             fdata.append("Price", $("#inputPrice").val());
             fdata.append("Inventory", $("#inputInventory").val());

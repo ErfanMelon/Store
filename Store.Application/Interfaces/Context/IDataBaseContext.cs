@@ -13,6 +13,8 @@ namespace Store.Application.Interfaces.Context
          DbSet<Product> Products { get; set; }
          DbSet<ProductFeatures> ProductFeatures { get; set; }
          DbSet<ProductImages> ProductImages { get; set; }
+         DbSet<ProductBrand> ProductBrands { get; set; }
+         DbSet<ProductLikes> ProductLikes { get; set; }
 
         int SaveChanges(bool acceptAllChangesOnSuccess);
         int SaveChanges();

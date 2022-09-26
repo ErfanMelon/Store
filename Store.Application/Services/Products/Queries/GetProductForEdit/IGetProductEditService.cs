@@ -23,7 +23,6 @@ namespace Store.Application.Services.Products.Queries.GetProductForEdit
             try
             {
                 var product = _context.Products.Where(p => p.ProductId == productId)
-                    .Include(p => p.Category)
                     .Include(p => p.ProductFeatures)
                     .FirstOrDefault();
                 if (product != null)
@@ -31,7 +30,7 @@ namespace Store.Application.Services.Products.Queries.GetProductForEdit
                     {
                         Data = new RequestProductDto
                         {
-                            Brand = product.Brand,
+                            BrandId=product.BrandId,
                             CategoryId = product.CategoryId,
                             Description = product.Description,
                             Displayed = product.Displayed,

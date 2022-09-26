@@ -24,16 +24,19 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
                 var product = _context.Products
                     .Include(p => p.ProductFeatures)
                     .Include(p => p.ProductImages)
+                    .Include(p=>p.Brand)
                     .Include(p => p.Category)
                     .ThenInclude(i => i.ParentCategory)
-                    .FirstOrDefault();
+                    .FirstOrDefault(p=>p.ProductId==productId);
+                product.Views++;
+                _context.SaveChanges();
                 return new ResultDto<GetProductSiteDto>
                 {
                     Data = new GetProductSiteDto
                     {
                         ProductId = product.ProductId,
                         ProductName = product.ProductTitle,
-                        Brand = product.Brand,
+                        Brand = product.Brand.Brand,
                         Category = GetCategory(product.Category),
                         Description = product.Description,
                         Price = product.Price,

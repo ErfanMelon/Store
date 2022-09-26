@@ -11,5 +11,7 @@
         public bool Displayed { get; set; }
         public List<string> Images { get; set; }
         public List<GetProductFeatureDto> Features { get; set; }
+        public int TotalViews { get; set; }
+        public int Stars { get; set; }
     }
 }

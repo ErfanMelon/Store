@@ -35,10 +35,10 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
         {
             try
             {
-                Random random = new Random();
                 var products = _context.Products
                     .Include(p => p.Category)
                     .Include(p => p.ProductImages)
+                    .Include(p=>p.ProductLikes)
                     .AsQueryable();
 
                 if (CategoryId != null)
@@ -47,7 +47,7 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                 }
                 if (!string.IsNullOrWhiteSpace(SearchKey))
                 {
-                    products = products.Where(p => p.ProductTitle.ToLower().Contains(SearchKey) || p.Brand.ToLower().Contains(SearchKey)).AsQueryable();
+                    products = products.Where(p => p.ProductTitle.ToLower().Contains(SearchKey)).AsQueryable();// Brand Adds In Future
                 }
                 products.ToPaged(page, 10, out int rowcount);
                 return new ResultDto<ResultGetProductsSiteDto>
@@ -59,7 +59,7 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                             Price = p.Price,
                             ProductId = p.ProductId,
                             ProductTitle = p.ProductTitle,
-                            Stars = random.Next(1, 5),
+                            Stars =p.ProductLikes.Any()?(int)p.ProductLikes.Select(l=>l.Score).Average():0,
                             ImageSrc = p.ProductImages.Select(i => i.Src).FirstOrDefault()
                         }).ToList(),
                         RowSize = rowcount,

@@ -102,13 +102,16 @@
                 <h4 class="card-title">@Model.ProductTitle</h4>
                 <div class="d-flex gap-3 py-3">
                     <div class="cursor-pointer">
-                        <i class="bx bxs-star text-warning"></i>
-                        <i class="bx bxs-star text-warning"></i>
-                        <i class="bx bxs-star text-warning"></i>
-                        <i class="bx bxs-star text-warning"></i>
-                        <i class="bx bxs-star text-secondary"></i>
+                        @for (int i = 1; i <= Model.Stars; i++)
+                        {
+                            <i class="bx bxs-star text-warning"></i>
+                        }
+                        @for (int i = 1; i <= (5 - Model.Stars); i++)
+                        {
+                            <i class="bx bxs-star text-secondary"></i>
+                        }
                     </div>
-                    <div>142 بررسی</div>
+                    <div>@Model.TotalViews بررسی</div>
                     <div class="text-success">
                         <i class="bx bxs-cart-alt align-middle"></i> 134 سفارش
                     </div>
@@ -139,10 +142,9 @@
                     <div class="col">
                         <div class="form-check">
                             @{
-                                string displayed = Model.Displayed == true ? "true" : "false";
-                            }
-                            <input class="form-check-input" type="checkbox" value="" id="inputDisplayOnSite" data-val="true" data-val-required="The Displayed field is required." name="Displayed" disabled><input name="Displayed" type="hidden" value="@displayed">
-                            <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
+                                string displayed = Model.Displayed ? "میشود" : "نمیشود";
+                            }          
+                            <label class="form-check-label" for="inputDisplayOnSite">نمایش داده @displayed در سایت</label>
                         </div>
                     </div>
                 </div>
