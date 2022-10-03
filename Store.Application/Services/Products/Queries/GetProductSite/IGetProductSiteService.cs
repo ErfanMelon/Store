@@ -41,8 +41,7 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
                         Description = product.Description,
                         Price = product.Price,
                         Features = product.ProductFeatures.Select(f => new ProductSiteFeaturesDto { Feature = f.Feature, FeatureValue = f.FeatureValue }).ToList(),
-                        Images=product.ProductImages.Select(i=>i.Src).ToList(),
-                        Stars=GetStars(productId)
+                        Images=product.ProductImages.Select(i=>i.Src).ToList()
                     },
                     IsSuccess = true,
                 };
@@ -60,15 +59,6 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
             }
             return category.CategoryTitle;
         }
-        int GetStars(long productid)
-        {
-            var ListRate = _context.ProductLikes.Where(p => p.ProductId == productid).Select(p => p.Score);
-            if (ListRate.Any())
-            {
-                return (int)Math.Round(ListRate.Average(), MidpointRounding.AwayFromZero);
-            }
-            return 0;
-        }
     }
     public class GetProductSiteDto
     {
@@ -79,7 +69,6 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
         public int Price { get; set; }
         public string Description { get; set; }
         public List<string> Images { get; set; }
-        public int Stars { get; set; }
         public List<ProductSiteFeaturesDto> Features { get; set; }
     }
     public class ProductSiteFeaturesDto

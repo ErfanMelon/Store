@@ -2,43 +2,13 @@
 using Store.Application.Interfaces.Context;
 using Store.Common;
 using Store.Common.Dto;
+using Store.Domain.Entities.Products;
 
 namespace Store.Application.Services.Products.Queries.GetProductsSite
 {
     public interface IGetProductsSite
     {
-        ResultDto<ResultGetProductsSiteDto> Execute(int page, long? CategoryId, string SearchKey, int PageSize, OrderProduct order);
-    }
-    public enum OrderProduct
-    {
-        /// <summary>
-        /// دسته بندی نشده
-        /// </summary>
-        NotOrdered,
-        /// <summary>
-        /// بیشترین بازدید
-        /// </summary>
-        MostVisited,
-        /// <summary>
-        /// بیشترین فروش
-        /// </summary>
-        MostSales,
-        /// <summary>
-        /// محبوب
-        /// </summary>
-        Popular,
-        /// <summary>
-        /// جدیدترین ها
-        /// </summary>
-        Newsest,
-        /// <summary>
-        /// ارزانترین ها
-        /// </summary>
-        Cheaper,
-        /// <summary>
-        /// گرانترین ها
-        /// </summary>
-        Expensive
+        ResultDto<ResultGetProductsSiteDto> Execute(int page, long? CategoryId, string SearchKey);
     }
     public class ProductsSiteDto
     {
@@ -61,15 +31,14 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
             _context = context;
         }
 
-        public ResultDto<ResultGetProductsSiteDto> Execute(int page, long? CategoryId, string SearchKey, int PageSize, OrderProduct order)
+        public ResultDto<ResultGetProductsSiteDto> Execute(int page, long? CategoryId, string SearchKey)
         {
             try
             {
                 var products = _context.Products
                     .Include(p => p.Category)
                     .Include(p => p.ProductImages)
-                    .Include(p => p.ProductLikes)
-                    .Include(p => p.Brand)
+                    .Include(p=>p.ProductLikes)
                     .AsQueryable();
 
                 if (CategoryId != null)
@@ -78,33 +47,9 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                 }
                 if (!string.IsNullOrWhiteSpace(SearchKey))
                 {
-                    products = products.Where(p => p.ProductTitle.Contains(SearchKey) || p.Brand.Brand.Contains(SearchKey)).AsQueryable();
+                    products = products.Where(p => p.ProductTitle.ToLower().Contains(SearchKey)).AsQueryable();// Brand Adds In Future
                 }
-                products = products.ToPaged(page, PageSize, out int rowcount).AsQueryable();
-                switch (order)
-                {
-                    case OrderProduct.NotOrdered:
-                        break;
-                    case OrderProduct.MostVisited:
-                        products = products.OrderByDescending(p => p.Views).AsQueryable();
-                        break;
-                    case OrderProduct.MostSales:// Incomplete !
-                        break;
-                    case OrderProduct.Popular:
-                        products = products.OrderByDescending(p => p).AsQueryable();
-                        break;
-                    case OrderProduct.Newsest:
-                        products = products.OrderByDescending(p => p.InsertTime).AsQueryable();
-                        break;
-                    case OrderProduct.Cheaper:
-                        products = products.OrderBy(p => p.Price).AsQueryable();
-                        break;
-                    case OrderProduct.Expensive:
-                        products = products.OrderByDescending(p => p.Price).AsQueryable();
-                        break;
-                    default:
-                        break;
-                }
+                products.ToPaged(page, 10, out int rowcount);
                 return new ResultDto<ResultGetProductsSiteDto>
                 {
                     Data = new ResultGetProductsSiteDto
@@ -114,7 +59,7 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                             Price = p.Price,
                             ProductId = p.ProductId,
                             ProductTitle = p.ProductTitle,
-                            Stars = p.ProductLikes.Any() ? (int)p.ProductLikes.Select(l => l.Score).Average() : 0,
+                            Stars =p.ProductLikes.Any()?(int)p.ProductLikes.Select(l=>l.Score).Average():0,
                             ImageSrc = p.ProductImages.Select(i => i.Src).FirstOrDefault()
                         }).ToList(),
                         RowSize = rowcount,

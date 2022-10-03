@@ -1,15 +1,6 @@
-﻿@addTagHelper *, LazZiya.TagHelpers
-
-@model Store.Application.Services.Products.Queries.GetProductsSite.ResultGetProductsSiteDto
+﻿@model Store.Application.Services.Products.Queries.GetProductsSite.ResultGetProductsSiteDto
 @{
     ViewData["Title"] = "محصولات";
-    Dictionary<string, string> routeuser= new Dictionary<string, string>
-    {
-        {"SearchKey",Context.Request.Query["SearchKey"]},
-        {"page",Context.Request.Query["SearchKey"]},
-        {"CategoryId",Context.Request.Query["SearchKey"]},
-        {"pagesize",Context.Request.Query["SearchKey"]}
-    };
 }
 
 <div class="col-lg-12 col-md-12 col-xs-12 pl">
@@ -22,22 +13,22 @@
             <div class="nav-sort-tabs-res">
                 <ul class="nav sort-tabs-options" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=MostVisited" role="tab" aria-controls="Most-visited" aria-selected="true">پربازدیدترین</a>
+                        <a class="nav-link active" id="Most-visited-tab" data-toggle="tab" href="#Most-visited" role="tab" aria-controls="Most-visited" aria-selected="true">پربازدیدترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=MostSales" role="tab" aria-controls="Bestselling" aria-selected="false">پرفروش&zwnj;ترین&zwnj;</a>
+                        <a class="nav-link" id="Bestselling-tab" data-toggle="tab" href="#Bestselling" role="tab" aria-controls="Bestselling" aria-selected="false">پرفروش&zwnj;ترین&zwnj;</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=Popular" role="tab" aria-controls="Most-Popular" aria-selected="false">محبوب&zwnj;ترین</a>
+                        <a class="nav-link" id="Most-Popular-tab" data-toggle="tab" href="#Most-Popular" role="tab" aria-controls="Most-Popular" aria-selected="false">محبوب&zwnj;ترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=Newsest" role="tab" aria-controls="newest" aria-selected="false">جدیدترین</a>
+                        <a class="nav-link" id="newest-tab" data-toggle="tab" href="#newest" role="tab" aria-controls="newest" aria-selected="false">جدیدترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=Cheaper" role="tab" aria-controls="cheapest" aria-selected="false">ارزان&zwnj;ترین</a>
+                        <a class="nav-link" id="cheapest-tab" data-toggle="tab" href="#cheapest" role="tab" aria-controls="cheapest" aria-selected="false">ارزان&zwnj;ترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&page=@Context.Request.Query["page"]&CategoryId=@Context.Request.Query["CategoryId"]&pagesize=@Context.Request.Query["pagesize"]&order=Expensive" role="tab" aria-controls="most-expensive" aria-selected="false">گران&zwnj;ترین</a>
+                        <a class="nav-link" id="most-expensive-tab" data-toggle="tab" href="#most-expensive" role="tab" aria-controls="most-expensive" aria-selected="false">گران&zwnj;ترین</a>
                     </li>
                 </ul>
             </div>
@@ -89,7 +80,7 @@
 
             </div>
         </div>
-        @*<div class="pagination-product">
+        <div class="pagination-product">
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
                     <li class="page-item">
@@ -113,25 +104,7 @@
                     </li>
                 </ul>
             </nav>
-        </div>*@
-        <paging total-records="Model.RowSize"
-                page-no="@int.TryParse(Context.Request.Query["page"],out int page)?page:1"
-                page-size="@int.TryParse(Context.Request.Query["pagesize"],out int pagesize)?pagesize:10"
-                show-prev-next="true"
-                sr-text-first="ابتدا"
-                sr-text-last="انتها"
-                sr-text-next="بعدی"
-                sr-text-previous="قبلی"
-                show-total-pages="false"
-                show-total-records="false"
-                show-page-size-nav="false"
-                show-first-numbered-page="true"
-                show-last-numbered-page="true"
-                query-string-key-page-no="Page"
-                query-string-key-page-size="PageSize"
-                query-string-value="@@(Request.QueryString.Value)"
-                gap-size="2">
-        </paging>
+        </div>
     </div>
 </div>
 
