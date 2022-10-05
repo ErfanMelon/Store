@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Store.Application.Interfaces.Context;
+using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Validations.Product;
 using Store.Common.Dto;
 using Store.Domain.Entities.Products;
@@ -10,11 +11,11 @@ namespace Store.Application.Services.Products.Commands.AddProduct
     public class AddProductService : IAddProductService
     {
         private readonly IDataBaseContext _dataBaseContext;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public AddProductService(IDataBaseContext dataBaseContext, IHostingEnvironment hostingEnvironment)
+        private readonly IUploadFileService _uploadFileService;
+        public AddProductService(IDataBaseContext dataBaseContext,IUploadFileService uploadFileService)
         {
             _dataBaseContext = dataBaseContext;
-            _hostingEnvironment = hostingEnvironment;
+            _uploadFileService = uploadFileService;
         }
 
         public ResultDto Execute(RequestProductDto request)
@@ -43,7 +44,7 @@ namespace Store.Application.Services.Products.Commands.AddProduct
                 var images = new List<ProductImages>();
                 foreach (var item in request.Images)
                 {
-                    var uploadedimg = UploadFile(item);
+                    var uploadedimg = _uploadFileService.Execute(item,UploadFileType.ProductImage);
                     images.Add(new ProductImages
                     {
                         Product = product,
@@ -75,42 +76,6 @@ namespace Store.Application.Services.Products.Commands.AddProduct
             {
                 return new ResultDtoError();
             }
-        }
-        private UploadDto UploadFile(IFormFile file)
-        {
-            if (file != null)
-            {
-                string folder = $@"images\ProductImages\";
-                var uploadsRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, folder);
-                if (!Directory.Exists(uploadsRootFolder))
-                {
-                    Directory.CreateDirectory(uploadsRootFolder);
-                }
-
-
-                if (file == null || file.Length == 0)
-                {
-                    return new UploadDto()
-                    {
-                        Status = false,
-                        FileNameAddress = "",
-                    };
-                }
-
-                string fileName = DateTime.Now.Ticks.ToString() + file.FileName;
-                var filePath = Path.Combine(uploadsRootFolder, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-
-                return new UploadDto()
-                {
-                    FileNameAddress = folder + fileName,
-                    Status = true,
-                };
-            }
-            return null;
         }
     }
 

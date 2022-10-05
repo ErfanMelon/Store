@@ -2,7 +2,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
+using Store.Application.Services.Common.Commands.DeleteFile;
+using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
+using Store.Application.Services.HomePages.Commands.AddBanner;
+using Store.Application.Services.HomePages.Commands.AddVisitBanner;
+using Store.Application.Services.HomePages.Commands.DeleteBanner;
+using Store.Application.Services.HomePages.Queries.GetBanners;
+using Store.Application.Services.HomePages.Queries.GetBannersSite;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
 using Store.Persistance.Context;
@@ -17,11 +24,22 @@ var connectionstring = builder.Configuration.GetSection("ConnectionString").Valu
 builder.Services.AddEntityFrameworkSqlServer().AddDbContext<DataBaseContext>(option => option.UseSqlServer(connectionstring));
 builder.Services.AddScoped<IDataBaseContext, DataBaseContext>();
 
+builder.Services.AddScoped <IUploadFileService, UploadFileService> ();
+builder.Services.AddScoped <IDeleteFileService, DeleteFileService> ();
+
 builder.Services.AddScoped<IUserFacade, UserFacade>();
 
 builder.Services.AddScoped<IProductFacade, ProductFacade>();
 
 builder.Services.AddScoped<IGetMenuCategoriesService, GetMenuCategoriesService>();
+
+builder.Services.AddScoped<IAddBannerService, AddBannerService>();
+builder.Services.AddScoped<IGetBannersService, GetBannersService>();
+builder.Services.AddScoped<IDeleteBannerService, DeleteBannerService>();
+builder.Services.AddScoped<IGetBannersSiteService, GetBannersSiteService>();
+builder.Services.AddScoped<IAddVisitBannerService, AddVisitBannerService>();
+
+
 
 
 

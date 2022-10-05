@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
 using Store.Common.Roles;
+using Store.Domain.Entities.HomePages;
 using Store.Domain.Entities.Products;
 using Store.Domain.Entities.Users;
 using System.Collections;
@@ -22,6 +23,7 @@ namespace Store.Persistance.Context
         public DbSet<ProductImages> ProductImages { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<ProductLikes> ProductLikes { get; set; }
+        public DbSet<Banner> Banners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +63,7 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<ProductImages>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductLikes>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductBrand>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<Banner>().HasQueryFilter(pi => !pi.IsRemoved);
         }
     }
 }

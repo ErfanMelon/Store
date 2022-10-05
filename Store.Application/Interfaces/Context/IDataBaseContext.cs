@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Store.Domain.Entities.HomePages;
 using Store.Domain.Entities.Products;
 using Store.Domain.Entities.Users;
 
@@ -15,6 +16,7 @@ namespace Store.Application.Interfaces.Context
          DbSet<ProductImages> ProductImages { get; set; }
          DbSet<ProductBrand> ProductBrands { get; set; }
          DbSet<ProductLikes> ProductLikes { get; set; }
+         DbSet<Banner> Banners { get; set; }
 
         int SaveChanges(bool acceptAllChangesOnSuccess);
         int SaveChanges();

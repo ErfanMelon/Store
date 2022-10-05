@@ -1,0 +1,105 @@
+﻿@using Store.Application.Services.HomePages.Queries.GetBanners
+@model List<ResultGetBanners>
+@{
+    ViewData["Title"] = "بنر ها";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<h6 class="mb-0 text-uppercase">لیست بنر ها</h6>
+<hr>
+<div class="card">
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-2">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card bg-dark text-white">
+                        <img src="~/@item.ImageSrc" class="card-img" alt="...">
+                        <div class="card-img-overlay">
+                            <h5 class="card-title text-white">بنر شماره @item.Id</h5>
+                            <p class="card-text">برای دیدن لینک <span><a href="@item.Link">کلیک</a></span> کنید</p>
+                            <p class="card-text">
+                                <button type="button" onclick="DeleteBanner('@item.Id')" class="btn btn-outline-primary">
+                                    <i class="bx bx-trash-alt me-0"></i>
+                                </button>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger me-2'
+            },
+            buttonsStyling: false,
+        })
+        function DeleteBanner(bannerid){
+            swalWithBootstrapButtons.fire({
+                title: 'حذف',
+                text: "آیا میخواهید بنر را حذف کنید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+
+                    var postData = {
+                        'bannerId': bannerid,
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        contentType: 'application/x-www-form-urlencoded',
+                        dataType: 'json',
+                        type: "POST",
+                        url: "DeleteBanner",
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        }
+                    });
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'لغو شد',
+                        'شما عملیات را لغو کردید :)',
+                        'error'
+                    )
+                }
+            })
+        }
+    </script>
+}
+    @section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+
+

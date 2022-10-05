@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
+using Store.Application.Services.Common.Commands.DeleteFile;
+using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Products.Commands.AddProduct;
+using Store.Application.Validations.Product;
 using Store.Common.Dto;
 using Store.Domain.Entities.Products;
-using Store.Application.Validations.Product;
 
 namespace Store.Application.Services.Products.Commands.EditProduct
 {
@@ -20,81 +20,13 @@ namespace Store.Application.Services.Products.Commands.EditProduct
     public class EditProductService : IEditProductService
     {
         private readonly IDataBaseContext _context;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public EditProductService(IDataBaseContext context, IHostingEnvironment hostingEnvironment)
+        private readonly IUploadFileService _uploadFileService;
+        private readonly IDeleteFileService _deleteFileService;
+        public EditProductService(IDataBaseContext context, IUploadFileService uploadFileService, IDeleteFileService deleteFileService)
         {
             _context = context;
-            _hostingEnvironment = hostingEnvironment;
-        }
-        private UploadDto RemoveImages(string filepath)
-        {
-            if (filepath != null)
-            {
-                string folder = $@"images\ProductImages\";
-                var uploadsRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, folder);
-                if (!Directory.Exists(uploadsRootFolder))
-                {
-                    Directory.CreateDirectory(uploadsRootFolder);
-                }
-
-                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, filepath);
-
-                if (!File.Exists(filePath))
-                {
-                    return new UploadDto()
-                    {
-                        Status = false,
-                        FileNameAddress = "",
-                    };
-                }
-
-
-                File.Delete(filePath);
-
-                return new UploadDto()
-                {
-                    FileNameAddress = folder + filepath,
-                    Status = true,
-                };
-            }
-            return null;
-
-        }
-        private UploadDto UploadFile(IFormFile file)
-        {
-            if (file != null)
-            {
-                string folder = $@"images\ProductImages\";
-                var uploadsRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, folder);
-                if (!Directory.Exists(uploadsRootFolder))
-                {
-                    Directory.CreateDirectory(uploadsRootFolder);
-                }
-
-
-                if (file == null || file.Length == 0)
-                {
-                    return new UploadDto()
-                    {
-                        Status = false,
-                        FileNameAddress = "",
-                    };
-                }
-
-                string fileName = DateTime.Now.Ticks.ToString() + file.FileName;
-                var filePath = Path.Combine(uploadsRootFolder, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-
-                return new UploadDto()
-                {
-                    FileNameAddress = folder + fileName,
-                    Status = true,
-                };
-            }
-            return null;
+            _uploadFileService = uploadFileService;
+            _deleteFileService = deleteFileService;
         }
 
         public ResultDto Execute(RequestEditProductDto request)
@@ -111,10 +43,10 @@ namespace Store.Application.Services.Products.Commands.EditProduct
                     .Include(p => p.ProductImages)
                     .Include(p => p.ProductFeatures)
                     .Include(p => p.Category)
-                    .Include(p=>p.Brand)
+                    .Include(p => p.Brand)
                     .FirstOrDefault();
                 // Update Operation
-                
+
                 product.ProductTitle = request.ProductTitle;
                 product.Brand = _context.ProductBrands.Find(request.BrandId);
                 product.Category = _context.Categories.Find(request.CategoryId);
@@ -128,13 +60,13 @@ namespace Store.Application.Services.Products.Commands.EditProduct
 
                 foreach (var item in product.ProductImages)//delete olds
                 {
-                    if (RemoveImages(item.Src).Status)
+                    if (_deleteFileService.Execute(item.Src).Status)
                         _context.ProductImages.Remove(item);
                 }
                 var images = new List<ProductImages>();
                 foreach (var item in request.Images)//add new
                 {
-                    var srcimg = UploadFile(item);
+                    var srcimg = _uploadFileService.Execute(item,UploadFileType.ProductImage);
                     if (srcimg.Status)
                         images.Add(new ProductImages
                         {

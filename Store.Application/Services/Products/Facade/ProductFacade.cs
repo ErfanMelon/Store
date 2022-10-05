@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
+using Store.Application.Services.Common.Commands.DeleteFile;
+using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Products.Commands.AddBrand;
 using Store.Application.Services.Products.Commands.AddCategory;
 using Store.Application.Services.Products.Commands.AddProduct;
@@ -24,10 +26,14 @@ namespace Store.Application.Services.Products.Facade
     {
         private readonly IDataBaseContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment)
+        private readonly IUploadFileService _uploadFileService;
+        private readonly IDeleteFileService _deleteFileService;
+        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment, IUploadFileService uploadFileService, IDeleteFileService deleteFileService)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
+            _uploadFileService = uploadFileService;
+            _deleteFileService = deleteFileService;
         }
 
         private IAddCategoryService _addCategoryService;
@@ -78,7 +84,7 @@ namespace Store.Application.Services.Products.Facade
         {
             get
             {
-                return _addProductService = _addProductService ?? new AddProductService(_context, _hostingEnvironment);
+                return _addProductService = _addProductService ?? new AddProductService(_context, _uploadFileService);
             }
         }
 
@@ -112,7 +118,7 @@ namespace Store.Application.Services.Products.Facade
         {
             get
             {
-                return _editProductService = _editProductService ?? new EditProductService(_context, _hostingEnvironment);
+                return _editProductService = _editProductService ?? new EditProductService(_context, _uploadFileService, _deleteFileService);
             }
         }
         private IGetProductEditService _getProductEditService;
@@ -149,14 +155,16 @@ namespace Store.Application.Services.Products.Facade
             }
         }
         private IDeleteBrandService _deleteBrandService;
-        public IDeleteBrandService deleteBrandService {
+        public IDeleteBrandService deleteBrandService
+        {
             get
             {
                 return _deleteBrandService = _deleteBrandService ?? new DeleteBrandService(_context);
             }
         }
         private IGetBrandsService _getBrandsService;
-        public IGetBrandsService getBrandsService {
+        public IGetBrandsService getBrandsService
+        {
             get
             {
                 return _getBrandsService = _getBrandsService ?? new GetBrandsService(_context);
