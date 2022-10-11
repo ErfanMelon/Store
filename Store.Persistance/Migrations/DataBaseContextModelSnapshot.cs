@@ -30,8 +30,11 @@ namespace Store.Persistance.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BannerId"), 1L, 1);
 
-                    b.Property<int>("Clicks")
+                    b.Property<int>("BannerLocation")
                         .HasColumnType("int");
+
+                    b.Property<bool>("DisplayOnPage")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ImageSrc")
                         .IsRequired()
@@ -180,7 +183,7 @@ namespace Store.Persistance.Migrations
                         {
                             BrandId = 1,
                             Brand = "متفرقه",
-                            InsertTime = new DateTime(2022, 10, 3, 16, 1, 42, 53, DateTimeKind.Local).AddTicks(9252),
+                            InsertTime = new DateTime(2022, 10, 5, 16, 51, 48, 278, DateTimeKind.Local).AddTicks(2335),
                             IsRemoved = false
                         });
                 });
@@ -328,21 +331,21 @@ namespace Store.Persistance.Migrations
                         new
                         {
                             RoleId = 1,
-                            InsertTime = new DateTime(2022, 10, 3, 16, 1, 42, 53, DateTimeKind.Local).AddTicks(8905),
+                            InsertTime = new DateTime(2022, 10, 5, 16, 51, 48, 278, DateTimeKind.Local).AddTicks(2064),
                             IsRemoved = false,
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            InsertTime = new DateTime(2022, 10, 3, 16, 1, 42, 53, DateTimeKind.Local).AddTicks(9128),
+                            InsertTime = new DateTime(2022, 10, 5, 16, 51, 48, 278, DateTimeKind.Local).AddTicks(2234),
                             IsRemoved = false,
                             RoleName = "Operator"
                         },
                         new
                         {
                             RoleId = 3,
-                            InsertTime = new DateTime(2022, 10, 3, 16, 1, 42, 53, DateTimeKind.Local).AddTicks(9183),
+                            InsertTime = new DateTime(2022, 10, 5, 16, 51, 48, 278, DateTimeKind.Local).AddTicks(2274),
                             IsRemoved = false,
                             RoleName = "Customer"
                         });

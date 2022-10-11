@@ -1,10 +1,6 @@
 ﻿using Store.Application.Interfaces.Context;
 using Store.Common.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Store.Domain.Entities.HomePages;
 
 namespace Store.Application.Services.HomePages.Queries.GetBanners
 {
@@ -28,7 +24,9 @@ namespace Store.Application.Services.HomePages.Queries.GetBanners
                 {
                     ImageSrc=b.ImageSrc,
                     Link= b.Link,
-                    Id=b.BannerId
+                    Id=b.BannerId,
+                    BannerLocation=b.BannerLocation,
+                    Display=b.DisplayOnPage
                 }).ToList(),
                 IsSuccess=true,
             };
@@ -39,5 +37,7 @@ namespace Store.Application.Services.HomePages.Queries.GetBanners
         public int Id { get; set; }
         public string ImageSrc { get; set; }
         public string Link { get; set; }
+        public bool Display { get; set; }
+        public BannerLocation BannerLocation { get; set; }
     }
 }

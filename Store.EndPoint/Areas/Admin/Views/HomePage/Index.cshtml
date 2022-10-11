@@ -1,4 +1,5 @@
 ﻿@using Store.Application.Services.HomePages.Queries.GetBanners
+@using Store.Domain.Entities.HomePages
 @model List<ResultGetBanners>
 @{
     ViewData["Title"] = "بنر ها";
@@ -15,12 +16,21 @@
                     <div class="card bg-dark text-white">
                         <img src="~/@item.ImageSrc" class="card-img" alt="...">
                         <div class="card-img-overlay">
-                            <h5 class="card-title text-white">بنر شماره @item.Id</h5>
+                            <h5 class="card-title text-white">موقعیت بنر @Enum.GetName(typeof(BannerLocation),item.BannerLocation)</h5>
                             <p class="card-text">برای دیدن لینک <span><a href="@item.Link">کلیک</a></span> کنید</p>
                             <p class="card-text">
                                 <button type="button" onclick="DeleteBanner('@item.Id')" class="btn btn-outline-primary">
                                     <i class="bx bx-trash-alt me-0"></i>
                                 </button>
+                                @if (!item.Display)
+                                {
+                                    <button type="button" class="btn btn-success" onclick="ChangeDisplayBanner('@item.Id')">نمایش</button>
+
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="ChangeDisplayBanner('@item.Id')">پنهان</button>
+                                }
                             </p>
                         </div>
                     </div>
@@ -40,7 +50,7 @@
             },
             buttonsStyling: false,
         })
-        function DeleteBanner(bannerid){
+        function DeleteBanner(bannerid) {
             swalWithBootstrapButtons.fire({
                 title: 'حذف',
                 text: "آیا میخواهید بنر را حذف کنید؟",
@@ -95,6 +105,38 @@
                     )
                 }
             })
+        }
+        function ChangeDisplayBanner(bannerid) {
+            var postData = {
+                'bannerId': bannerid,
+            };
+
+            // Post Data To Controller
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: "ChangeBannerState",
+                data: postData,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
         }
     </script>
 }

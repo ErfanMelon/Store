@@ -1,0 +1,34 @@
+﻿@using Store.Application.Services.Common.Queries.GetMenuCategories;
+@model List<MenuCategoriesDto>
+@{
+    Layout = null;
+}
+@foreach (var item in Model)
+{
+
+    <li>
+
+        @if (item.HasChild)
+        {
+            <a href="#" class="collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><i class="mdi mdi-chevron-down"></i>@item.CategoryTitle</a>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample" style="">
+                <ul>
+
+
+                    @foreach (var itemChild in item.Childs)
+                    {
+                        <li class="has-sub">
+                            <a href="/product/index?CategoryId=@itemChild.CategoryId" class="category-level-2">لوازم جانبی گوشی</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+        <li><a href="#">@item.CategoryTitle</a></li>
+
+        }
+
+        </li>
+}

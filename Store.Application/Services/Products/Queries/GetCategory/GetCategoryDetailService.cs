@@ -15,8 +15,7 @@ namespace Store.Application.Services.Products.Queries.GetCategory
 
         public ResultDto<CategoryDetailDto> Execute(long categoryId)
         {
-            try
-            {
+            
                 var resultCategory = _context.Categories.Where(c => c.CategoryId == categoryId)
                     .Include(c => c.ParentCategory)
                     .Include(c => c.SubCategories)
@@ -52,12 +51,7 @@ namespace Store.Application.Services.Products.Queries.GetCategory
                     };
                 }
                 return new ResultDto<CategoryDetailDto> { Message = "داده ای پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-
-                return new ResultDto<CategoryDetailDto> { Message = "خطایی رخ داد !" };
-            }
+            
         }
     }
 

@@ -21,7 +21,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
 
         public IActionResult AddProduct()
         {
-            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => !c.HasChild), "CategoryId", "CategoryTitle");
+            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent!=null), "CategoryId", "CategoryTitle");
             ViewBag.Brands = new SelectList(_productFacade.getBrandsService.Execute().Data, "BrandId", "BrandName");
             return View();
         }
@@ -29,9 +29,9 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         public IActionResult AddProduct(RequestProductDto request, List<RequestFeatureDto> Features)
         {
             List<IFormFile> images = new List<IFormFile>();
-            for (int i = 0; i < Request.Form.Files.Count; i++)
+            
+            foreach (var file in Request.Form.Files)
             {
-                var file = Request.Form.Files[i];
                 images.Add(file);
             }
             request.Images = images;
@@ -41,9 +41,9 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             return Json(resultAddProduct);
         }
 
-        public IActionResult ProductList(int page = 1, int pagesize = 20)
+        public IActionResult ProductList(int page = 1, int pagesize = 10,string searchKey=null)
         {
-            return View(_productFacade.getProductsAdminService.Execute(page, pagesize).Data);
+            return View(_productFacade.getProductsAdminService.Execute(page, pagesize,searchKey).Data);
         }
         public IActionResult DeleteProduct(long productid)
         {
@@ -64,7 +64,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             var product = _productFacade.getProductEditService.Execute(productId);
             if (product.IsSuccess)
             {
-                ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => !c.HasChild), "CategoryId", "CategoryTitle");
+                ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
                 ViewBag.Brands = new SelectList(_productFacade.getBrandsService.Execute().Data, "BrandId", "BrandName");
                 TempData["ProductId"] = productId;
                 return View(product.Data);
@@ -75,9 +75,8 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         public IActionResult EditProduct(RequestEditProductDto request, List<RequestFeatureDto> Features)
         {
             List<IFormFile> images = new List<IFormFile>();
-            for (int i = 0; i < Request.Form.Files.Count; i++)
+            foreach (var file in Request.Form.Files)
             {
-                var file = Request.Form.Files[i];
                 images.Add(file);
             }
             request.Images = images;

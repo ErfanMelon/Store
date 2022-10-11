@@ -15,7 +15,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
 
         public IActionResult AddCategory()
         {
-            ViewBag.Categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.HasChild), "CategoryId", "CategoryTitle");
+            ViewBag.Categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent==null), "CategoryId", "CategoryTitle");
             return PartialView();
         }
         [HttpPost]
@@ -31,7 +31,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult EditCategoryPage(CategoryViewModel viewModel)
         {
-            var categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.HasChild), "CategoryId", "CategoryTitle");
+            var categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent == null), "CategoryId", "CategoryTitle");
             ViewBag.Categorylist = categorylist;
             TempData["CurrentParentCategory"] = viewModel.ParentCategoryId != 0 ? categorylist.FirstOrDefault(p => p.Value == viewModel.ParentCategoryId.ToString()).Text : "-";
             return PartialView("EditCategory", viewModel);

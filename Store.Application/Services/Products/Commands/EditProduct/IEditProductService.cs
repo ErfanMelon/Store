@@ -37,8 +37,6 @@ namespace Store.Application.Services.Products.Commands.EditProduct
             {
                 return new ResultDto { Message = Valid.Errors[0].ErrorMessage };
             }
-            try
-            {
                 var product = _context.Products.Where(p => p.ProductId == request.ProductId)
                     .Include(p => p.ProductImages)
                     .Include(p => p.ProductFeatures)
@@ -92,11 +90,6 @@ namespace Store.Application.Services.Products.Commands.EditProduct
                 //save
                 _context.SaveChanges();
                 return new ResultDto { IsSuccess = true, Message = $"{product.ProductTitle} با موفقیت ویرایش شد !" };
-            }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-            }
         }
     }
 }

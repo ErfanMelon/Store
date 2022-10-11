@@ -19,37 +19,32 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
 
         public ResultDto<GetProductSiteDto> Execute(long productId)
         {
-            try
+
+            var product = _context.Products
+                .Include(p => p.ProductFeatures)
+                .Include(p => p.ProductImages)
+                .Include(p => p.Brand)
+                .Include(p => p.Category)
+                .ThenInclude(i => i.ParentCategory)
+                .FirstOrDefault(p => p.ProductId == productId);
+            product.Views++;
+            _context.SaveChanges();
+            return new ResultDto<GetProductSiteDto>
             {
-                var product = _context.Products
-                    .Include(p => p.ProductFeatures)
-                    .Include(p => p.ProductImages)
-                    .Include(p=>p.Brand)
-                    .Include(p => p.Category)
-                    .ThenInclude(i => i.ParentCategory)
-                    .FirstOrDefault(p=>p.ProductId==productId);
-                product.Views++;
-                _context.SaveChanges();
-                return new ResultDto<GetProductSiteDto>
+                Data = new GetProductSiteDto
                 {
-                    Data = new GetProductSiteDto
-                    {
-                        ProductId = product.ProductId,
-                        ProductName = product.ProductTitle,
-                        Brand = product.Brand.Brand,
-                        Category = GetCategory(product.Category),
-                        Description = product.Description,
-                        Price = product.Price,
-                        Features = product.ProductFeatures.Select(f => new ProductSiteFeaturesDto { Feature = f.Feature, FeatureValue = f.FeatureValue }).ToList(),
-                        Images=product.ProductImages.Select(i=>i.Src).ToList()
-                    },
-                    IsSuccess = true,
-                };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<GetProductSiteDto> { };
-            }
+                    ProductId = product.ProductId,
+                    ProductName = product.ProductTitle,
+                    Brand = product.Brand.Brand,
+                    Category = GetCategory(product.Category),
+                    Description = product.Description,
+                    Price = product.Price,
+                    Features = product.ProductFeatures.Select(f => new ProductSiteFeaturesDto { Feature = f.Feature, FeatureValue = f.FeatureValue }).ToList(),
+                    Images = product.ProductImages.Select(i => i.Src).ToList()
+                },
+                IsSuccess = true,
+            };
+
         }
         private string GetCategory(Category category)
         {

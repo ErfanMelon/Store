@@ -13,40 +13,43 @@ namespace Store.Application.Services.Products.Queries.GetProductsAdmin
             _context = context;
         }
 
-        public ResultDto<GetProductsAdminDto> Execute(int page, int pagesize)
+        public ResultDto<GetProductsAdminDto> Execute(int page, int pagesize, string SearchKey)
         {
-            try
+
+            int rowscount = 0;
+            var Result = _context.Products
+                .Include(p => p.Category)
+                .Include(p=>p.Brand)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(SearchKey))
             {
-                int rowscount = 0;
-                var Result = _context.Products
-                    .Include(p => p.Category)
-                    .ToPaged(page, pagesize, out rowscount).
-                    Select(p => new ProductAdminDto
-                    {
-                        Category = p.Category.CategoryTitle,
-                        Price = p.Price,
-                        ProductTitle = p.ProductTitle,
-                        ProductId=p.ProductId,
-                    }).ToList();
-                return new ResultDto<GetProductsAdminDto>
-                {
-                    Data = new GetProductsAdminDto
-                    {
-                        products = Result,
-                        CurrentPage = page,
-                        PageSize = pagesize,
-                        RowsCount = rowscount,
-                    },
-                    IsSuccess = true,
-                };
+                Result = Result.Where(p =>
+                p.Description.Contains(SearchKey) ||
+                p.Brand.Brand.Contains(SearchKey) ||
+                p.ProductTitle.Contains(SearchKey)||
+                p.Category.CategoryTitle.Contains(SearchKey)
+                ).AsQueryable();
             }
-            catch (Exception)
+            var ProductList = Result.ToPaged(page, pagesize, out rowscount).
+                 Select(p => new ProductAdminDto
+                 {
+                     Category = p.Category.CategoryTitle,
+                     Price = p.Price,
+                     ProductTitle = p.ProductTitle,
+                     ProductId = p.ProductId,
+                 }).ToList();
+            return new ResultDto<GetProductsAdminDto>
             {
-                return new ResultDto<GetProductsAdminDto>
+                Data = new GetProductsAdminDto
                 {
-                    Message = "Error"
-                };
-            }
+                    products = ProductList,
+                    CurrentPage = page,
+                    PageSize = pagesize,
+                    RowsCount = rowscount,
+                },
+                IsSuccess = true,
+            };
+
         }
     }
 }

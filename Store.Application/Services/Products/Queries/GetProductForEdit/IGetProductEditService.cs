@@ -20,8 +20,7 @@ namespace Store.Application.Services.Products.Queries.GetProductForEdit
         public ResultDto<RequestProductDto> Execute(long productId)
         {
 
-            try
-            {
+            
                 var product = _context.Products.Where(p => p.ProductId == productId)
                     .Include(p => p.ProductFeatures)
                     .FirstOrDefault();
@@ -49,11 +48,7 @@ namespace Store.Application.Services.Products.Queries.GetProductForEdit
                         Message = ""
                     };
                 return new ResultDto<RequestProductDto> { Message = "پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<RequestProductDto> { Message = "خطا !" };
-            }
+           
         }
     }
 }

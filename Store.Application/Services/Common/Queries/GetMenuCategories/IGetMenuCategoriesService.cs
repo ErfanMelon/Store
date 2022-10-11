@@ -18,32 +18,26 @@ namespace Store.Application.Services.Common.Queries.GetMenuCategories
 
         public ResultDto<List<MenuCategoriesDto>> Execute()
         {
-            try
-            {
-                var Categories = _context.Categories
-                    .Include(c => c.SubCategories)
-                    .Where(c => c.ParentCategoryId == null);
-                return new ResultDto<List<MenuCategoriesDto>>
+            var Categories = _context.Categories
+                .Include(c => c.SubCategories)
+                .Where(c => c.ParentCategoryId == null)
+                .Select(c => new MenuCategoriesDto
                 {
-                    Data = Categories.Select(c => new MenuCategoriesDto
+                    CategoryId = c.CategoryId,
+                    CategoryTitle = c.CategoryTitle,
+                    HasChild = c.SubCategories.Any(),
+                    Childs = c.SubCategories.Any() ? c.SubCategories.Select(child => new MenuCategoriesDto
                     {
-                        CategoryId = c.CategoryId,
-                        CategoryTitle = c.CategoryTitle,
-                        HasChild = c.SubCategories.Any(),
-                        Childs = c.SubCategories.Any() ? c.SubCategories.Select(child => new MenuCategoriesDto 
-                        {
-                            CategoryId = child.CategoryId,
-                            CategoryTitle=child.CategoryTitle,
-                            HasChild=false
-                        }).ToList():null,
-                    }).ToList(),
-                    IsSuccess = true
-                };
-            }
-            catch (Exception)
+                        CategoryId = child.CategoryId,
+                        CategoryTitle = child.CategoryTitle,
+                        HasChild = false
+                    }).ToList() : null
+                });
+            return new ResultDto<List<MenuCategoriesDto>>
             {
-                return new ResultDto<List<MenuCategoriesDto>> { };
-            }
+                Data = Categories.ToList(),
+                IsSuccess = true
+            };
         }
     }
     public class MenuCategoriesDto

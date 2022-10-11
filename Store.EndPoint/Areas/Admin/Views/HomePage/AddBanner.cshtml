@@ -1,23 +1,38 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Store.Domain.Entities.HomePages;
+@using Store.Application.Services.HomePages.Commands.AddBanner;
+@model RequestBannerDto
+@{
     ViewData["Title"] = "افزودن بنر جدید ";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<form method="post" enctype="multipart/form-data">
 <div class="card">
     <div class="card-body">
         <div class="row row-cols-auto g-3">
-            <form method="post" enctype="multipart/form-data">
+            
                 <div class="col-md-6">
                     <label class="form-label" for="bannerimg">عکس</label>
-                    <input class="form-control form-control-sm mb-3" name="bannerImage" type="file">
+                    <input class="form-control form-control-sm mb-3" asp-for="Image" name="bannerImage" type="file">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label" for="BannerLink">لینک</label>
-                    <input class="form-control form-control-sm mb-3" name="bannerLink" type="url" placeholder="لینک" aria-label="مثال ورودی کوچک">
+                    <input class="form-control form-control-sm mb-3" asp-for="Link" type="url" placeholder="لینک" aria-label="مثال ورودی کوچک">
+                </div>
+                <div class="col-md-6">
+                    <input class="form-check-input" type="checkbox" asp-for="DisplayOnSite" id="ShowInSite">
+                    <label class="form-label" for="ShowInSite">نمایش در سایت</label>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="BannerLocation">موقعیت</label>
+                    <select asp-for="BannerLocation" class="form-select form-select-sm mb-3" aria-label="مثال ورودی انتخاب کوچک" id="BannerLocation" asp-items="@Html.GetEnumSelectList<BannerLocation>()">
+                    </select>
                 </div>
                 <div class="col-md-12">
                     <button class="form-control form-control-sm mb-3" id="btnAddBanner" type="submit" placeholder="">ثبت</button>
                 </div>
-            </form>
+            
         </div>
     </div>
 </div>
+</form>

@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "ویرایش محصول ";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    long productid = Convert.ToInt64(TempData["ProductId"]);
 }
 @section Css{
 
@@ -12,7 +13,7 @@
     <link href="~/admintemplate/assets/plugins/drag-and-drop/dist/imageuploadify.min.css" rel="stylesheet" />
 
 }
-    <input type="hidden" value="@TempData["ProductId"]" id="inputProductId" />
+    <input type="hidden" value="@productid" id="inputProductId" />
     <div class="card">
         <div class="card-body p-4">
             <h5 class="card-title">ویرایش محصول</h5>
@@ -31,7 +32,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="image-uploadify" class="form-label">تصویر محصول</label>
-                                <input id="image-uploadify" asp-for="Images" type="file" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
+                                <input id="image-uploadify" type="file" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
 
                             </div>
                         </div>
@@ -41,11 +42,11 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="inputPrice" class="form-label">قیمت</label>
-                                    <input type="number" class="form-control" asp-for="Price" id="inputPrice" placeholder="1">
+                                    <input type="number" asp-for="Price" class="form-control" id="inputPrice" placeholder="1">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputInventory" class="form-label">تعداد موجود</label>
-                                    <input type="text" class="form-control" asp-for="Inventory" id="inputInventory" placeholder="10">
+                                    <input type="text" asp-for="Inventory" class="form-control" id="inputInventory" placeholder="10">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputBrand" class="form-label">برند</label>
@@ -54,8 +55,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" asp-for="Displayed" id="inputDisplayOnSite">
-                                        <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
+                                        <input class="form-check-input" asp-for="Displayed" type="checkbox" id="inputDisplayOnSite">
+                                        <label class="form-check-label"  for="inputDisplayOnSite">نمایش در سایت</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -97,9 +98,8 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                @if (Model.ProductFeatures.Any())
-                                                {
-                                                    foreach (var item in Model.ProductFeatures)
+                                               
+                                                    @foreach (var item in Model.ProductFeatures)
                                                     {
                                                         <tr>
                                                             <td> @item.Feature</td>
@@ -109,7 +109,7 @@
                                                             </td>
                                                         </tr>
                                                     }
-                                                }
+                                              
 
                                             </tbody>
                                         </table>
@@ -168,7 +168,9 @@
             fdata.append("Description", $("#inputProductDescription").val());
             fdata.append("Price", $("#inputPrice").val());
             fdata.append("Inventory", $("#inputInventory").val());
-            fdata.append("Displayed", $('#inputDisplayOnSite').attr("checked") ? true : false);
+            if ($('#inputDisplayOnSite').is(":checked")) {
+                fdata.append("Displayed", true);
+            }
             fdata.append("CategoryId", $("#inputCategory").find('option:selected').val());
             fdata.append("ProductId", $("#inputProductId").val());
 
@@ -209,7 +211,7 @@
                             data.message,
                             'success'
                         ).then(function (isConfirm) {
-                            window.location.href = "/admin/product/ProductList";
+                            window.location.href = "/admin/product/DetailProduct?productid=@productid";
 
                         });
                     }

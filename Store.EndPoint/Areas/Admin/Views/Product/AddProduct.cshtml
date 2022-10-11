@@ -22,15 +22,15 @@
                         <div class="border border-3 p-4 rounded">
                             <div class="mb-3">
                                 <label for="inputProductTitle" class="form-label">عنوان محصول</label>
-                                <input type="text" class="form-control" asp-for="ProductTitle" id="inputProductTitle" placeholder="عنوان محصول را وارد کنید">
+                                <input type="text" class="form-control" id="inputProductTitle" placeholder="عنوان محصول را وارد کنید">
                             </div>
                             <div class="mb-3">
                                 <label for="inputProductDescription" class="form-label">توضیحات</label>
-                                <textarea class="form-control" asp-for="Description" id="inputProductDescription" rows="3"></textarea>
+                                <textarea class="form-control" id="inputProductDescription" rows="3"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="image-uploadify" class="form-label">تصویر محصول</label>
-                                <input id="image-uploadify" asp-for="Images" type="file" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
+                                <input id="image-uploadify" type="file" asp-for="Images" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
 
                             </div>
                         </div>
@@ -40,11 +40,11 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="inputPrice" class="form-label">قیمت</label>
-                                    <input type="number" class="form-control" asp-for="Price" id="inputPrice" placeholder="1">
+                                    <input type="number" class="form-control" id="inputPrice" placeholder="0">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputInventory" class="form-label">تعداد موجود</label>
-                                    <input type="text" class="form-control" asp-for="Inventory" id="inputInventory" placeholder="10">
+                                    <input type="number" class="form-control" id="inputInventory" placeholder="0">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="inputBrand" class="form-label">برند</label>
@@ -52,10 +52,9 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    @*<label for="inputStarPoints" class="form-label">نمایش در سایت</label>
-                                <input type="checkbox" class="form-control" asp-for="Displayed" id="inputStarPoints">*@
+                                    
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" asp-for="Displayed" value="" id="inputDisplayOnSite">
+                                        <input class="form-check-input" type="checkbox" id="inputDisplayOnSite">
                                         <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
                                     </div>
                                 </div>
@@ -153,7 +152,10 @@
             fdata.append("Description", $("#inputProductDescription").val());
             fdata.append("Price", $("#inputPrice").val());
             fdata.append("Inventory", $("#inputInventory").val());
-            fdata.append("Displayed", $('#inputDisplayOnSite').attr("checked") ? true : false);
+            if ($('#inputDisplayOnSite').is(":checked"))
+            {
+            fdata.append("Displayed",true);
+            }
             fdata.append("CategoryId", $("#inputCategory").find('option:selected').val());
 
             // Images

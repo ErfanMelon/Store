@@ -12,8 +12,7 @@ namespace Store.Application.Services.Users.Commands.ChangeUserState
         }
         public ResultDto<long> Execute(long userId)
         {
-            try
-            {
+            
                 var user = _dataBaseContext.Users.Find(userId);
                 if (user != null)
                 {
@@ -24,13 +23,7 @@ namespace Store.Application.Services.Users.Commands.ChangeUserState
                     return new ResultDto<long> { Data = user.UserId, IsSuccess = true, Message = $"وضعیت کاربر به {state} تغییر کرد !" };
                 }
                 return new ResultDto<long> { Message = "کاربری پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-
-                return new ResultDto<long> { Message = "انجام نشد!" };
-
-            }
+          
         }
     }
 }

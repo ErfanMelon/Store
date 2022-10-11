@@ -10,7 +10,7 @@
     <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }
     @section Scripts{
-        <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 
     <script>
         function DeleteProduct(id) {
@@ -79,8 +79,8 @@
         }
     </script>
 }
-<div class="card">
-    <div class="row g-0">
+    <div class="card">
+        <div class="row g-0">
         @if (Model.Images.Any())
         {
             <div class="col-md-4 border-end">
@@ -141,10 +141,14 @@
                     </div>
                     <div class="col">
                         <div class="form-check">
-                            @{
-                                string displayed = Model.Displayed ? "میشود" : "نمیشود";
-                            }          
-                            <label class="form-check-label" for="inputDisplayOnSite">نمایش داده @displayed در سایت</label>
+                            @if (!Model.Displayed)
+                            {
+                                <label class="form-check-label" for="inputDisplayOnSite">در سایت نمایش داده <span class="badge rounded-pill bg-danger">نمیشود</span></label>
+                            }
+                            else
+                            {
+                                <label class="form-check-label" for="inputDisplayOnSite">در سایت نمایش داده <span class="badge rounded-pill bg-success">میشود</span></label>
+                            }
                         </div>
                     </div>
                 </div>

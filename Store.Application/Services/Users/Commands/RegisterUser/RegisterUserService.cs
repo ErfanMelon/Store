@@ -23,8 +23,7 @@ namespace Store.Application.Services.Users.Commands.RegisterUser
             {
                 return new ResultDto<ResultRegisterUserDto> { Message = IsValidRequest.Errors[0].ErrorMessage };
             }
-            try
-            {
+           
                 var passhasher = new PasswordHasher();
                 User user = new User
                 {
@@ -57,14 +56,7 @@ namespace Store.Application.Services.Users.Commands.RegisterUser
                     IsSuccess = true,
                     Message = "کاربر با موفقیت اضافه شد !",
                 };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<ResultRegisterUserDto>
-                {
-                    Message = "کاربر ثبت نشد !",
-                };
-            }
+            
 
         }
 

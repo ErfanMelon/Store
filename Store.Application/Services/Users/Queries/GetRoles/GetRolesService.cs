@@ -12,8 +12,7 @@ namespace Store.Application.Services.Users.Queries.GetRoles
         }
         public ResultDto<List<ResultGetRoleDto>> Execute()
         {
-            try
-            {
+          
                 var roles = _dataBaseContext.Roles.ToList()
                 .Select(r => new ResultGetRoleDto
                 {
@@ -26,11 +25,7 @@ namespace Store.Application.Services.Users.Queries.GetRoles
                     IsSuccess = true,
                     Message = "",
                 };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<List<ResultGetRoleDto>> { Message = "خطا" };
-            }
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.HomePages.Commands.AddBanner;
 using Store.Application.Services.HomePages.Commands.DeleteBanner;
 using Store.Application.Services.HomePages.Queries.GetBanners;
@@ -9,14 +10,10 @@ namespace Store.EndPoint.Areas.Admin.Controllers
     [Area("Admin")]
     public class HomePageController : Controller
     {
-        private readonly IAddBannerService _addBannerService;
-        private readonly IGetBannersService _getBannersService;
-        private readonly IDeleteBannerService _deleteBannerService;
-        public HomePageController(IAddBannerService addBannerService, IGetBannersService getBannersService,IDeleteBannerService deleteBannerService)
+        private readonly IHomePageFacade _homePageFacade;
+        public HomePageController(IHomePageFacade homePageFacade)
         {
-            _addBannerService = addBannerService;
-            _getBannersService = getBannersService;
-            _deleteBannerService = deleteBannerService;
+            _homePageFacade = homePageFacade;
         }
 
         public IActionResult AddBanner()
@@ -24,28 +21,29 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult AddBanner(string bannerLink)
+        public IActionResult AddBanner(RequestBannerDto request)
         {
-            RequestBannerDto bannerDto = new RequestBannerDto
-            {
-                Link = bannerLink,
-                Image = Request.Form.Files.FirstOrDefault(),
-            };
-            var result = _addBannerService.Execute(bannerDto);
+            request.Image = Request.Form.Files.FirstOrDefault();
+            var result = _homePageFacade.addBannerService.Execute(request);
             if (result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                return Redirect("/Admin/HomePage/Index");
             }
             return View();
         }
         public IActionResult Index()
         {
-            return View(_getBannersService.Execute().Data);
+            return View(_homePageFacade.getBannersService.Execute().Data);
         }
         [HttpPost]
         public IActionResult DeleteBanner(int bannerId)
         {
-            return Json(_deleteBannerService.Execute(bannerId));
+            return Json(_homePageFacade.deleteBannerService.Execute(bannerId));
+        }
+        [HttpPost]
+        public IActionResult ChangeBannerState(int bannerId)
+        {
+            return Json(_homePageFacade.changeBannerStateService.Execute(bannerId));
         }
     }
 }

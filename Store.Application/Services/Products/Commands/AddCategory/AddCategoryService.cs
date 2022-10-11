@@ -22,23 +22,18 @@ namespace Store.Application.Services.Products.Commands.AddCategory
                 return new ResultDto { IsSuccess = false, Message = validate.Errors[0].ErrorMessage };
             }
 
-            try
+            var parentCategory = _context.Categories.Find(request.ParentCategoryId);
+            if (parentCategory != null && parentCategory.ParentCategoryId != null)
+                return new ResultDto { Message = "در حال حاظر امکان دسته بندی تودرتو بیشتر از 1 امکان پذیر نمیباشد !" };
+            _context.Categories.Add(new Category
             {
-                var parentCategory = _context.Categories.Find(request.ParentCategoryId);
-                if (parentCategory !=null && parentCategory.ParentCategoryId != null)
-                    return new ResultDto {Message = "در حال حاظر امکان دسته بندی تودرتو بیشتر از 1 امکان پذیر نمیباشد !" };
-                _context.Categories.Add(new Category
-                {
-                    CategoryTitle = request.CategoryTitle,
-                    ParentCategory = parentCategory,
-                });
-                _context.SaveChanges();
-                return new ResultDto { IsSuccess = true, Message = $"{request.CategoryTitle} با موفقیت اضافه شد!" };
-            }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-            }
+                CategoryTitle = request.CategoryTitle,
+                ParentCategory = parentCategory,
+            });
+            _context.SaveChanges();
+            return new ResultDto { IsSuccess = true, Message = $"{request.CategoryTitle} با موفقیت اضافه شد!" };
+
+
         }
     }
 }

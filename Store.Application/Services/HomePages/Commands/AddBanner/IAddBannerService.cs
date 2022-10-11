@@ -34,9 +34,10 @@ namespace Store.Application.Services.HomePages.Commands.AddBanner
             {
                 var banner = new Banner
                 {
-                    Clicks = 0,
                     ImageSrc = imgresult.FileNameAddress,
-                    Link = request.Link
+                    Link = request.Link,
+                    BannerLocation=request.BannerLocation,
+                    DisplayOnPage=request.DisplayOnSite
                 };
                 _context.Banners.Add(banner);
                 _context.SaveChanges();
@@ -51,7 +52,9 @@ namespace Store.Application.Services.HomePages.Commands.AddBanner
     }
     public class RequestBannerDto
     {
+        public bool DisplayOnSite { get; set; }
         public IFormFile Image { get; set; }
         public string? Link { get; set; }
+        public BannerLocation BannerLocation { get; set; }
     }
 }

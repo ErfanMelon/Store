@@ -13,8 +13,7 @@ namespace Store.Application.Services.Users.Commands.DeleteUser
         }
         public ResultDto<long> Execute(long userId)
         {
-            try
-            {
+            
                 var user = _dataBaseContext.Users.Where(u=>u.UserId==userId)
                     .Include(u=>u.UserInRoles)
                     .FirstOrDefault();
@@ -33,13 +32,7 @@ namespace Store.Application.Services.Users.Commands.DeleteUser
                     return new ResultDto<long> { Data = userId, IsSuccess = true, Message =$"{user.UserFullName} با موفقیت حذف شد !" };
                 }
                 return new ResultDto<long> { Message = "کاربری پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-
-                return new ResultDto<long> { Message = "انجام نشد!" };
-
-            }
+           
         }
     }
 }

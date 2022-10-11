@@ -2,7 +2,7 @@
 
 namespace Store.Domain.Entities.Products
 {
-    public class Product:BaseEntity
+    public class Product:BaseEntity,IComparable
     {
         public long ProductId { get; set; }
         public string ProductTitle { get; set; }
@@ -19,5 +19,21 @@ namespace Store.Domain.Entities.Products
         public virtual ProductBrand Brand { get; set; }
         public int BrandId { get; set; }
         public virtual ICollection<ProductLikes> ProductLikes { get; set; }
+
+        public int CompareTo(object? obj)
+        {
+            Product p = (Product)obj;
+            int firstproductlikes = p.ProductLikes.Any() ? (int)p.ProductLikes.Average(l => l.Score):0;
+            int otherproductlikes = this.ProductLikes.Any() ? (int)this.ProductLikes.Average(l => l.Score):0;
+            if (firstproductlikes>otherproductlikes)
+            {
+                return 1;
+            }
+            if (firstproductlikes<otherproductlikes)
+            {
+                return -1;
+            }
+            return 0;
+        }
     }
 }

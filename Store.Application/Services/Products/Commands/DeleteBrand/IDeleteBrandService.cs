@@ -22,23 +22,16 @@ namespace Store.Application.Services.Products.Commands.DeleteBrandService
 
         public ResultDto Execute(int brandId)
         {
-            try
+            var brand = _context.ProductBrands.Find(brandId);
+            if (brand != null)
             {
-                var brand = _context.ProductBrands.Find(brandId);
-                if (brand!=null)
-                {
-                    brand.IsRemoved = true;
-                    brand.RemoveTime = DateTime.Now;
-                    _context.SaveChanges();
-                    return new ResultDto { IsSuccess = true, Message = $"{brand.Brand} با موفقیت حذف شد !" };
-                }
-                return new ResultDto { Message = "برند یافت نشد !" };
+                brand.IsRemoved = true;
+                brand.RemoveTime = DateTime.Now;
+                _context.SaveChanges();
+                return new ResultDto { IsSuccess = true, Message = $"{brand.Brand} با موفقیت حذف شد !" };
             }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-                throw;
-            }
+            return new ResultDto { Message = "برند یافت نشد !" };
+
         }
     }
 }

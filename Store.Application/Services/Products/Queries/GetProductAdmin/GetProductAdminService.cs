@@ -15,8 +15,7 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
 
         public ResultDto<GetProductAdminDto> Execute(long productid)
         {
-            try
-            {
+           
                 var product = _context.Products.Where(p => p.ProductId == productid)
                     .Include(p => p.ProductFeatures)
                     .Include(p => p.ProductImages)
@@ -50,11 +49,7 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                     };
                 }
                 return new ResultDto<GetProductAdminDto> { Message = "محصولی پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<GetProductAdminDto> { Message = "خطا رخ داد!" };
-            }
+           
         }
         string GetCategory(Category category)
         {

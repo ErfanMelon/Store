@@ -249,14 +249,12 @@
                 categoryId : catid
             }
             $.post("/Admin/Product/DetailCategory", model, function (result) {
-
-                $("#MyModal").modal();
-                $("#modaltitle").html("جزئیات دسته بندی");
-                $("#btnModal").html("تایید");
-                $("#modalbody").html(result);
-                $("#btnModal").attr("onclick", "");
-                $("#MyModal").modal("show");
-
+                Swal.fire({
+                    title: 'جزئیات دسته بندی',
+                    html: result,
+                    confirmButtonText: 'بستن',
+                    confirmButtonClass: 'btn btn-primary',
+                });
             });
         }
     </script>

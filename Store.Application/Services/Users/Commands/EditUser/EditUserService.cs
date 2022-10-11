@@ -21,8 +21,7 @@ namespace Store.Application.Services.Users.Commands.EditUser
             {
                 return new ResultDto<long> { Message = IsValidUserRequest.Errors[0].ErrorMessage };
             }
-            try
-            {
+            
                 var user = _dataBaseContext.Users.Where(u => u.UserId == request.UserId)
                     .Include(u => u.UserInRoles)
                     .FirstOrDefault();
@@ -69,14 +68,7 @@ namespace Store.Application.Services.Users.Commands.EditUser
                 {
                     Message = "کاربری پیدا نشد !"
                 };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<long>
-                {
-                    Message = "کاربر ویرایش نشد !",
-                };
-            }
+            
 
         }
     }

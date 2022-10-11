@@ -115,12 +115,11 @@
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">@item.ProductTitle</td>
                                         <td>@item.Category</td>
-                                        <td>@item.Price</td>
+                                        <td>@item.Price.ToString("n0") تومان</td>
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" class="btn btn-danger" onclick="DeleteProduct('@item.ProductId')">حذف</button>
-@*                                                <button type="button" class="btn btn-primary" href="/admin/product/DetailProduct?productid=@item.ProductId">جزئیات</button>
-*@                                                <a class="btn btn-primary" href="/admin/product/DetailProduct?productid=@item.ProductId">جزئیات</a>
+                                                <a class="btn btn-primary" href="/admin/product/DetailProduct?productid=@item.ProductId">جزئیات</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -148,16 +147,23 @@
                             sr-text-previous="قبلی"
                             show-total-pages="false"
                             show-total-records="true"
-                            show-page-size-nav="true"
+                            show-page-size-nav="false"
                             show-first-numbered-page="true"
                             show-last-numbered-page="true"
                             query-string-key-page-no="Page"
                             query-string-key-page-size="PageSize"
+                            
                             gap-size="2">
                     </paging>
 
                 </div>
             </div>
+        </div>
+        <div class="input-group mb-3">  
+            <form method="get">
+                <input type="text" name="searchKey" class="form-control" placeholder="عنوان ، برند ، دسته یا توضیحات محصول را وارد کنید " aria-label="جست و جو کن" aria-describedby="button-addon2">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">بگرد</button>
+            </form>
             
         </div>
     </div>

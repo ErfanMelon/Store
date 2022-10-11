@@ -22,8 +22,6 @@ namespace Store.Application.Services.Products.Queries.GetBrands
 
         public ResultDto<List<ResultBrandsDto>> Execute()
         {
-            try
-            {
                 return new ResultDto<List<ResultBrandsDto>>
                 {
                     Data=_context.ProductBrands.Select(b=>new ResultBrandsDto
@@ -33,12 +31,6 @@ namespace Store.Application.Services.Products.Queries.GetBrands
                     }).ToList(),
                     IsSuccess=true
                 };
-            }
-            catch (Exception)
-            {
-                return new ResultDto<List<ResultBrandsDto>> { Message = "خطا" };
-                throw;
-            }
         }
     }
     public class ResultBrandsDto

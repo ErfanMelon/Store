@@ -14,8 +14,6 @@ namespace Store.Application.Services.Products.Commands.DeleteCategory
 
         public ResultDto Execute(long categoryId)
         {
-            try
-            {
                 var category = _context.Categories.Where(c=>c.CategoryId==categoryId)
                     .Include(c=>c.SubCategories)
                     .FirstOrDefault();
@@ -35,11 +33,6 @@ namespace Store.Application.Services.Products.Commands.DeleteCategory
                     return new ResultDto { IsSuccess = true, Message = $"{category.CategoryTitle} با موفقیت حذف شد !" };
                 }
                 return new ResultDto { Message = "داده ای پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-            }
         }
 
     }

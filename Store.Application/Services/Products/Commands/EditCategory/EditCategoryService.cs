@@ -20,8 +20,7 @@ namespace Store.Application.Services.Products.Commands.EditCategory
             {
                 return new ResultDto { Message = validate.Errors[0].ErrorMessage };
             }
-            try
-            {
+
                 var category = _context.Categories.Find(request.CategoryId);
 
                 if (category==null)
@@ -40,11 +39,7 @@ namespace Store.Application.Services.Products.Commands.EditCategory
                 
                 _context.SaveChanges();
                 return new ResultDto { IsSuccess = true, Message = $"{request.CategoryTitle} با موفقیت اضافه شد!" };
-            }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-            }
+
         }
     }
 }

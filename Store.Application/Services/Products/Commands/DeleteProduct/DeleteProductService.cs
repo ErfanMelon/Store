@@ -14,8 +14,6 @@ namespace Store.Application.Services.Products.Commands.DeleteProduct
 
         public ResultDto Execute(long productid)
         {
-            try
-            {
                 var product = _context.Products.Where(p=>p.ProductId==productid)
                     .Include(p=>p.ProductImages)
                     .Include(p=>p.ProductFeatures)
@@ -40,11 +38,6 @@ namespace Store.Application.Services.Products.Commands.DeleteProduct
                     return new ResultDto { IsSuccess = true, Message = $" {product.ProductTitle} با موفقیت حذف شد !" };
                 }
                 return new ResultDto { Message = "داده ای پیدا نشد !" };
-            }
-            catch (Exception)
-            {
-                return new ResultDtoError();
-            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Store.EndPoint.ViewComponents
         }
         public IViewComponentResult Invoke()
         {
-            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => !c.HasChild), "CategoryId", "CategoryTitle");
+            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent!=null), "CategoryId", "CategoryTitle");
             return View("Search");
         }
     }

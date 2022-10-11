@@ -1,8 +1,16 @@
 ﻿@using Store.Application.Services.HomePages.Queries.GetBannersSite;
+@using Store.Domain.Entities.HomePages;
 @model List<GetBannerSiteDto>
 @{
     ViewData["Title"] = "صفحه اصلی سایت";
     Layout = "~/Views/Shared/_SiteLayout.cshtml";
+    List<GetBannerSiteDto> Sliders = Model.Where(m => m.BannerLocation == BannerLocation.Slider).ToList();
+    List<GetBannerSiteDto> L1 = Model.Where(m => m.BannerLocation == BannerLocation.L1).ToList();
+    List<GetBannerSiteDto> G1 = Model.Where(m => m.BannerLocation == BannerLocation.G1).Take(4).ToList();
+    List<GetBannerSiteDto> L2 = Model.Where(m => m.BannerLocation == BannerLocation.L2).ToList();
+    List<GetBannerSiteDto> G2 = Model.Where(m => m.BannerLocation == BannerLocation.G2).Take(4).ToList();
+    List<GetBannerSiteDto> R1 = Model.Where(m => m.BannerLocation == BannerLocation.R1).ToList();
+    List<GetBannerSiteDto> CenterFullScreen = Model.Where(m => m.BannerLocation == BannerLocation.CenterFullScreen).ToList();
 }
 <!-- header-------------------------------->
 <!-- slider-main--------------------------->
@@ -15,16 +23,16 @@
 
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
 
-                        @for (int i = 1; i <= Model.Count - 1; i++)
+                        @for (int i = 1; i <= Sliders.Count - 1; i++)
                         {
                             <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
                         }
                     </ol>
                     <div class="carousel-inner">
-                        @foreach (var item in Model)
+                        @foreach (var item in Sliders)
                         {
 
-                            if (Model.First() == item)
+                            if (Sliders.First() == item)
                             {
                                 <div class="carousel-item active">
                                     <a href="@item.Link">
@@ -57,25 +65,24 @@
         </div>
         <!-- adplacement--------------------------->
         <div class="col-lg-4 col-md-4 col-xs-12 pl mt-1">
-            @*<div class="adplacement-container-column">
-            <a href="#" class="adplacement-item">
-            <div class="adplacement-sponsored-box">
-            <img src="~/@Model.PageImages.Where(p=> p.ImageLocation == ImageLocation.L1)?.FirstOrDefault()?.Src?? '' ">
+            <div class="adplacement-container-column">
+                <a href="#" class="adplacement-item">
+                    <div class="adplacement-sponsored-box">
+                        <img src="~/@L1?.FirstOrDefault()?.ImgSrc?? '' ">
+                    </div>
+                </a>
+                <a href="#" class="adplacement-item">
+                    <div class="adplacement-sponsored-box">
+                        <img src="~/@L2?.FirstOrDefault()?.ImgSrc?? ''">
+                    </div>
+                </a>
             </div>
-            </a>
-            <a href="#" class="adplacement-item">
-            <div class="adplacement-sponsored-box">
-            <img src="~/@Model.PageImages.Where(p=> p.ImageLocation == ImageLocation.L2)?.FirstOrDefault()?.Src?? ''">
-            </div>
-            </a>
-            </div>*@
         </div>
         <div class="col-lg-3 col-md-3 col-xs-12 pr">
             <div class="adplacement-container-column mt-4">
                 <a href="#" class="adplacement-item img-banner">
                     <div class="adplacement-sponsored-box">
-                        @*                        <img src="~/@Model.PageImages.Where(p=> p.ImageLocation == ImageLocation.R1)?.FirstOrDefault()?.Src?? ''>
-                        *@
+                        <img src="~/@R1?.FirstOrDefault()?.ImgSrc??''">
                     </div>
                 </a>
             </div>
@@ -474,22 +481,22 @@
             <div class="col-12">
                 <a href="#" class="adplacement-item mb-4">
                     <div class="adplacement-sponsored_box">
-                        @*                        <img src="~/@Model.PageImages.Where(p=> p.ImageLocation == ImageLocation.CenterFullScreen)?.FirstOrDefault()?.Src?? ''">
-                        *@
+                        <img src="~/@CenterFullScreen?.FirstOrDefault()?.ImgSrc?? ''">
+
                     </div>
                 </a>
             </div>
 
-            @*@foreach (var item in Model.PageImages.Where(p=>p.ImageLocation == ImageLocation.G1).ToList())
+            @foreach (var item in G1)
             {
-            <div class="col-6 col-lg-3 pr">
-            <a href="#" class="adplacement-item">
-            <div class="adplacement-sponsored_box">
-            <img src="~/@item.Src">
-            </div>
-            </a>
-            </div>
-            }*@
+                <div class="col-6 col-lg-3 pr">
+                    <a href="#" class="adplacement-item">
+                        <div class="adplacement-sponsored_box">
+                            <img src="~/@item.ImgSrc">
+                        </div>
+                    </a>
+                </div>
+            }
 
 
 
@@ -762,16 +769,16 @@
             <div class="row pr">
                 <div class="adplacement-container-row">
 
-                    @* @foreach (var item in Model.PageImages.Where(p => p.ImageLocation == ImageLocation.G2).ToList())
+                    @foreach (var item in G2)
                     {
-                    <div class="col-6 col-lg-3 pr">
-                    <a href="#" class="adplacement-item">
-                    <div class="adplacement-sponsored_box">
-                    <img src="~/@item.Src">
-                    </div>
-                    </a>
-                    </div>
-                    }*@
+                        <div class="col-6 col-lg-3 pr">
+                            <a href="#" class="adplacement-item">
+                                <div class="adplacement-sponsored_box">
+                                    <img src="~/@item.ImgSrc">
+                                </div>
+                            </a>
+                        </div>
+                    }
 
 
                 </div>
