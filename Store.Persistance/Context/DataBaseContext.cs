@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
 using Store.Common.Roles;
+using Store.Domain.Entities.Carts;
 using Store.Domain.Entities.HomePages;
 using Store.Domain.Entities.Products;
 using Store.Domain.Entities.Users;
@@ -24,6 +25,8 @@ namespace Store.Persistance.Context
         public DbSet<ProductBrand> ProductBrands { get; set; }
         public DbSet<ProductLikes> ProductLikes { get; set; }
         public DbSet<Banner> Banners { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<ProductsInCart> ProductsInCarts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +45,8 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<ProductLikes>().HasKey(e => e.LikeId);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+
+            modelBuilder.Entity<Cart>().HasMany(c=>c.ItemsInCart).WithOne(i=>i.Cart);
         }
 
         private static void SeedDataBase(ModelBuilder modelBuilder)
@@ -64,6 +69,8 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<ProductLikes>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductBrand>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<Banner>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<Cart>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<ProductsInCart>().HasQueryFilter(pi => !pi.IsRemoved);
         }
     }
 }

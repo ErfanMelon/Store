@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
+using Store.Application.Services.Carts;
 using Store.Application.Services.Common.Commands.DeleteFile;
 using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
 using Store.Application.Services.HomePages.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
+using Store.EndPoint.Tools;
 using Store.Persistance.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IProductFacade, ProductFacade>();
 builder.Services.AddScoped<IGetMenuCategoriesService, GetMenuCategoriesService>();
 
 builder.Services.AddScoped<IHomePageFacade, HomePageFacade>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<Store.EndPoint.Tools.ICookieManager, CookieManager>();
 
 
 

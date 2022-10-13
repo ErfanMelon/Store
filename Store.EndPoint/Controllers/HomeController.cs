@@ -10,13 +10,16 @@ namespace Store.EndPoint.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IHomePageFacade _homePageFacade;
-        public HomeController(ILogger<HomeController> logger,IHomePageFacade homePageFacade)
+        private readonly IProductFacade _productFacade;
+        public HomeController(ILogger<HomeController> logger,IHomePageFacade homePageFacade, IProductFacade productFacade)
         {
             _logger = logger;
             _homePageFacade = homePageFacade;
+            _productFacade = productFacade;
         }
         public IActionResult Index()
         {
+            ViewBag.Categories = _productFacade.getCategoriesService.Execute().Data.Select(c=>c.CategoryId).ToList();
             //return RedirectToAction("Index", "Product");
             return View(_homePageFacade.getBannersSiteService.Execute().Data);
         }

@@ -1,0 +1,61 @@
+﻿@using Store.Application.Services.Carts
+@model CartDto
+@{
+    Layout = null;
+}
+
+<div class="header-cart-basket">
+    <a href="/cart" class="cart-basket-box">
+        <span class="icon-cart">
+            <i class="mdi mdi-cart"></i>
+        </span>
+        <span class="title-cart">سبد خرید</span>
+        <span class="price-cart">
+            @Model.TotalPrice.ToString("n0")
+            <span>تومان</span>
+        </span>
+        <span class="count-cart">@Model.ProductDtos?.Count()</span>
+    </a>
+    <div class="widget-shopping-cart">
+        <div class="widget-shopping-cart-content">
+            <ul class="product-list-widget">
+                @foreach (var item in Model.ProductDtos)
+                {
+                    <li class="mini-cart-item">
+                        <div class="mini-cart-item-content">
+                            <a href="~/cart/RemoveFromCart?productid=@item.ProductId" class="mini-cart-item-close">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                            <a href="/product/detail?id=@item.ProductId" class="mini-cart-item-image d-block">
+                                <img src="~/@item.ProductImg">
+                            </a>
+                            <span class="product-name-card">@item.ProductTitle</span>
+                            <div class="variation">
+                                <span class="variation-n">فروشنده : </span>
+                                <p class="mb-0">کالا مارکت </p>
+                            </div>
+                            
+                            <div class="quantity">
+                                <span class="quantity-Price-amount">
+                                    @item.Price.ToString("n0")
+                                    <span>تومان</span>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <div class="mini-card-total">
+                <strong>قیمت کل : </strong>
+                <span class="price-total">
+                    @Model.TotalPrice.ToString("n0")
+                    <span>تومان</span>
+                </span>
+            </div>
+            <div class="mini-card-button">
+                <a href="/cart" class="view-card">مشاهده سبد خرید</a>
+                <a href="/pay" class="card-checkout">تسویه حساب</a>
+            </div>
+        </div>
+    </div>
+</div>
