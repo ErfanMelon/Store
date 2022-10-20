@@ -12,7 +12,7 @@ namespace Store.EndPoint.ViewComponents
         }
         public IViewComponentResult Invoke(long categoryId)
         {
-            ViewBag.Category = _productFacade.getCategoryDetailService.Execute(categoryId).Data.CategoryTitle;
+            ViewBag.Category = _productFacade.getCategoryDetailService.Execute(categoryId).Data?.CategoryTitle;
             return View("HomePageProducts", _productFacade.getProductsSite.Execute(1, categoryId, "",7,Application.Services.Products.Queries.GetProductsSite.Order.NotOrdered).Data);
         }
     }

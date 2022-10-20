@@ -20,6 +20,7 @@ namespace Store.Application.Interfaces.Context
          DbSet<Banner> Banners { get; set; }
          DbSet<Cart> Carts { get; set; }
          DbSet<ProductsInCart> ProductsInCarts { get; set; }
+         DbSet<RequestPay> RequestPays { get; set; }
 
         int SaveChanges(bool acceptAllChangesOnSuccess);
         int SaveChanges();

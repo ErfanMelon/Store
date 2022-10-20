@@ -6,6 +6,7 @@ using Store.Application.Services.Carts;
 using Store.Application.Services.Common.Commands.DeleteFile;
 using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
+using Store.Application.Services.Fainances.Facade;
 using Store.Application.Services.HomePages.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IGetMenuCategoriesService, GetMenuCategoriesService>(
 builder.Services.AddScoped<IHomePageFacade, HomePageFacade>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<Store.EndPoint.Tools.ICookieManager, CookieManager>();
+builder.Services.AddScoped<IRequestPayFacade, RequestPayFacade>();
 
 
 
@@ -49,7 +51,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(options =>
 {
-    options.LoginPath = new PathString("/");
+    options.LoginPath = new PathString("/Authentication/Signin");
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5.0);
 });
 var app = builder.Build();
@@ -67,8 +69,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

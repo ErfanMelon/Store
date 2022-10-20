@@ -5,7 +5,6 @@ using Store.Domain.Entities.Carts;
 using Store.Domain.Entities.HomePages;
 using Store.Domain.Entities.Products;
 using Store.Domain.Entities.Users;
-using System.Collections;
 
 namespace Store.Persistance.Context
 {
@@ -27,6 +26,7 @@ namespace Store.Persistance.Context
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<ProductsInCart> ProductsInCarts { get; set; }
+        public DbSet<RequestPay> RequestPays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +47,10 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
             modelBuilder.Entity<Cart>().HasMany(c=>c.ItemsInCart).WithOne(i=>i.Cart);
+            modelBuilder.Entity<RequestPay>().HasKey(e => e.PayId);
+
+            modelBuilder.Entity<RequestPay>().HasIndex(r => r.PayId).IsUnique();
+
         }
 
         private static void SeedDataBase(ModelBuilder modelBuilder)
@@ -71,6 +75,7 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<Banner>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<Cart>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductsInCart>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<RequestPay>().HasQueryFilter(pi => !pi.IsRemoved);
         }
     }
 }
