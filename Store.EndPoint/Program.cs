@@ -8,6 +8,7 @@ using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
 using Store.Application.Services.Fainances.Facade;
 using Store.Application.Services.HomePages.Facade;
+using Store.Application.Services.Orders.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
 using Store.EndPoint.Tools;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IHomePageFacade, HomePageFacade>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<Store.EndPoint.Tools.ICookieManager, CookieManager>();
 builder.Services.AddScoped<IRequestPayFacade, RequestPayFacade>();
+builder.Services.AddScoped<IOrderFacade, OrderFacade>();
 
 
 

@@ -3,12 +3,13 @@ using Store.Application.Interfaces.Context;
 using Store.Common.Roles;
 using Store.Domain.Entities.Carts;
 using Store.Domain.Entities.HomePages;
+using Store.Domain.Entities.Orders;
 using Store.Domain.Entities.Products;
 using Store.Domain.Entities.Users;
 
 namespace Store.Persistance.Context
 {
-    public class DataBaseContext : DbContext,IDataBaseContext
+    public class DataBaseContext : DbContext, IDataBaseContext
     {
         public DataBaseContext(DbContextOptions options) : base(options)
         {
@@ -27,6 +28,8 @@ namespace Store.Persistance.Context
         public DbSet<Cart> Carts { get; set; }
         public DbSet<ProductsInCart> ProductsInCarts { get; set; }
         public DbSet<RequestPay> RequestPays { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,10 +49,14 @@ namespace Store.Persistance.Context
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
-            modelBuilder.Entity<Cart>().HasMany(c=>c.ItemsInCart).WithOne(i=>i.Cart);
+            modelBuilder.Entity<Cart>().HasMany(c => c.ItemsInCart).WithOne(i => i.Cart);
             modelBuilder.Entity<RequestPay>().HasKey(e => e.PayId);
 
             modelBuilder.Entity<RequestPay>().HasIndex(r => r.PayId).IsUnique();
+
+            modelBuilder.Entity<Order>().HasOne(e => e.User).WithMany(e => e.Orders).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Order>().HasMany(e => e.OrderDetails).WithOne(e => e.Order);
 
         }
 
@@ -76,6 +83,8 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<Cart>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductsInCart>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<RequestPay>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<Order>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<OrderDetail>().HasQueryFilter(pi => !pi.IsRemoved);
         }
     }
 }

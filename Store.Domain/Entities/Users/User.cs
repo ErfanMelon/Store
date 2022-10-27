@@ -1,4 +1,5 @@
 ﻿using Store.Domain.Entities.Common;
+using Store.Domain.Entities.Orders;
 using System.ComponentModel.DataAnnotations;
 
 namespace Store.Domain.Entities.Users
@@ -19,5 +20,6 @@ namespace Store.Domain.Entities.Users
         [Required]
         public bool IsActive { get; set; }
         public ICollection<UserInRole> UserInRoles { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

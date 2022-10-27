@@ -15,20 +15,23 @@ namespace Store.EndPoint.Controllers
     {
         private readonly IRequestPayFacade _requestPayFacade;
         private readonly ICartService _cartService;
+        private readonly IOrderFacade _orderFacade;
 
         private readonly Payment _payment;
         private readonly Authority _authority;
         private readonly Transactions _transactions;
-        public PayController(IRequestPayFacade requestPayFacade, ICartService cartService)
+        public PayController(IRequestPayFacade requestPayFacade, ICartService cartService, IOrderFacade orderFacade)
         {
             _requestPayFacade = requestPayFacade;
             _cartService = cartService;
+            _orderFacade = orderFacade;
 
             #region ZarinPalCodes
             var expose = new Expose();
             _payment = expose.CreatePayment();
             _authority = expose.CreateAuthority();
             _transactions = expose.CreateTransactions();
+
             #endregion
 
         }
@@ -36,7 +39,7 @@ namespace Store.EndPoint.Controllers
         {
             long userId = ClaimTool.GetUserId(User).Value;
             var CustomerCart = _cartService.GetCart(userId).Data;
-            if (CustomerCart!=null && CustomerCart.TotalPrice > 0)
+            if (CustomerCart != null && CustomerCart.TotalPrice > 0)
             {
                 var request = _requestPayFacade.addPayRequestService.Execute(new PayRequestDto
                 {
@@ -82,19 +85,25 @@ namespace Store.EndPoint.Controllers
                 Description = verification.ExtraDetail,
                 RefId = verification.RefId,
                 RequsetPayId = CustomerPaymentId,
-                Authority= authority
+                Authority = authority
             }; //edit payment status and other info
 
             switch (verification.Status)
             {
                 case 100:
                     result.IsPay = true;
+                    _orderFacade.addOrderService.Execute(CustomerPaymentId);
                     break;
                 default:
                     result.IsPay = false;
                     break;
             }
-            return Json(_requestPayFacade.editRequsetPayService.Execute(result));
+            _requestPayFacade.editRequsetPayService.Execute(result);
+            if (status.ToLower() == "ok")
+            {
+                return RedirectToAction("Index", "Order");
+            }
+            return RedirectToAction("Index", "Cart");
         }
     }
 }
