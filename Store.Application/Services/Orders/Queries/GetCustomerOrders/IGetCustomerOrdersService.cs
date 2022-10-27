@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
+using Store.Common;
 using Store.Common.Dto;
 using Store.Domain.Entities.Orders;
 
@@ -33,23 +34,10 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrders
                         OrderCreation = order.InsertTime,
                         OrderId = order.OrderId,
                         PayId = order.PayId,
-                        PaidPrice=order.OrderDetails.Sum(d=>d.Amount*d.Count)
+                        PaidPrice=order.OrderDetails.Sum(d=>d.Amount*d.Count),
+                        OrderState=EnumHelpers<OrderState>.GetDisplayValue(order.OrderState)
                     };
-                    switch (order.OrderState)
-                    {
-                        case OrderState.InProccess:
-                            userOrder.OrderState = "درحال ارسال";
-                            break;
-                        case OrderState.Cancelled:
-                            userOrder.OrderState = "لغو شده";
-                            break;
-                        case OrderState.Delivered:
-                            userOrder.OrderState = "تحویل داده شده";
-                            break;
-                        default:
-                            userOrder.OrderState = "نامشخص";
-                            break;
-                    }
+                    
                     
                     userOrders.Add(userOrder);
                 }

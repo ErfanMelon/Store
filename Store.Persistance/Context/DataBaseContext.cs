@@ -30,7 +30,6 @@ namespace Store.Persistance.Context
         public DbSet<RequestPay> RequestPays { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             SeedDataBase(modelBuilder);

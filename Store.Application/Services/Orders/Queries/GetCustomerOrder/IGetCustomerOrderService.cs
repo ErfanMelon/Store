@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
+using Store.Common;
 using Store.Common.Dto;
 using Store.Domain.Entities.Orders;
 
@@ -33,23 +34,10 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrder
                         Count = detail.Count,
                         Price = detail.Amount,
                         ProductName = detail.ProductName,
-                        ProductImg=_context.ProductImages.Where(i=>i.ProductId==detail.ProductId).FirstOrDefault()?.Src
+                        ProductImg = _context.ProductImages.Where(i => i.ProductId == detail.ProductId).FirstOrDefault()?.Src,
+                        OrderStateProduct = EnumHelpers<OrderState>.GetDisplayValue(detail.ProductState)
                     };
-                    switch (detail.ProductState)
-                    {
-                        case OrderState.InProccess:
-                            details.OrderStateProduct = "درحال ارسال";
-                            break;
-                        case OrderState.Cancelled:
-                            details.OrderStateProduct = "لغو شده";
-                            break;
-                        case OrderState.Delivered:
-                            details.OrderStateProduct = "تحویل داده شده";
-                            break;
-                        default:
-                            details.OrderStateProduct = "نامشخص";
-                            break;
-                    }
+
                     ProductDetails.Add(details);
                 }
                 return new ResultDto<List<CustomerOrdersProductDto>>

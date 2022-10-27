@@ -21,5 +21,6 @@ namespace Store.Domain.Entities.Users
         public bool IsActive { get; set; }
         public ICollection<UserInRole> UserInRoles { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public string Address { get; set; }
     }
 }

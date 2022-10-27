@@ -31,6 +31,7 @@ namespace Store.Application.Services.Users.Commands.RegisterUser
                     Password = passhasher.HashPassword(request.Password),
                     UserFullName = request.FullName,
                     IsActive=true,
+                    Address=""
                 };
 
                 var UserRoles = new List<Role>();

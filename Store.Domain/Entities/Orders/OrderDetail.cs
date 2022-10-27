@@ -16,5 +16,6 @@ namespace Store.Domain.Entities.Orders
         public int Amount { get; set; }
         public OrderState ProductState { get; set; }
         public int ProductRefund { get; set; } // if customer cancells product , amount of refund calculate
+        public DateTime? DeliveredDate { get; set; }
     }
 }

@@ -14,6 +14,8 @@ namespace Store.Domain.Entities.Orders
         public int OrderRefund { get; set; }// if customer cancells some products , the Amount of refund calculate based orderdetail (default=0) 
         public OrderState OrderState { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
+        public DateTime? DeliveredDate { get; set; }
+        public string UserAddress { get; set; }
 
     }
 }

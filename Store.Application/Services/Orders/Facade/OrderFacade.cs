@@ -1,17 +1,16 @@
 ﻿using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Orders.Commands.AddOrder;
+using Store.Application.Services.Orders.Commands.ChangeOrderDetailState;
+using Store.Application.Services.Orders.Commands.ChangeOrderState;
 using Store.Application.Services.Orders.Queries.GetCustomerOrder;
+using Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin;
 using Store.Application.Services.Orders.Queries.GetCustomerOrders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Store.Application.Services.Orders.Queries.GetCustomerOrdersAdmin;
 
 namespace Store.Application.Services.Orders.Facade
 {
-    public class OrderFacade: IOrderFacade
+    public class OrderFacade : IOrderFacade
     {
         private readonly IDataBaseContext _context;
         public OrderFacade(IDataBaseContext context)
@@ -31,7 +30,7 @@ namespace Store.Application.Services.Orders.Facade
         {
             get
             {
-                return _getCustomerOrdersService = _getCustomerOrdersService ?? new GetCustomerOrdersService(_context); 
+                return _getCustomerOrdersService = _getCustomerOrdersService ?? new GetCustomerOrdersService(_context);
             }
         }
         private IGetCustomerOrderService _getCustomerOrderService;
@@ -40,6 +39,38 @@ namespace Store.Application.Services.Orders.Facade
             get
             {
                 return _getCustomerOrderService = _getCustomerOrderService ?? new GetCustomerOrderService(_context);
+            }
+        }
+        private IGetCustomerOrdersAdminService _getCustomerOrdersAdminService;
+        public IGetCustomerOrdersAdminService getCustomerOrdersAdminService
+        {
+            get
+            {
+                return _getCustomerOrdersAdminService = _getCustomerOrdersAdminService ?? new GetCustomerOrdersAdminService(_context);
+            }
+        }
+        private IGetCustomerOrderAdminService _getCustomerOrderAdminService;
+        public IGetCustomerOrderAdminService getCustomerOrderAdminService
+        {
+            get
+            {
+                return _getCustomerOrderAdminService = _getCustomerOrderAdminService ?? new GetCustomerOrderAdminService(_context);
+            }
+        }
+        private IChangeOrderStateService _changeOrderStateService;
+        public IChangeOrderStateService changeOrderStateService
+        {
+            get
+            {
+                return _changeOrderStateService = _changeOrderStateService ?? new ChangeOrderStateService(_context);
+            }
+        }
+        private IChangeOrderDetailStateService _changeOrderDetailStateService;
+        public IChangeOrderDetailStateService changeOrderDetailStateService
+        {
+            get
+            {
+                return _changeOrderDetailStateService = _changeOrderDetailStateService ?? new ChangeOrderDetailStateService(_context);
             }
         }
     }
