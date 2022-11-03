@@ -4,6 +4,7 @@ using Store.Application.Services.Users.Commands.EditUser;
 using Store.Application.Services.Users.Commands.LoginUser;
 using Store.Application.Services.Users.Commands.RegisterUser;
 using Store.Application.Services.Users.Queries.GetRoles;
+using Store.Application.Services.Users.Queries.GetUserDetail;
 using Store.Application.Services.Users.Queries.GetUsers;
 
 namespace Store.Application.Interfaces.FacadePatterns
@@ -17,5 +18,6 @@ namespace Store.Application.Interfaces.FacadePatterns
         public IRegisterUserService registerUserService { get; }
         public IGetRolesService getRolesService { get; }
         public IGetUserService getUserService { get; }
+        public IGetUserDetailService getUserDetailService { get; }
     }
 }

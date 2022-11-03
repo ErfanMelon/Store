@@ -16,10 +16,10 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             _userFacade = userFacade;
         }
 
-        public IActionResult List(string searchkey, int page=1,int pagesize=20)
+        public IActionResult List(string SearchKey, int page=1,int pagesize=20)
         {
             ViewBag.Roles = new SelectList(_userFacade.getRolesService.Execute().Data, "RoleId", "RoleName");
-            return View(_userFacade.getUserService.Execute(new RequestGetUserDto { SearchKey = searchkey, Page = page,PageSize=pagesize }));
+            return View(_userFacade.getUserService.Execute(new RequestGetUserDto { SearchKey = SearchKey, Page = page,PageSize=pagesize }));
         }
         [HttpGet]
         public IActionResult Create()
@@ -28,28 +28,15 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(string FullName, string Email, string Password, string RePassword, int RoleId)
+        public IActionResult Create(RegisterUserDto register)
         {
-            var resultRegisterUser = _userFacade.registerUserService.Execute(new RegisterUserDto
-            {
-                Email = Email,
-                FullName = FullName,
-                Password = Password,
-                RePassword = RePassword,
-                RoleIds = new List<int> { RoleId },
-            });
+            var resultRegisterUser = _userFacade.registerUserService.Execute(register);
             return Json(resultRegisterUser);
         }
         [HttpPost]
-        public IActionResult Edit(long UserId, string FullName, string Email, int RoleId)
+        public IActionResult Edit(EditUserDto dto)
         {
-            var resultEditUser = _userFacade.editUserService.Execute(new EditUserDto
-            {
-                Email=Email,
-                FullName=FullName,
-                UserId=UserId,
-                RoleIds=new List<int> { RoleId}
-            });
+            var resultEditUser = _userFacade.editUserService.Execute(dto);
             return Json(resultEditUser);
         }
         [HttpPost]
@@ -63,6 +50,11 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         {
             var resultDeleteUser = _userFacade.deleteUserService.Execute(userId);
             return Json(resultDeleteUser);
+        }
+        public IActionResult Detail(long userId)
+        {
+            var resultDetailUser = _userFacade.getUserDetailService.Execute(userId);
+            return View(resultDetailUser.Data);
         }
     }
 }

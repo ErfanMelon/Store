@@ -17,7 +17,6 @@ namespace Store.Persistance.Context
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<UserInRole> UserInRoles { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductFeatures> ProductFeatures { get; set; }
@@ -47,6 +46,7 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<ProductLikes>().HasKey(e => e.LikeId);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+            modelBuilder.Entity<User>().HasOne(u => u.Role).WithOne();
 
             modelBuilder.Entity<Cart>().HasMany(c => c.ItemsInCart).WithOne(i => i.Cart);
             modelBuilder.Entity<RequestPay>().HasKey(e => e.PayId);
@@ -71,7 +71,6 @@ namespace Store.Persistance.Context
         {
             modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsRemoved);
             modelBuilder.Entity<Role>().HasQueryFilter(r => !r.IsRemoved);
-            modelBuilder.Entity<UserInRole>().HasQueryFilter(u => !u.IsRemoved);
             modelBuilder.Entity<Category>().HasQueryFilter(c => !c.IsRemoved);
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsRemoved);
             modelBuilder.Entity<ProductFeatures>().HasQueryFilter(pf => !pf.IsRemoved);

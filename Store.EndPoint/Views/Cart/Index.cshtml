@@ -84,7 +84,7 @@
                                      
                                     <span> @Model.TotalPrice.ToString("n0") تومان</span>
                                 </li>
-                                <li class="shipping-totals">
+                               @* <li class="shipping-totals">
                                     <span class="amount">حمل و نقل</span>
                                     <div class="shipping-totals-item">
                                         <div class="shipping-totals-outline">
@@ -128,7 +128,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li>*@
+                            <li class="discount-code">
+                                <div class=" align-items-center">
+                                    <div class="col-md-2 pl mt-5">
+                                        <div class="proceed-to-checkout">
+                                            <a href="/pay" class="checkout-button d-block">تسویه حساب</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             </ul>
                         </div>
                     </div>

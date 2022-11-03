@@ -1,8 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Store.Application.Interfaces.Context;
+﻿using Store.Application.Interfaces.Context;
 using Store.Application.Validations.User;
 using Store.Common.Dto;
-using Store.Domain.Entities.Users;
 
 namespace Store.Application.Services.Users.Commands.EditUser
 {
@@ -21,54 +19,32 @@ namespace Store.Application.Services.Users.Commands.EditUser
             {
                 return new ResultDto<long> { Message = IsValidUserRequest.Errors[0].ErrorMessage };
             }
-            
-                var user = _dataBaseContext.Users.Where(u => u.UserId == request.UserId)
-                    .Include(u => u.UserInRoles)
-                    .FirstOrDefault();
-                if (user != null)
-                {
-                    if (user.UserInRoles.Any())
-                        foreach (var roleinuser in user.UserInRoles)
-                        {
-                            roleinuser.IsRemoved = true;
-                            roleinuser.RemoveTime = DateTime.Now;
-                        }
 
-                    // Update User's Roles
-                    var userroles = new List<Role>();
-                    foreach (var item in request.RoleIds)
-                    {
-                        var role = _dataBaseContext.Roles.Find(item);
-                        userroles.Add(role);
-                    }
-                    foreach (var item in userroles)
-                    {
-                        _dataBaseContext.UserInRoles.Add(new UserInRole
-                        {
-                            Role = item,
-                            User = user,
-                        });
-                    }
-
-                    // Update User
-                    user.UserFullName = request.FullName;
-                    user.Email = request.Email;
-                    user.UpdateTime = DateTime.Now;
-
-                    _dataBaseContext.SaveChanges();
-                    return new ResultDto<long>
-                    {
-                        Data = user.UserId,
-                        IsSuccess = true,
-                        Message = "کاربر با موفقیت ویرایش شد !"
-                    };
-                }
-                // else
+            var user = _dataBaseContext.Users.Where(u => u.UserId == request.UserId)
+                .FirstOrDefault();
+            if (user != null)
+            {
+                user.UserFullName = request.FullName;
+                user.Email = request.Email;
+                user.UpdateTime = DateTime.Now;
+                user.Role = _dataBaseContext.Roles.Find(request.RoleId);
+                user.Address = request.Address;
+                user.PhoneNumber = request.PhoneNumber;
+                user.ZipCode = request.ZipCode;
+                _dataBaseContext.SaveChanges();
                 return new ResultDto<long>
                 {
-                    Message = "کاربری پیدا نشد !"
+                    Data = user.UserId,
+                    IsSuccess = true,
+                    Message = "کاربر با موفقیت ویرایش شد !"
                 };
-            
+            }
+            // else
+            return new ResultDto<long>
+            {
+                Message = "کاربری پیدا نشد !"
+            };
+
 
         }
     }

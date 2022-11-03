@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Store.Application.Interfaces.Context;
+﻿using Store.Application.Interfaces.Context;
 using Store.Application.Validations.User;
 using Store.Common;
 using Store.Common.Dto;
@@ -23,8 +22,6 @@ namespace Store.Application.Services.Users.Commands.LoginUser
             }
 
             var user = _dataBaseContext.Users
-                .Include(p => p.UserInRoles)
-                .ThenInclude(p => p.Role)
                 .Where(p => p.Email.Equals(request.Username)
             && p.IsActive == true)
             .FirstOrDefault();
@@ -46,20 +43,11 @@ namespace Store.Application.Services.Users.Commands.LoginUser
                     Message = "رمز وارد شده اشتباه است!",
                 };
             }
-
-
-            var roles = "";
-            foreach (var item in user.UserInRoles)
-            {
-                roles += $"{item.Role.RoleName}";
-            }
-
-
             return new ResultDto<UserLoginDto>
             {
                 Data = new UserLoginDto
                 {
-                    Roles = roles,
+                    Role = user.RoleId,
                     UserId = user.UserId,
                     Name = user.UserFullName
                 },

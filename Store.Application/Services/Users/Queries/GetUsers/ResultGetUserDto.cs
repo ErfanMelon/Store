@@ -1,4 +1,6 @@
-﻿namespace Store.Application.Services.Users.Queries.GetUsers
+﻿using Store.Common.Dto;
+
+namespace Store.Application.Services.Users.Queries.GetUsers
 {
     public class ResultGetUserDto
     {

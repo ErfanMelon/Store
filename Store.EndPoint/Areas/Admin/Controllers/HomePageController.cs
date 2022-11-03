@@ -31,9 +31,9 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             }
             return View();
         }
-        public IActionResult Index()
+        public IActionResult Index(int page=1,int pagesize=30)
         {
-            return View(_homePageFacade.getBannersService.Execute().Data);
+            return View(_homePageFacade.getBannersService.Execute(page,pagesize).Data);
         }
         [HttpPost]
         public IActionResult DeleteBanner(int bannerId)

@@ -83,7 +83,7 @@
         </div>
         <div class="pagination-product">
             <nav aria-label="Page navigation example">
-                <paging total-records="@Model.RowSize"
+                <paging total-records="@Model.RowsCount"
                         page-no="@int.TryParse(Context.Request.Query["page"], out int pageNumber)?pageNumber:1"
                         page-size="@int.TryParse(Context.Request.Query["pagesize"], out int pageSize)?pageSize:10"
                         show-prev-next="true"

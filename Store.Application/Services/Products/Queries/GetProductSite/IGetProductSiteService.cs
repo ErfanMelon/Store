@@ -40,7 +40,9 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
                     Description = product.Description,
                     Price = product.Price,
                     Features = product.ProductFeatures.Select(f => new ProductSiteFeaturesDto { Feature = f.Feature, FeatureValue = f.FeatureValue }).ToList(),
-                    Images = product.ProductImages.Select(i => i.Src).ToList()
+                    Images = product.ProductImages.Select(i => i.Src).ToList(),
+                    Stars=_context.ProductLikes.Any(s=>s.ProductId== productId)? (int)_context.ProductLikes.Where(s => s.ProductId == productId).Average(e=>e.Score):0, // average the userlikes
+                    TotalOrders=_context.OrderDetails.Any(o => o.ProductId == productId)?_context.OrderDetails.Where(o => o.ProductId == productId).Sum(o=>o.Count):0 // sum total order of this product
                 },
                 IsSuccess = true,
             };
@@ -65,6 +67,8 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
         public string Description { get; set; }
         public List<string> Images { get; set; }
         public List<ProductSiteFeaturesDto> Features { get; set; }
+        public int Stars { get; set; }
+        public int TotalOrders { get; set; }
     }
     public class ProductSiteFeaturesDto
     {

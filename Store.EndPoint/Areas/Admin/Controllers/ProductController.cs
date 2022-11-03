@@ -56,7 +56,6 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
-            TempData["productId"] = productid;
             return View(product.Data);
         }
         public IActionResult EditProduct(long productId)

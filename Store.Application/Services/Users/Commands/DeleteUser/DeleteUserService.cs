@@ -13,18 +13,10 @@ namespace Store.Application.Services.Users.Commands.DeleteUser
         }
         public ResultDto<long> Execute(long userId)
         {
-            
                 var user = _dataBaseContext.Users.Where(u=>u.UserId==userId)
-                    .Include(u=>u.UserInRoles)
                     .FirstOrDefault();
                 if (user != null)
                 {
-                    if(user.UserInRoles.Any())
-                        foreach (var item in user.UserInRoles)
-                        {
-                            item.IsRemoved = true;
-                            item.RemoveTime = DateTime.Now;
-                        }
                     user.IsRemoved = true;
                     user.RemoveTime = DateTime.Now;
                     _dataBaseContext.SaveChanges();

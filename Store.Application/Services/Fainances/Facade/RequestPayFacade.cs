@@ -2,6 +2,7 @@
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Fainances.Commands.AddPayRequest;
 using Store.Application.Services.Fainances.Commands.EditPayRequset;
+using Store.Application.Services.Fainances.Queries.GetRequestPays;
 using Store.Application.Services.Fainances.Queries.VaildateRequestPay;
 
 namespace Store.Application.Services.Fainances.Facade
@@ -37,5 +38,14 @@ namespace Store.Application.Services.Fainances.Facade
                 return _editRequsetPayService = _editRequsetPayService ?? new EditRequsetPayService(_context);
             }
         }
+        private IGetRequestPaysService _getRequestPaysService;
+        public IGetRequestPaysService getRequestPaysService
+        {
+            get
+            {
+                return _getRequestPaysService = _getRequestPaysService ?? new GetRequestPaysService(_context);
+            }
+        }
+
     }
 }

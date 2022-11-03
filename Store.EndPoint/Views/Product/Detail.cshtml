@@ -217,7 +217,7 @@
                                     @Model.ProductName
                                 </h1>
                                 <div class="product-guaranteed text-success">
-                                    12
+                                    @Model.TotalOrders
                                     <span>فروش موفق</span>
                                 </div>
                             </div>
@@ -225,11 +225,14 @@
                                 <div class="product-config">
                                     <span class="product-title-en">  @Model.ProductName</span>
                                     <div class="product-rate">
-                                        <i class="fa fa-star active"></i>
-                                        <i class="fa fa-star active"></i>
-                                        <i class="fa fa-star active"></i>
-                                        <i class="fa fa-star active"></i>
-                                        <i class="fa fa-star active"></i>
+                                        @for (var i = 1; i <= Model.Stars; i++)
+                                        {
+                                             <i class="fa fa-star active"></i>
+                                        }
+                                        @for (var i = 1; i <= (5-(Model.Stars)); i++)
+                                        {
+                                             <i class="fa fa-star"></i>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -269,13 +272,13 @@
 
                                         </ul>
                                     </div>
-                                    <div class="product-price-survey-question">
+                                    @*<div class="product-price-survey-question">
                                         آیا قیمت مناسب‌تری سراغ دارید؟
                                         <div class="answers">
                                             <a href="#" class="product-price-survery-answer price-yes btn btn-secondary">بلی</a>
                                             <a href="#" class="product-price-survery-answer price-no btn btn-secondary">خیر</a>
                                         </div>
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class="col=lg-6 col-md-6 col-xs-12 pr">
                                     <div class="product-seller-info">

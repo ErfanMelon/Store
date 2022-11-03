@@ -20,8 +20,10 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
     }
     public class ResultGetProductsSiteDto
     {
-        public int RowSize { get; set; }
         public List<ProductsSiteDto> Products { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int RowsCount { get; set; }
     }
     public class GetProductsSite : IGetProductsSite
     {
@@ -85,7 +87,9 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                         Stars = p.ProductLikes.Any() ? (int)p.ProductLikes.Select(l => l.Score).Average() : 0,
                         ImageSrc = p.ProductImages.Select(i => i.Src).FirstOrDefault()
                     }).ToList(),
-                    RowSize = rowcount,
+                    RowsCount = rowcount,
+                    CurrentPage=page,
+                    PageSize=pagesize
                 },
                 IsSuccess = true
             };

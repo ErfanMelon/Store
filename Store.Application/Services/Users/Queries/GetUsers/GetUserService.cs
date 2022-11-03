@@ -15,14 +15,13 @@ namespace Store.Application.Services.Users.Queries.GetUsers
         public ResultGetUserDto Execute(RequestGetUserDto request)
         {
             var users = _dataBaseContext.Users
-                .Include(u=>u.UserInRoles)
-                .ThenInclude(uir=>uir.Role)
+                .Include(u=>u.Role)
                 .AsQueryable();
             if (!string.IsNullOrWhiteSpace(request.SearchKey))
             {
                 users = users.Where(u =>
                 u.Email.ToLower().Contains(request.SearchKey) ||
-                u.UserFullName.ToLower().Contains(request.SearchKey));
+                u.UserFullName.ToLower().Contains(request.SearchKey)).AsQueryable();
             }
             var usersList = users.ToPaged(request.Page, request.PageSize, out int rows).Select(u => new GetUserDto
             {
@@ -30,7 +29,11 @@ namespace Store.Application.Services.Users.Queries.GetUsers
                 IsActive = u.IsActive,
                 UserFullName = u.UserFullName,
                 UserId = u.UserId,
-                UserRoleId = u.UserInRoles.First().RoleId
+                UserRole=u.RoleId,
+                UserRoleName=u.Role.RoleName,
+                Address=u.Address,
+                PhoneNumber=u.PhoneNumber,
+                ZipCode=u.ZipCode
             }).ToList();
             return new ResultGetUserDto
             {

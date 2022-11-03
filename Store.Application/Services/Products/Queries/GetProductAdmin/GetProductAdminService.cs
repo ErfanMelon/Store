@@ -29,6 +29,7 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                     {
                         Data = new GetProductAdminDto
                         {
+                            ProductId=product.ProductId,
                             Brand = product.Brand.Brand,
                             Category = GetCategory(product.Category),
                             TotalViews=product.Views,
@@ -44,6 +45,7 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                             Inventory = product.Inventory,
                             Price = product.Price,
                             ProductTitle = product.ProductTitle,
+                            OrderCount=_context.OrderDetails.Any(d=>d.ProductId==productid)? _context.OrderDetails.Where(d=>d.ProductId==productid).Sum(p=>p.Count):0
                         },
                         IsSuccess=true,
                     };

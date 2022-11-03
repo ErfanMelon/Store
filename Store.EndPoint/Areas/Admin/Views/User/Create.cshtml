@@ -17,10 +17,17 @@
             <hr>
             <section class="row g-3">
                 <div class="col-md-6">
-                    <label for="FullName" class="form-label">نام</label>
+                    <label for="FirstName" class="form-label">نام</label>
                     <div class="input-group">
                         <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
-                        <input type="text" class="form-control border-start-0" id="FullName" placeholder="نام">
+                        <input type="text" class="form-control border-start-0" id="FirstName" placeholder="نام">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="LastName" class="form-label">نام خانوادگی</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent"><i class="bx bxs-user"></i></span>
+                        <input type="text" class="form-control border-start-0" id="LastName" placeholder="نام خانوادگی">
                     </div>
                 </div>
                 <div class="col-6">
@@ -30,13 +37,31 @@
                         <input type="text" class="form-control border-start-0" id="EmailAddress" placeholder="آدرس ایمیل">
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-6">
                     <label for="RoleIdSelect" class="form-label">نقش</label>
                     <div class="input-group">
-                        <select class="form-select form-select-sm mb-3" aria-label="مثال ورودی انتخاب کوچک" id="RoleIdSelect" asp-items="@ViewBag.Roles">
+                        <select class="form-select form-select-sm mb-3" aria-label="" id="RoleIdSelect" asp-items="@ViewBag.Roles">
                         </select>
                     </div>
                 </div>
+                <div class="col-6">
+                    <label for="PhoneNumber" class="form-label">شماره تماس</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent"><i class="bx bx-phone"></i></span>
+                        <input type="text" class="form-control border-start-0" id="PhoneNumber" placeholder="شماره تماس">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="ZipCode" class="form-label">کدپستی</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent"><i class="bx bx-home-alt"></i></span>
+                        <input type="number" class="form-control border-start-0" id="ZipCode" placeholder="کد پستی">
+                    </div>
+                </div>
+                <div class="col-12">
+                        <label for="inputAddress" class="form-label">آدرس</label>
+                        <textarea class="form-control" id="inputAddress" placeholder="آدرس خود را وارد کنید" rows="3"></textarea>
+                    </div>
                 <div class="col-6">
                     <label for="ChoosePassword" class="form-label">رمز عبور</label>
                     <div class="input-group">
@@ -82,11 +107,14 @@
             }).then((result) => {
                 if (result.value) {
                     //Click On Yes
-                    var fullName = $("#FullName").val()
+                    var fullName = $("#FirstName").val()+" "+$("#LastName").val()
                     var email = $("#EmailAddress").val()
                     var roleId = $("#RoleIdSelect").val()
                     var password = $("#ChoosePassword").val()
                     var repassword = $("#ConfirmPassword").val()
+                    var address = $("#inputAddress").val()
+                    var zipcode = $("#ZipCode").val()
+                    var phonenumber = $("#PhoneNumber").val()
 
                     var postData = {
                         'FullName': fullName,
@@ -94,6 +122,9 @@
                         'RoleId': roleId,
                         'Password': password,
                         'RePassword': repassword,
+                        'Address':address,
+                        'PhoneNumber':phonenumber,
+                        'ZipCode': zipcode,
                     };
 
                     // Post Data To Controller
@@ -133,7 +164,7 @@
                     )
                 }
             })
-        }
+        } 
     </script>
 
 }

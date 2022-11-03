@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.Persistance.Context;
 
@@ -11,9 +12,10 @@ using Store.Persistance.Context;
 namespace Store.Persistance.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    partial class DataBaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221102175538_RemoveUserInRole")]
+    partial class RemoveUserInRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -412,7 +414,7 @@ namespace Store.Persistance.Migrations
                         {
                             BrandId = 1,
                             Brand = "متفرقه",
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8646),
+                            InsertTime = new DateTime(2022, 11, 2, 21, 25, 37, 441, DateTimeKind.Local).AddTicks(7985),
                             IsRemoved = false
                         });
                 });
@@ -559,21 +561,21 @@ namespace Store.Persistance.Migrations
                         new
                         {
                             RoleId = 1,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8277),
+                            InsertTime = new DateTime(2022, 11, 2, 21, 25, 37, 441, DateTimeKind.Local).AddTicks(7692),
                             IsRemoved = false,
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8479),
+                            InsertTime = new DateTime(2022, 11, 2, 21, 25, 37, 441, DateTimeKind.Local).AddTicks(7900),
                             IsRemoved = false,
                             RoleName = "Operator"
                         },
                         new
                         {
                             RoleId = 3,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8517),
+                            InsertTime = new DateTime(2022, 11, 2, 21, 25, 37, 441, DateTimeKind.Local).AddTicks(7939),
                             IsRemoved = false,
                             RoleName = "Customer"
                         });
@@ -588,6 +590,7 @@ namespace Store.Persistance.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"), 1L, 1);
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -607,9 +610,6 @@ namespace Store.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("RemoveTime")
                         .HasColumnType("datetime2");
 
@@ -623,16 +623,12 @@ namespace Store.Persistance.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -786,8 +782,8 @@ namespace Store.Persistance.Migrations
             modelBuilder.Entity("Store.Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("Store.Domain.Entities.Users.Role", "Role")
-                        .WithOne()
-                        .HasForeignKey("Store.Domain.Entities.Users.User", "RoleId")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

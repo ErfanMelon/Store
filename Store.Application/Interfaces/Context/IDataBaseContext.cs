@@ -11,7 +11,6 @@ namespace Store.Application.Interfaces.Context
     {
          DbSet<User> Users { get; set; }
          DbSet<Role> Roles { get; set; }
-         DbSet<UserInRole> UserInRoles { get; set; }
          DbSet<Category> Categories { get; set; }
          DbSet<Product> Products { get; set; }
          DbSet<ProductFeatures> ProductFeatures { get; set; }

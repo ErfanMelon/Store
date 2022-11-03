@@ -2,6 +2,7 @@
 {
     public class GetProductAdminDto
     {
+        public long ProductId { get; set; }
         public string ProductTitle { get; set; }
         public int Price { get; set; }
         public string Category { get; set; }
@@ -13,5 +14,6 @@
         public List<GetProductFeatureDto> Features { get; set; }
         public int TotalViews { get; set; }
         public int Stars { get; set; }
+        public int OrderCount { get; set; }
     }
 }

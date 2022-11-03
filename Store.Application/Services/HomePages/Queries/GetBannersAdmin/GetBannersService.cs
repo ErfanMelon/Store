@@ -1,4 +1,5 @@
 ﻿using Store.Application.Interfaces.Context;
+using Store.Common;
 using Store.Common.Dto;
 
 namespace Store.Application.Services.HomePages.Queries.GetBanners
@@ -11,18 +12,25 @@ namespace Store.Application.Services.HomePages.Queries.GetBanners
             _context = context;
         }
 
-        public ResultDto<List<ResultGetBanners>> Execute()
+        public ResultDto<ResultGetBanners> Execute(int page, int pagesize)
         {
-            return new ResultDto<List<ResultGetBanners>>
+            var banners = _context.Banners.Select(b => new BannerDto
             {
-                Data=_context.Banners.Select(b=>new ResultGetBanners 
+                ImageSrc = b.ImageSrc,
+                Link = b.Link,
+                Id = b.BannerId,
+                BannerLocation = b.BannerLocation,
+                Display = b.DisplayOnPage
+            }).ToPaged(page,pagesize,out int rowcounts).ToList();
+            return new ResultDto<ResultGetBanners>
+            {
+                Data=new ResultGetBanners
                 {
-                    ImageSrc=b.ImageSrc,
-                    Link= b.Link,
-                    Id=b.BannerId,
-                    BannerLocation=b.BannerLocation,
-                    Display=b.DisplayOnPage
-                }).ToList(),
+                    Banners=banners,
+                    CurrentPage=page,
+                    PageSize=pagesize,
+                    RowsCount= rowcounts
+                },
                 IsSuccess=true,
             };
         }
