@@ -3,10 +3,12 @@ using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Users.Commands.ChangeUserState;
 using Store.Application.Services.Users.Commands.DeleteUser;
 using Store.Application.Services.Users.Commands.EditUser;
+using Store.Application.Services.Users.Commands.EditUserSite;
 using Store.Application.Services.Users.Commands.LoginUser;
 using Store.Application.Services.Users.Commands.RegisterUser;
 using Store.Application.Services.Users.Queries.GetRoles;
 using Store.Application.Services.Users.Queries.GetUserDetail;
+using Store.Application.Services.Users.Queries.GetUserDetailSite;
 using Store.Application.Services.Users.Queries.GetUsers;
 
 namespace Store.Application.Services.Users.FacadePattern
@@ -78,12 +80,28 @@ namespace Store.Application.Services.Users.FacadePattern
                 return _getUserService = _getUserService ?? new GetUserService(_context);
             }
         }
-        private IGetUserDetailService _getUserDetailService;
-        public IGetUserDetailService getUserDetailService
+        private IGetUserDetailServiceAdmin _getUserDetailServiceAdmin;
+        public IGetUserDetailServiceAdmin getUserDetailServiceAdmin
         {
             get
             {
-                return _getUserDetailService = _getUserDetailService ?? new GetUserDetailService(_context);
+                return _getUserDetailServiceAdmin = _getUserDetailServiceAdmin ?? new GetUserDetailServiceAdmin(_context);
+            }
+        }
+        private IGetUserDetailSiteService _getUserDetailSiteService;
+        public IGetUserDetailSiteService getUserDetailSiteService
+        {
+            get
+            {
+                return _getUserDetailSiteService = _getUserDetailSiteService ?? new GetUserDetailSiteService(_context);
+            }
+        }
+        private IEditUserSiteService _editUserSiteService;
+        public IEditUserSiteService editUserSiteService
+        {
+            get
+            {
+                return _editUserSiteService = _editUserSiteService ?? new EditUserSiteService(_context);
             }
         }
     }

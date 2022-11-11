@@ -1,0 +1,21 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Store.EndPoint.Areas.Admin.Models.ViewModels.EditOrderDetailViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="card">
+    <input type="hidden" id="DetailId" value="@Model.DetailId" />
+    <div class="card-body">
+        <div class="row row-cols-auto g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="OrderDetailCount">تعداد سفارش این کالا</label>
+                <input id="OrderDetailCount" class="form-control mb-3" value="@Model.ProductCount" type="number" placeholder="@Model.ProductCount" aria-label="مثال ورودی پیش فرض">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="Description">توضیح سفارش این کالا</label>
+<textarea class="form-control" id="Description" placeholder="توضیحات" rows="3">@Model.Description</textarea>
+            </div>
+        </div>
+    </div>
+</div>

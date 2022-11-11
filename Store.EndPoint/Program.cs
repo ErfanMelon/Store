@@ -11,6 +11,8 @@ using Store.Application.Services.HomePages.Facade;
 using Store.Application.Services.Orders.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
+using Store.Common;
+using Store.Common.Roles;
 using Store.EndPoint.Tools;
 using Store.Persistance.Context;
 
@@ -43,7 +45,12 @@ builder.Services.AddScoped<IOrderFacade, OrderFacade>();
 
 
 
-
+builder.Services.AddAuthorization(option =>
+{
+    option.AddPolicy(Enum.GetName(typeof(BaseRoles), BaseRoles.Admin), policy => policy.RequireRole(Enum.GetName(typeof(BaseRoles), BaseRoles.Admin)));
+    option.AddPolicy(Enum.GetName(typeof(BaseRoles), BaseRoles.Operator), policy => policy.RequireRole(Enum.GetName(typeof(BaseRoles), BaseRoles.Operator)));
+    option.AddPolicy(Enum.GetName(typeof(BaseRoles), BaseRoles.Customer), policy => policy.RequireRole(Enum.GetName(typeof(BaseRoles), BaseRoles.Customer)));
+});
 
 
 builder.Services.AddAuthentication(options =>
@@ -54,7 +61,9 @@ builder.Services.AddAuthentication(options =>
 }).AddCookie(options =>
 {
     options.LoginPath = new PathString("/Authentication/Signin");
+    options.LogoutPath = new PathString("/Authentication/SignOut");
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5.0);
+    options.AccessDeniedPath = "/Authentication/Signin";
 });
 var app = builder.Build();
 

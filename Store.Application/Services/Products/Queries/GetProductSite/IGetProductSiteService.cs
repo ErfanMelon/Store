@@ -41,7 +41,7 @@ namespace Store.Application.Services.Products.Queries.GetProductSite
                     Price = product.Price,
                     Features = product.ProductFeatures.Select(f => new ProductSiteFeaturesDto { Feature = f.Feature, FeatureValue = f.FeatureValue }).ToList(),
                     Images = product.ProductImages.Select(i => i.Src).ToList(),
-                    Stars=_context.ProductLikes.Any(s=>s.ProductId== productId)? (int)_context.ProductLikes.Where(s => s.ProductId == productId).Average(e=>e.Score):0, // average the userlikes
+                    Stars=_context.Comments.Any(c=>c.ProductId== productId)? (int)_context.Comments.Where(c => c.ProductId == productId).Average(s=>s.Score):0, // average the userlikes
                     TotalOrders=_context.OrderDetails.Any(o => o.ProductId == productId)?_context.OrderDetails.Where(o => o.ProductId == productId).Sum(o=>o.Count):0 // sum total order of this product
                 },
                 IsSuccess = true,

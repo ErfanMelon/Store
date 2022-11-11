@@ -36,6 +36,10 @@ namespace Store.Application.Services.Fainances.Commands.AddPayRequest
                 {
                     return new ResultDto<ResultAddPayRequest> { Message = "کد پستی صحیح نمیباشد !" };
                 }
+                if (!requested_cart.User.IsActive)
+                {
+                    return new ResultDto<ResultAddPayRequest> { Message = "کاربر فعال نیست !" };
+                }
                 #endregion
 
                 var requestpay = new RequestPay

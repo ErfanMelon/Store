@@ -4,20 +4,12 @@
 }
 @section Css{
     <link href="~/sitetemplate/assets/css/vendor/lightgallery.css" rel="stylesheet" />
+                    <link href="~/remodal-1.1.1/src/remodal.css" rel="stylesheet" />
+    <link href="~/remodal-1.1.1/src/remodal-default-theme.css" rel="stylesheet" />
+    <link href="~/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }
-    @section Scripts
-    {
-    <script src="~/SiteTemplate/assets/js/vendor/lightgallery-all.js"></script>
-    <script src="~/SiteTemplate/assets/js/vendor/jquery.ez-plus.js"></script>
-    <script>
-        function AddToCart(){
-            var count=$("#countproduct").val();
-            var id=@Model.ProductId;
-            window.location.href="/cart/AddToCart?productid="+id+"&count="+count;
-        }
-</script>
-}
-
+    
+<input type="hidden" value="@Model.ProductId" id="productid" />
     <div class="container-main">
         <div class="d-block">
             <div class="page-content page-row">
@@ -26,10 +18,9 @@
                         <i class="mdi mdi-home"></i>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                                <li class="breadcrumb-item"><a href="#">کالای دیجیتال</a></li>
-                                <li class="breadcrumb-item"><a href="#">موبایل</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">گوشی موبایل سامسونگ مدل Galaxy Note 10 SM-N970F/DS دو سیم‌کارت ظرفیت 256 گیگابایت</li>
+                                <li class="breadcrumb-item"><a href="/">خانه</a></li>
+                                <li class="breadcrumb-item"><a href="#">@Model.Category</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
                             </ol>
                         </nav>
                     </div>
@@ -41,107 +32,7 @@
                                         <div class="gallery-item">
                                             <div>
                                                 <ul class="gallery-actions">
-                                                    <li>
-                                                        <a href="#" class="btn-option add-product-wishes">
-                                                            <i class="mdi mdi-heart-outline"></i>
-                                                            <span>محبوب</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="option-social">
-                                                        <a href="#" class="btn-option btn-option-social" data-toggle="modal" data-target="#option-social">
-                                                            <i class="mdi mdi-share"></i>
-                                                            <span>اشتراک</span>
-                                                        </a>
-                                                        <!-- Modal-option-social -->
-                                                        <div class="modal fade" id="option-social" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">اشتراک گذاری</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="title">با استفاده از روش‌های زیر می‌توانید این صفحه را با دوستان خود به اشتراک بگذارید.</div>
-                                                                        <form action="#" class="email-sharing">
-                                                                            <h5 class="share-title">ارسال از طریق ایمیل</h5>
-                                                                            <div class="input-group-sharing">
-                                                                                <input type="email" class="share-email-address form-control" id="share-email">
-                                                                                <button class="btn-send-email btn btn-primary" type="submit">ارسال ایمیل</button>
-                                                                            </div>
-                                                                        </form>
-                                                                        <div class="share-options">
-                                                                            <div class="share-social-buttons text-center">
-                                                                                <a href="#" class="share-social share-social-twitter">
-                                                                                    <i class="mdi mdi-twitter"></i>
-                                                                                </a>
-                                                                                <a href="#" class="share-social share-social-facebook">
-                                                                                    <i class="mdi mdi-facebook"></i>
-                                                                                </a>
-                                                                                <a href="#" class="share-social share-social-whatsapp">
-                                                                                    <i class="mdi mdi-whatsapp"></i>
-                                                                                </a>
-                                                                                <a href="#" class="share-social share-social-email-outline">
-                                                                                    <i class="mdi mdi-email-outline"></i>
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-share-col">
-                                                                            <input class="ui-url-field" type="url" value="https://www.digikala.com/product/dkp-1672478" readonly="">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class="option-alarm">
-                                                        <a href="#" class="btn-option btn-option-alarm" data-toggle="modal" data-target="#btn-option-alarm">
-                                                            <i class="mdi mdi-bell-outline"></i>
-                                                            <span>اطلاع‌رسانی</span>
-                                                        </a>
-                                                        <!-- Modal-option-alarm -->
-                                                        <div class="modal fade" id="btn-option-alarm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="exampleModalCenterTitle">به من اطلاع بده</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-notification-title">از طریق:</div>
-                                                                        <div class="form-auth-row">
-                                                                            <label for="#" class="ui-checkbox mt-1">
-                                                                                <input type="checkbox" value="1" name="login" id="remember">
-                                                                                <span class="ui-checkbox-check"></span>
-                                                                            </label>
-                                                                            <label for="remember" class="remember-me mr-0">ایمیل به info@digismart.com</label>
-                                                                        </div>
-                                                                        <div class="form-auth-row">
-                                                                            <label for="#" class="ui-checkbox mt-1">
-                                                                                <input type="checkbox" value="1" name="login" id="remember">
-                                                                                <span class="ui-checkbox-check"></span>
-                                                                            </label>
-                                                                            <label for="remember" class="remember-me mr-0">پیامک به *******0991</label>
-                                                                        </div>
-                                                                        <div class="form-auth-row">
-                                                                            <label for="#" class="ui-checkbox mt-1">
-                                                                                <input type="checkbox" value="1" name="login" id="remember">
-                                                                                <span class="ui-checkbox-check"></span>
-                                                                            </label>
-                                                                            <label for="remember" class="remember-me mr-0">سیستم پیام شخصی دیجی اسمارت</label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-primary ml-2">ثبت</button>
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">بازگشت</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
+                                                    
                                                     <li class="Three-dimensional">
                                                         <a href="#" class="btn-option btn-Three-dimensional" data-toggle="modal" data-target="#more-product">
                                                             <i class="mdi mdi-more"></i>
@@ -168,12 +59,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li class="Three-dimensional">
-                                                    <a href="product-comparison.html" class="btn-option btn-compare">
-                                                        <i class="mdi mdi-compare"></i>
-                                                        <span>مقایسه</span>
-                                                    </a>
-                                                </li>
+                                               
                                             </ul>
                                         </div>
                                     </div>
@@ -383,12 +269,7 @@
                             نظرات کاربران
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="question-and-answer-tab" data-toggle="tab" href="#question-and-answer" role="tab" aria-controls="question-and-answer" aria-selected="false">
-                            <i class="mdi mdi-comment-question-outline"></i>
-                            پرسش و پاسخ
-                        </a>
-                    </li>
+                    
                 </ul>
             </div>
             <div class="col-lg">
@@ -413,60 +294,6 @@
                                 <div class="content-expert-evaluation">
                                 </div>
                             </section>
-                            <div class="content-expert-articles">
-                                <section class="content-expert-article">
-                                    <button class="content-expert-button">
-                                        <span class="show-more"><i class="mdi mdi-plus"></i></span>
-                                        <span class="show-less"><i class="mdi mdi-minus"></i></span>
-                                    </button>
-                                    <h3 class="content-expert-title">طراحی و ساخت؛ زیبای خاص</h3>
-                                    <div class="content-expert-text">
-                                        <p style="text-align:right">باید در همین ابتدا اعتراف کنیم Galaxy Note 10 یک گوشی بسیار زیباست. البته شاید این تعریف کمی شخصی به نظر برسد اما ظاهر این گوشی آن‌قدر زیباست که جایی را برای گله و شکایت باقی نمی‌گذارد. در این گوشی دوست‌داشتنی صفحه‌نمایش تقریباً تمام قاب جلویی را پوشانده است. این گوشی ابعاد بزرگی دارد و با صفحه‌نمایش 6.3 که تقریبا 0.2 اینچ بزرگتر از S10 است، در گروه فبلت‌ها جای می‌گیرد. اگر به دنبال خرید این گوشی هوشمند هستید، احتمالاً قبلاً هم گوشی بزرگی داشته‌اید و اندازه آن برایتان آزاردهنده نخواهد بود. اولین راه‌حل موفق برای ساده کردن فرمول زیبایی و کارایی بیشتر، تغییر مکان حسگر اثرانگشت در گلکسی نوت 10 است. با توجه به امنیت بالای این راه برای باز کردن گوشی، حذف آن چندان منطقی به نظر نمی‌رسد. در این گوشی خبری از حسگر اثرانگشت روی قاب جلویی نیست و در عوض این حسگر زیر صفحه‌نمایش قرار گرفته است تا Galaxy Note 10 از همه نظر به گوشی مدرن تبدیل شود. تفاوت دیگری که امسال گلکسی سری نوت با گلسی سری S &nbsp;داشته اند محل قرار گرفتن دوربین سلفی آن ها است. به طوری که دوربین سلفی در S10 در قسمت بالای سمت راست قرار گرفته و در نوت 10 در مرکز بالای صفحه نمایش تعبیه شده است.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-1.jpg">
-                                        </div>
-                                    </div>
-                                </section>
-                                <section class="content-expert-article">
-                                    <button class="content-expert-button">
-                                        <span class="show-more"><i class="mdi mdi-plus"></i></span>
-                                        <span class="show-less"><i class="mdi mdi-minus"></i></span>
-                                    </button>
-                                    <h3 class="content-expert-title">صفحه‌نمایش؛ همان خیره‌کننده‌ی همیشگی</h3>
-                                    <div class="content-expert-text">
-                                        <p style="text-align:right">مثل همیشه یکی از نقاط قوت گوشی سری محصولات Galaxy Note صفحه‌نمایش آن‌هاست. فناوری Super AMOLED به معنی تصاویر زنده و شفافیت خیره‌کننده در کنار پشتیبانی از نمایش ویدئوهای HDR است. گلکسی نوت 10 از یک صفحه نمایش 6.3 اینچی بهره می برد، که تقریبا تمام قاب جلویی را پوشانده است. سامسونگ مدت ها است که برای پرچمداران خود از صفحه نمایش هایی با لبه های منحنی شکل استفاده می کند؛ کاری که با تولید S8 آغاز کرد و گوشی Note 10 هم از این قاعده مستثنی نیست. انحنای لبه‌ها باعث می‌شود حس کنید فضای بسیار بیشتری در اختیار دارید. این نمایشگر، تراکم پیکسلی فوق‌العاده 401 در هر اینچ دارد روی نوت 10 قرار داده شده است؛ می‌توان این‌گونه در نظر گرفت که سامسونگ احتمالاً استفاده از تعداد پیکسل بالاتر را به علت مصرف باتری بیشتر و اندازه‌ی بزرگ‌تر را به علت بزرگ‌ترشدن سایز گوشی کنار گذاشته است.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-2.jpg">
-                                        </div>
-                                        <p style="text-align:right">به دلیل O شکل بودن بریدگی قسمت بالای آن، نام Infinity-O برای آن انتخاب شده است. نمایشگرهای Infinity در واقع از ویژگی های صفحه نمایش های سامسونگ است که بدون هیچ بریدگی یا Bezel تولید می شوند و برای اولین بار با به کار گیری در گوشی های&nbsp; Galaxy S8 و&nbsp; Galaxy S8+ معرفی شد.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-3.jpg">
-                                        </div>
-                                        <p style="text-align:right">نمایشگر نوت 10 هم از فناوری همیشه روشن سود می‌برد که با استفاده از بخش تنظیمات حالا می‌توانید شخصی‌سازی‌های بیشتری را برای آن در نظر بگیرید. سامسونگ موفق شده است برای این گوشی نسبت صفحه‌نمایش به بدنه 90.9 درصد را به دست آورد که برای یک گوشی امروزی هم میزان بسیار مطلوبی به‌حساب می‌آید. تراز سفیدی مناسب، نور کافی برای دیدن محتویات زیر نور‌های شدید، تراکم پیکسلی بالا که هنگام دیدن تصویر یا خواندن متن کمک می‌کند تا جزییات بیشتری را ببینید، از مشخصات نمایشگر نوت 10 هستند.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-4.jpg">
-                                        </div>
-                                    </div>
-                                </section>
-                                <section class="content-expert-article">
-                                    <button class="content-expert-button">
-                                        <span class="show-more"><i class="mdi mdi-plus"></i></span>
-                                        <span class="show-less"><i class="mdi mdi-minus"></i></span>
-                                    </button>
-                                    <h3 class="content-expert-title">سخت‌افزار، سیستم‌عامل و کارایی</h3>
-                                    <div class="content-expert-text">
-                                        <p style="text-align:right">چیپست اگزونوس 9825 از چیپست‌های 7 نانومتری سامسونگ در قلب اس نوت 10 قرار گرفته است. چیپست 7 نانومتری به معنی قدرت بالا و مصرف بهینه باتری گوشی است. هرساله سخت‌افزارهای نسل جدیدتر برای گوشی‌های موبایل در نظر گرفته می‌شوند که این سخت‌افزار شامل چیپست هم می‌شود. واضح است که چیپست نسل جدید سامسونگ بسیار سریع است اما در عمل سرعت‌بالای آن را نمی‌توان انقلابی دانست. سری‌های قبلی محصولات گلکسی سامسونگ که از تراشه اگزونوس استفاده می‌کردند گاهی اوقات در زمان استفاده بسیار سنگین خاموش می‌شدند. به نظر می‌رسد در گلکسی جدید به خاطر وجود رم 8 گیگابیتی، خبری از این مشکل نباشد.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-5.jpg">
-                                        </div>
-                                        <p style="text-align:right">نتیجه‌ی این لیست، سخت‌افزاری است که جای هیچ انتقادی را باقی نمی‌گذارد و در هر حالی بهترین بازده ممکن را دارد. سامسونگ در هر حالتی بهترین استفاده‌ی ممکن را از این سخت‌افزار کرده است. باید اطمینان داشته باشیم وقتی این سخت‌افزار برای پردازش واقعیت افزوده، فیلم‌برداری 2160 فریم بر ثانیه، تطبیق چهره و عنبیه برای بازکردن قفل گوشی طراحی و ساخته شده؛ دیگر در مورد بازی‌هایی که نهایتاً چند فریم خروجی دارند یا برنامه‌هایی که مقدار کمی از رم را اشغال می‌کنند، همچنین اجرای اندروید و رابط کاربری سامسونگ، هیچ مشکلی نخواهد داشت. پس خیالتان راحت باشد که هیچ عملیاتی وجود ندارد که گلکسی نوت 10 از پس انجام دادن آن برنیاید یا در انجام دادن آن کم‌کاری کند.</p>
-                                        <div class="content-expert-img">
-                                            <img src="assets/images/page-single-product/tab-content/note10-6.jpg">
-                                        </div>
-                                        <p style="text-align:right">اندازه بزرگ‌تر در بیشتر گوشی‌های موبایل نوید باتری با ظرفیت بیشتر را می‌دهد؛ البته باتری در گوشی نوت 10 تفاوت چشمگیری را به خود ندیده است و ظرفیت آن برابر با 3500 میلی‌آمپر است که با توجه به چیپست مدرن این گوشی باید تا مدت‌زمان مطلوبی انرژی را در خود نگه دارد. البته رزولوشن بالای صفحه‌نمایش باعث شده است که باتری به میزان بیشتری مصرف شود و از باتری گوشی انتظار روشن نگه‌داشتن آن تا بیش از یک روز را نداشته باشیم. این گوشی مانند پاوربانکی پرقدرت امکان شارژ بی‌سیم دیگر دستگاه‌ها را دارد. اما این نکته را نباید فراموش کنیم که گلکسی نوت 10 شارژ بی‌سیم گوشی‌های دیگر را با سرعت بسیار بالا (با توان 9 واتی) انجام می‌دهد. همان‌طور که گفتیم این گوشی می‌تواند دیگر گوشی‌ها و گجت‌های دارای فناوری شارژ بی‌سیم را شارژ کند. یکی از ویژگی‌های خاص و البته دوست‌داشتنی در مورد گوشی‌های سامسونگ امکان صفحه‌نمایش همیشه روشن است. این امکان نوتیفیکیشن‌ها را بدون نیاز به باز کردن گوشی برای کاربر به نمایش در می‌آورد.</p>
-                                    </div>
-                                </section>
-                            </div>
                         </div>
                         <div class="tab-pane fade" id="Specifications" role="tabpanel" aria-labelledby="Specifications-tab">
                             <article>
@@ -559,313 +386,201 @@
                                                 نظر
                                                 شما به عنوان مالک محصول ثبت خواهد شد.
                                             </p>
-                                            <a href="#" class="btn-add-comment btn btn-secondary">افزودن نظر جدید</a>
+                                            <button type="button" data-remodal-target="modal" href="#modal" class="btn-add-comment btn btn-secondary">افزودن نظر جدید</button>
+                                          
                                         </div>
                                     </div>
                                     <div class="product-comment-list">
-                                        <ul class="comment-list">
-                                            <li>
-                                                <div class="col-lg-3 pr">
-                                                    <section>
-                                                        <div class="comments-user-shopping">
-                                                            حسن شجاعی
-                                                            <div class="cell-date">
-                                                                در تاریخ ۱۸ فروردین ۱۳۹۹
-                                                            </div>
-                                                            <div class="message-light"><i class="fa fa-thumbs-o-up"></i>خرید این محصول را توصیه می‌کنم</div>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                                <div class="col-lg-9 pl">
-                                                    <div class="article">
-                                                        <ul class="comment-text">
-                                                            <div class="header">
-                                                                <div>بهتر از آیفون</div>
-                                                                <div class="product-rate pl">
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                </div>
-                                                                <p>در کل سامسونگ کاربردی تر از آیفون هست ولی از نظر کیفیت تصویر و سرعت آیفون بهتره و کلاس!</p>
-                                                            </div>
-                                                            <div class="comments-evaluation">
-                                                                <div class="comments-evaluation-positive">
-                                                                    <span>نقاط قوت</span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            سبک
-                                                                        </li>
-                                                                        <li>
-                                                                            سرعت پردازش بالا
-                                                                        </li>
-                                                                        <li>
-                                                                            خوش دست
-                                                                        </li>
-                                                                        <li>
-                                                                            صفحه نمایش عالی
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="comments-evaluation-negative">
-                                                                    <span>نقاط قوت</span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            قیمت زیاد
-                                                                        </li>
-                                                                        <li>
-                                                                            باطری ضعیف
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="footer">
-                                                                    <div class="comments-likes">
-                                                                        آیا این نظر برایتان مفید بود؟
-                                                                        <button class="btn-like js-comment-like" type="submit">
-                                                                            بله
-                                                                            <span class="count">8</span>
-                                                                        </button>
-                                                                        <button class="btn-like js-comment-dislike" type="submit">
-                                                                            خیر
-                                                                            <span class="count">4</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="col-lg-3 pr">
-                                                    <section>
-                                                        <div class="comments-user-shopping">
-                                                            جلال بهرامی راد
-                                                            <div class="cell-date">
-                                                                در تاریخ ۱۹ فروردین ۱۳۹۹
-                                                            </div>
-                                                            <div class="message-light"><i class="fa fa-thumbs-o-up"></i>خرید این محصول را توصیه می‌کنم</div>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                                <div class="col-lg-9 pl">
-                                                    <div class="article">
-                                                        <ul class="comment-text">
-                                                            <div class="header">
-                                                                <div>عالی و صدرصد بهتر از اپل</div>
-                                                                <div class="product-rate pl">
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                    <i class="fa fa-star active"></i>
-                                                                </div>
-                                                                <p>عالییه بنظرمن اونایی که میرن پول گوشی های ایفون با اون قیمت رو میدن با استفاده از این گوشی باید نظرشونو عوض کنن</p>
-                                                            </div>
-                                                            <div class="comments-evaluation">
-                                                                <div class="comments-evaluation-positive">
-                                                                    <span>نقاط قوت</span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            سبک
-                                                                        </li>
-                                                                        <li>
-                                                                            سرعت پردازش بالا
-                                                                        </li>
-                                                                        <li>
-                                                                            خوش دست
-                                                                        </li>
-                                                                        <li>
-                                                                            صفحه نمایش عالی
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="comments-evaluation-negative">
-                                                                    <span>نقاط قوت</span>
-                                                                    <ul>
-                                                                        <li>
-                                                                            قیمت زیاد
-                                                                        </li>
-                                                                        <li>
-                                                                            باطری ضعیف
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                                <div class="footer">
-                                                                    <div class="comments-likes">
-                                                                        آیا این نظر برایتان مفید بود؟
-                                                                        <button class="btn-like js-comment-like" type="submit">
-                                                                            بله
-                                                                            <span class="count">8</span>
-                                                                        </button>
-                                                                        <button class="btn-like js-comment-dislike" type="submit">
-                                                                            خیر
-                                                                            <span class="count">4</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                        @await Component.InvokeAsync("Comments",new {productId=Model.ProductId})
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="question-and-answer" role="tabpanel" aria-labelledby="question-and-answer-tab">
-                            <div class="faq">
-                                <h2 class="params-headline">
-                                    پرسش و پاسخ
-                                    <span>پرسش خود را در مورد محصول مطرح نمایید</span>
-                                </h2>
-                                <form action="#" class="form-faq">
-                                    <div class="form-faq-row mt-4">
-                                        <div class="form-faq-col">
-                                            <div class="ui-textarea">
-                                                <textarea name="qa" title="متن سوال" class="ui-textarea-field"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-faq-row mt-4">
-                                        <div class="form-faq-col form-faq-col-submit">
-                                            <button class="btn-tertiary btn btn-secondary" type="submit">ثبت پرسش</button>
-                                            <div class="form-faq-col-agreement d-inline-block mr-5">
-                                                <div class="form-auth-row">
-                                                    <label for="#" class="ui-checkbox mt-1">
-                                                        <input type="checkbox" value="1" name="login" id="remember">
-                                                        <span class="ui-checkbox-check"></span>
-                                                    </label>
-                                                    <label for="remember" class="remember-me mr-0">اولین پاسخی که به پرسش من داده شد، از طریق ایمیل به من اطلاع دهید. </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                                <div id="product-questions-list">
-                                    <div class="questions-list">
-                                        <ul class="faq-list">
-                                            <li class="is-question">
-                                                <div class="section">
-                                                    <div class="faq-header">
-                                                        <span class="icon-faq">?</span>
-                                                        <p class="h5">
-                                                            پرسش :
-                                                            <span>جلال</span>
-                                                        </p>
-                                                    </div>
-                                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-                                                    <div class="faq-date">
-                                                        <em>۱۴ فروردین ۱۳۹۹</em>
-                                                    </div>
-                                                    <a href="#" class="js-add-answer-btn">
-                                                        به این پرسش پاسخ
-                                                        دهید
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="questions-list answer-questions">
-                                        <ul class="faq-list">
-                                            <li class="is-question">
-                                                <div class="section">
-                                                    <div class="faq-header">
-                                                        <span class="icon-faq"><i class="mdi mdi-storefront"></i></span>
-                                                        <p class="h5">
-                                                            پاسخ فروشنده :
-                                                            <span>حسن</span>
-                                                        </p>
-                                                    </div>
-                                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
-                                                    <div class="faq-date">
-                                                        <em>۱۴ فروردین ۱۳۹۹</em>
-                                                    </div>
-                                                    <a href="#" class="js-add-answer-btn">
-                                                        به این پرسش پاسخ
-                                                        دهید
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="questions-list">
-                                        <ul class="faq-list">
-                                            <li class="is-question">
-                                                <div class="section">
-                                                    <div class="faq-header">
-                                                        <span class="icon-faq">?</span>
-                                                        <p class="h5">
-                                                            پرسش :
-                                                            <span>اشکان</span>
-                                                        </p>
-                                                    </div>
-                                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-                                                    <div class="faq-date">
-                                                        <em>۱۴ فروردین ۱۳۹۹</em>
-                                                    </div>
-                                                    <a href="#" class="js-add-answer-btn">
-                                                        به این پرسش پاسخ
-                                                        دهید
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="questions-list answer-questions">
-                                        <ul class="faq-list">
-                                            <li class="is-question">
-                                                <div class="section">
-                                                    <div class="faq-header">
-                                                        <span class="icon-faq"><i class="mdi mdi-storefront"></i></span>
-                                                        <p class="h5">
-                                                            پاسخ فروشنده :
-                                                            <span>جواد</span>
-                                                        </p>
-                                                    </div>
-                                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.</p>
-                                                    <div class="faq-date">
-                                                        <em>۱۴ فروردین ۱۳۹۹</em>
-                                                    </div>
-                                                    <a href="#" class="js-add-answer-btn">
-                                                        به این پرسش پاسخ
-                                                        دهید
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="questions-list">
-                                        <ul class="faq-list">
-                                            <li class="is-question">
-                                                <div class="section">
-                                                    <div class="faq-header">
-                                                        <span class="icon-faq">?</span>
-                                                        <p class="h5">
-                                                            پرسش :
-                                                            <span>رضا</span>
-                                                        </p>
-                                                    </div>
-                                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-                                                    <div class="faq-date">
-                                                        <em>۱۴ فروردین ۱۳۹۹</em>
-                                                    </div>
-                                                    <a href="#" class="js-add-answer-btn">
-                                                        به این پرسش پاسخ
-                                                        دهید
-                                                    </a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@section Modals{
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="remodal" data-remodal-id="modal">
+        <button data-remodal-action="close" class="remodal-close"></button>
+        <h1>افزودن نظر</h1>
+        <p>
+برای افزودن نظر ابتدا باید به حساب خود وارد شوید        </p>
+        <br>
+            <a  href="/authentication/signup" class="remodal-cancel">ثبت نام</a>
+            <a  href="/authentication/signin" class="remodal-confirm">ورود</a>
+    </div>
+    }
+    else
+    {
+        <div class="remodal" data-remodal-id="modal">
+        <button data-remodal-action="close" class="remodal-close"></button>
+        <h1>افزودن نظر</h1>
+        <p>
+            <div>
+                <p>عنوان نظر</p>
+                <input type="text" id="comment_title" placeholder="عنوان نظر را اینجا بنویس"/>
+                <p>نظر</p>
+                <textarea id="comment_content" placeholder="نظر شما درمورد محصول"></textarea>
+                <p>میزان رضایت از محصول</p>
+                <select id="comment_rate" asp-items="@ViewBag.RateOptions">
+
+                </select>
+                <p>نقاط قوت محصول</p>
+                <input type="text" id="txtgood"/>
+                <button id="btnAddGood">افزودن</button>
+                <p>نقاط ضعف محصول</p>
+                <input type="text" id="txtbad"/>
+                <button id="btnAddBad">افزودن</button>
+                    <table class="table table-borderless" id="tbl_goodpoints">
+                        <thead>
+                            <tr>
+                                <th scope="col">نقاط قوت محصول</th>
+                                <th scope="col"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <table class="table table-borderless" id="tbl_badpoints">
+                        <thead>
+                            <tr>
+                                <th scope="col">نقاط ضعف محصول</th>
+                                <th scope="col"> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+            </div>
+      </p>
+        <br>
+            <button data-remodal-action="cancel" class="remodal-cancel">صرف نظر</button>
+            <button data-remodal-action="confirm" onclick="AddComment()" class="remodal-confirm">ثبت نظر</button>
+    </div>
+    }
+}
+    @section Scripts
+    {
+    <script src="~/SiteTemplate/assets/js/vendor/lightgallery-all.js"></script>
+    <script src="~/SiteTemplate/assets/js/vendor/jquery.ez-plus.js"></script>
+    <script src="~/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+        function AddToCart() {
+            var count = $("#countproduct").val();
+            var id = @Model.ProductId;
+            window.location.href = "/cart/AddToCart?productid=" + id + "&count=" + count;
+        }
+    </script>
+    <script src="~/remodal-1.1.1/src/remodal.js"></script>
+    <script>
+        $("#btnAddGood").on("click", function () {
+
+            var txtgood = $("#txtgood").val();
+
+            if (txtgood == "") {
+                //swal.fire(
+                //    'هشدار!',
+                //    "نام و مقدار را باید وارد کنید",
+                //    'warning'
+                //);
+            }
+            else {
+                $('#tbl_goodpoints tbody').append('<tr> <td>' + txtgood + '</td>  <td><button type="button" class="btn review">حذف</button></td> </tr>');
+                $("#txtgood").val('');
+            }
+        });
+        $("#btnAddBad").on("click", function () {
+
+            var txtbad = $("#txtbad").val();
+
+            if (txtbad == "") {
+                //swal.fire(
+                //    'هشدار!',
+                //    "نام و مقدار را باید وارد کنید",
+                //    'warning'
+                //);
+            }
+            else {
+                $('#tbl_badpoints tbody').append('<tr> <td>' + txtbad + '</td>  <td><button type="button" class="btn review">حذف</button></td> </tr>');
+                $("#txtbad").val('');
+            }
+        });
+        $("#tbl_goodpoints").on('click', '.review', function () {
+            $(this).closest('tr').remove();
+        });
+        $("#tbl_badpoints").on('click', '.review', function () {
+            $(this).closest('tr').remove();
+        });
+    </script>
+    <script>
+        function AddComment(){
+            var dt=new FormData();
+
+            dt.append("ProductId",'@Model.ProductId');
+            dt.append("CommentTitle",$("#comment_title").val());
+            dt.append("Comment", $("#comment_content").val());
+            dt.append("Stars", $("#comment_rate").find('option:selected').val());
+
+            var ProsViewModel = $('#tbl_goodpoints tr:gt(0)').map(function () {
+                return $(this.cells[0]).text();
+            }).get();
+            var ConsViewModel = $('#tbl_badpoints tr:gt(0)').map(function () {
+                return $(this.cells[0]).text();
+            }).get();
+
+            $.each(ProsViewModel, function (i, val) {
+                dt.append('Pros[' + i + ']', val);
+            });
+            $.each(ConsViewModel, function (i, val) {
+                dt.append('Cons[' + i + ']', val);
+            });
+            
+            
+
+                $.ajax({
+                url: '/product/AddComment',
+                type: 'POST',
+                dataType: 'json',
+                data: dt,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+
+                    if (data.isSuccess == true) {
+
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            window.location.reload();
+
+                        });
+                    }
+                    else {
+
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+
+            });
+            
+            
+        }
+    </script>
+}

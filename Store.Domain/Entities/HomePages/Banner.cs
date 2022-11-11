@@ -2,18 +2,33 @@
 
 namespace Store.Domain.Entities.HomePages
 {
+    /// <summary>
+    /// تصاویر نمایشی در سایت
+    /// </summary>
     public class Banner:BaseEntity
     {
         public int BannerId { get; set; }
+        /// <summary>
+        /// تصویر بنر یا اسلایدر
+        /// </summary>
         public string ImageSrc { get; set; }
+        /// <summary>
+        /// لینک بنر 
+        /// </summary>
         public string? Link { get; set; }
+        /// <summary>
+        /// موقعیت قرار گیری در سایت
+        /// </summary>
         public BannerLocation BannerLocation { get; set; }
+        /// <summary>
+        /// آیا درصفحه اصلی نمایش داده شود
+        /// </summary>
         public bool DisplayOnPage { get; set; } = true;
     }
     public enum BannerLocation
     {
         /// <summary>
-        /// Main Banners
+        /// Main Banners اسلایدر
         /// </summary>
         Slider=0,
         /// <summary>

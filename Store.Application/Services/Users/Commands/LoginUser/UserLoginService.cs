@@ -2,6 +2,7 @@
 using Store.Application.Validations.User;
 using Store.Common;
 using Store.Common.Dto;
+using Store.Common.Roles;
 
 namespace Store.Application.Services.Users.Commands.LoginUser
 {
@@ -47,7 +48,7 @@ namespace Store.Application.Services.Users.Commands.LoginUser
             {
                 Data = new UserLoginDto
                 {
-                    Role = user.RoleId,
+                    Role = Enum.GetName(typeof(BaseRoles), user.RoleId),
                     UserId = user.UserId,
                     Name = user.UserFullName
                 },

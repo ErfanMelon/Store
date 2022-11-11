@@ -1,20 +1,12 @@
-﻿
-@using Store.Application.Services.HomePages.Queries.GetBannersSite;
+﻿@using Store.Application.Services.HomePages.Queries.GetBannersSite;
 @using Store.Domain.Entities.HomePages;
-@model List<GetBannerSiteDto>
+@model ILookup<BannerLocation,GetBannerSiteDto>
 @{
     ViewData["Title"] = "صفحه اصلی سایت";
     Layout = "~/Views/Shared/_SiteLayout.cshtml";
-    List<GetBannerSiteDto> Sliders = Model.Where(m => m.BannerLocation == BannerLocation.Slider).ToList();
-    List<GetBannerSiteDto> L1 = Model.Where(m => m.BannerLocation == BannerLocation.L1).ToList();
-    List<GetBannerSiteDto> G1 = Model.Where(m => m.BannerLocation == BannerLocation.G1).Take(4).ToList();
-    List<GetBannerSiteDto> L2 = Model.Where(m => m.BannerLocation == BannerLocation.L2).ToList();
-    List<GetBannerSiteDto> G2 = Model.Where(m => m.BannerLocation == BannerLocation.G2).Take(4).ToList();
-    List<GetBannerSiteDto> R1 = Model.Where(m => m.BannerLocation == BannerLocation.R1).ToList();
-    List<GetBannerSiteDto> CenterFullScreen = Model.Where(m => m.BannerLocation == BannerLocation.CenterFullScreen).ToList();
 
-    Random r = new Random();
-    List<long> categories = ViewBag.Categories as List<long>;
+    //Random r = new Random();
+    //List<long> categories = ViewBag.Categories as List<long>;
 }
 <!-- header-------------------------------->
 <!-- slider-main--------------------------->
@@ -27,16 +19,16 @@
 
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
 
-                        @for (int i = 1; i <= Sliders.Count - 1; i++)
+                        @for (int i = 1; i <= (Model[BannerLocation.Slider].Count() - 1); i++)
                         {
                             <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
                         }
                     </ol>
                     <div class="carousel-inner">
-                        @foreach (var item in Sliders)
+                        @foreach (var item in Model[BannerLocation.Slider])
                         {
 
-                            if (Sliders.First() == item)
+                            if (Model[BannerLocation.Slider].First() == item)
                             {
                                 <div class="carousel-item active">
                                     <a href="@item.Link">
@@ -72,12 +64,12 @@
             <div class="adplacement-container-column">
                 <a href="#" class="adplacement-item">
                     <div class="adplacement-sponsored-box">
-                        <img src="~/@L1?.FirstOrDefault()?.ImgSrc?? '' ">
+                        <img src="~/@Model[BannerLocation.L1]?.FirstOrDefault()?.ImgSrc?? '' ">
                     </div>
                 </a>
                 <a href="#" class="adplacement-item">
                     <div class="adplacement-sponsored-box">
-                        <img src="~/@L2?.FirstOrDefault()?.ImgSrc?? ''">
+                        <img src="~/@Model[BannerLocation.L2]?.FirstOrDefault()?.ImgSrc?? ''">
                     </div>
                 </a>
             </div>
@@ -86,7 +78,7 @@
             <div class="adplacement-container-column mt-4">
                 <a href="#" class="adplacement-item img-banner">
                     <div class="adplacement-sponsored-box">
-                        <img src="~/@R1?.FirstOrDefault()?.ImgSrc??''">
+                        <img src="~/@Model[BannerLocation.R1]?.FirstOrDefault()?.ImgSrc??''">
                     </div>
                 </a>
             </div>
@@ -485,13 +477,13 @@
             <div class="col-12">
                 <a href="#" class="adplacement-item mb-4">
                     <div class="adplacement-sponsored_box">
-                        <img src="~/@CenterFullScreen?.FirstOrDefault()?.ImgSrc?? ''">
+                        <img src="~/@Model[BannerLocation.CenterFullScreen]?.FirstOrDefault()?.ImgSrc?? ''">
 
                     </div>
                 </a>
             </div>
 
-            @foreach (var item in G1)
+            @foreach (var item in Model[BannerLocation.G1])
             {
                 <div class="col-6 col-lg-3 pr">
                     <a href="#" class="adplacement-item">
@@ -513,117 +505,119 @@
     <div class="d-block">
         @await Component.InvokeAsync("HomePageProducts",new {categoryId=23l})
         <!-- slider-moment------------------------->
-@*        <div class="col-lg-3 col-md-3 col-xs-12 pl order-1 d-block">
-            <div class="slider-moments">
-                <div class="widget-suggestion widget card">
-                    <header class="card-header promo-single-headline">
-                        <h3 class="card-title">پیشنهاد لحظه‌ای</h3>
-                    </header>
-                    <div id="suggestion-slider" class="owl-carousel owl-theme owl-rtl owl-loaded owl-drag">
-                        <div class="owl-stage-outer">
-                            <div class="owl-stage" style="transform: translate3d(1369px, 0px, 0px); transition: all 0.25s ease 0s; width: 2190px;">
-                                <div class="owl-item cloned" style="width: 273.75px;">
-                                    <div class="item">
-                                        <a href="#">
-                                            <img src="~/SiteTemplate/assets/images/slider-moment/sm-1.jpg" class="w-100" alt="">
-                                        </a>
-                                        <h3 class="product-title">
-                                            <a href="#"> تیشرت آستین کوتاه مردانه مدل T41 </a>
-                                        </h3>
-                                        <div class="price">
-                                            <span class="amount">
-                                                ۲۳,۰۰۰
-                                                <span>تومان</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item cloned" style="width: 273.75px;">
-                                    <div class="item">
-                                        <a href="#">
-                                            <img src="~/SiteTemplate/assets/images/slider-moment/sm-2.jpg" class="w-100" alt="">
-                                        </a>
-                                        <h3 class="product-title">
-                                            <a href="#">تی شرت آستین کوتاه تارکان کد btt 152-1</a>
-                                        </h3>
-                                        <div class="price">
-                                            <span class="amount">
-                                                ۵۹,۰۰۰
-                                                <span>تومان</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item" style="width: 273.75px;">
-                                    <div class="item">
-                                        <a href="#">
-                                            <img src="~/SiteTemplate/assets/images/slider-moment/sm-3.jpg" class="w-100" alt="">
-                                        </a>
-                                        <h3 class="product-title">
-                                            <a href="#"> لپ تاپ 17 اینچی ایسوس مدل VivoBook A712FB-P </a>
-                                        </h3>
-                                        <div class="price">
-                                            <span class="amount">
-                                                ۱۳,۰۰۰,۰۰۰
-                                                <span>تومان</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item" style="width: 273.75px;">
-                                    <div class="item">
-                                        <a href="#">
-                                            <img src="~/SiteTemplate/assets/images/slider-moment/sm-4.jpg" class="w-100" alt="">
-                                        </a>
-                                        <h3 class="product-title">
-                                            <a href="#">
-                                                لپ تاپ 16 اینچی اپل مدل MacBook Pro MVVK2 2019 همراه با تاچ بار
-                                            </a>
-                                        </h3>
-                                        <div class="price">
-                                            <span class="amount">
-                                                ۴۷,۰۰۰,۰۰۰
-                                                <span>تومان</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="owl-item" style="width: 273.75px;">
-                                    <div class="item">
-                                        <a href="#">
-                                            <img src="~/SiteTemplate/assets/images/slider-moment/sm-5.jpg" class="w-100" alt="">
-                                        </a>
-                                        <h3 class="product-title">
-                                            <a href="#">
-                                                گوشی موبایل سامسونگ مدل Galaxy S10 SM-G973F/DS دو سیم کارت ظرفیت 128 گیگابایت
-                                            </a>
-                                        </h3>
-                                        <div class="price">
-                                            <span class="amount">
-                                                ۱۱,۰۰۰,۰۰۰
-                                                <span>تومان</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="progressBar">
-                        <div class="slide-progress" style="width: 100%; transition: width 5000ms ease 0s;"></div>
-                    </div>
-                </div>
-            </div>
+        @*        <div class="col-lg-3 col-md-3 col-xs-12 pl order-1 d-block">
+        <div class="slider-moments">
+        <div class="widget-suggestion widget card">
+        <header class="card-header promo-single-headline">
+        <h3 class="card-title">پیشنهاد لحظه‌ای</h3>
+        </header>
+        <div id="suggestion-slider" class="owl-carousel owl-theme owl-rtl owl-loaded owl-drag">
+        <div class="owl-stage-outer">
+        <div class="owl-stage" style="transform: translate3d(1369px, 0px, 0px); transition: all 0.25s ease 0s; width: 2190px;">
+        <div class="owl-item cloned" style="width: 273.75px;">
+        <div class="item">
+        <a href="#">
+        <img src="~/SiteTemplate/assets/images/slider-moment/sm-1.jpg" class="w-100" alt="">
+        </a>
+        <h3 class="product-title">
+        <a href="#"> تیشرت آستین کوتاه مردانه مدل T41 </a>
+        </h3>
+        <div class="price">
+        <span class="amount">
+        ۲۳,۰۰۰
+        <span>تومان</span>
+        </span>
         </div>
-*@        <!-- slider-moment------------------------->
-        @await Component.InvokeAsync("HomePageProducts",new {categoryId=categories[r.Next(categories.Count-1)]})
+        </div>
+        </div>
+        <div class="owl-item cloned" style="width: 273.75px;">
+        <div class="item">
+        <a href="#">
+        <img src="~/SiteTemplate/assets/images/slider-moment/sm-2.jpg" class="w-100" alt="">
+        </a>
+        <h3 class="product-title">
+        <a href="#">تی شرت آستین کوتاه تارکان کد btt 152-1</a>
+        </h3>
+        <div class="price">
+        <span class="amount">
+        ۵۹,۰۰۰
+        <span>تومان</span>
+        </span>
+        </div>
+        </div>
+        </div>
+        <div class="owl-item" style="width: 273.75px;">
+        <div class="item">
+        <a href="#">
+        <img src="~/SiteTemplate/assets/images/slider-moment/sm-3.jpg" class="w-100" alt="">
+        </a>
+        <h3 class="product-title">
+        <a href="#"> لپ تاپ 17 اینچی ایسوس مدل VivoBook A712FB-P </a>
+        </h3>
+        <div class="price">
+        <span class="amount">
+        ۱۳,۰۰۰,۰۰۰
+        <span>تومان</span>
+        </span>
+        </div>
+        </div>
+        </div>
+        <div class="owl-item" style="width: 273.75px;">
+        <div class="item">
+        <a href="#">
+        <img src="~/SiteTemplate/assets/images/slider-moment/sm-4.jpg" class="w-100" alt="">
+        </a>
+        <h3 class="product-title">
+        <a href="#">
+        لپ تاپ 16 اینچی اپل مدل MacBook Pro MVVK2 2019 همراه با تاچ بار
+        </a>
+        </h3>
+        <div class="price">
+        <span class="amount">
+        ۴۷,۰۰۰,۰۰۰
+        <span>تومان</span>
+        </span>
+        </div>
+        </div>
+        </div>
+        <div class="owl-item" style="width: 273.75px;">
+        <div class="item">
+        <a href="#">
+        <img src="~/SiteTemplate/assets/images/slider-moment/sm-5.jpg" class="w-100" alt="">
+        </a>
+        <h3 class="product-title">
+        <a href="#">
+        گوشی موبایل سامسونگ مدل Galaxy S10 SM-G973F/DS دو سیم کارت ظرفیت 128 گیگابایت
+        </a>
+        </h3>
+        <div class="price">
+        <span class="amount">
+        ۱۱,۰۰۰,۰۰۰
+        <span>تومان</span>
+        </span>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div id="progressBar">
+        <div class="slide-progress" style="width: 100%; transition: width 5000ms ease 0s;"></div>
+        </div>
+        </div>
+        </div>
+        </div>
+        *@        <!-- slider-moment------------------------->
+        @*        @await Component.InvokeAsync("HomePageProducts",new {categoryId=categories[r.Next(categories.Count-1)]})
+        *@
+        @await Component.InvokeAsync("HomePageProducts",new {categoryId=0l})
         <!-- adplacement--------------------------->
         <div class="container-fluid">
             <div class="row pr">
                 <div class="adplacement-container-row">
 
-                    @foreach (var item in G2)
+                    @foreach (var item in Model[BannerLocation.G2])
                     {
                         <div class="col-6 col-lg-3 pr">
                             <a href="#" class="adplacement-item">
@@ -639,8 +633,9 @@
             </div>
         </div>
         <!-- adplacement--------------------------->
-        @await Component.InvokeAsync("HomePageProducts",new {categoryId=categories[r.Next(categories.Count-1)]})
-        @await Component.InvokeAsync("HomePageProducts",new {categoryId=categories[r.Next(categories.Count-1)]})
+        @*@await Component.InvokeAsync("HomePageProducts",new {categoryId=categories[r.Next(categories.Count-1)]})*@
+        @await Component.InvokeAsync("HomePageProducts",new {categoryId=0l})
+        @await Component.InvokeAsync("HomePageProducts",new {categoryId=0l})   
         <!-- brand--------------------------------------->
         <div class="col-lg-12 col-md-12 col-xs-12 pr order-1 d-block">
             <div class="slider-widget-products">

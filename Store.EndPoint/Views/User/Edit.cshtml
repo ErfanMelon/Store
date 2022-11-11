@@ -1,0 +1,127 @@
+﻿@using Store.Application.Services.Users.Queries.GetUserDetailSite
+@using Store.EndPoint.Tools
+@model UserDetailSiteDto
+@{
+    ViewData["Title"] = "اطلاعات کاربری";
+    Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+<section class="cart-home">
+    <div class="post-item-cart d-block order-2">
+        <div class="content-page">
+            <div class="cart-form">
+                
+            </div>
+            <div class="cart-collaterals">
+                <div class="totals d-block">
+                    <h3 class="Total-cart-total">مشخصات فردی</h3>
+                        <div class="checkout-summary">
+                            <ul class="checkout-summary-summary">
+                                <li class="cart-subtotal">
+                                    <span class="amount">نام و نام خانوادگی</span>
+                                    <input id="Name" value="@Model.Name" type="text">
+                                </li>
+                                <li class="shipping-totals">
+                                    <span class="amount">آدرس</span>
+                                    <div class="shipping-totals-item">
+                                        <div class="shipping-totals-outline">
+                                            <label for="#" class="shipping-totals-title-row">
+                                                <div class="shipping-totals-title">
+                                                    <textarea id="Address">@Model.Address</textarea>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="shipping-totals-outline">
+                                            <label for="#" class="shipping-totals-title-row">
+                                                <div class="shipping-totals-title">شماره تماس : <input value="@Model.PhoneNumber" type="tel" id="Phone" /></div>
+                                            </label>
+                                        </div>
+                                        <span class="shipping-destination">کد پستی : <input value="@Model.ZipCode" type="number" id="ZipCode" /></span>
+                                    </div>
+                                </li>
+                                <li class="discount-code">
+                                    <div class=" align-items-center">
+                                        <div class="col-md-7 pr mt-5">
+                                            <div class="coupon">
+                                                <button class="btn btn-coupon" onclick="EditUserInfo()" href="#">ثبت تغییرات</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+
+}
+@section Scripts{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        function EditUserInfo(){
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger me-2'
+                    },
+                    buttonsStyling: false,
+                })
+
+            var fullName = $("#Name").val();
+            var address = $("#Address").val();
+            var zipcode = $("#ZipCode").val();
+            var phone = $("#Phone").val();
+
+
+                var postData = {
+                    'FullName': fullName,
+                    'Address': address,
+                    'ZipCode': zipcode,
+                    'PhoneNumber': phone
+                };
+
+
+
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: "Edit",
+                data: postData,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            window.location.replace("/user");
+                        });
+                    }
+                    else {
+
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                },
+                error: function (request, status, error) {
+                    swal.fire(
+                        'هشدار!',
+                        request.responseText,
+                        'warning'
+                    );
+                }
+            });
+        }
+    </script>
+}
+
+

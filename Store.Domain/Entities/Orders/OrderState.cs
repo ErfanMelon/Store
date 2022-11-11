@@ -2,6 +2,9 @@
 
 namespace Store.Domain.Entities.Orders
 {
+    /// <summary>
+    /// وضعیت سفارش
+    /// </summary>
     public enum OrderState:int
     {
         [Display(Name = "درحال پردازش")]

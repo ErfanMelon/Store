@@ -28,5 +28,29 @@ namespace Store.EndPoint.Tools
             }
 
         }
+        public static string? GetUserRole(ClaimsPrincipal User)
+        {
+            try
+            {
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+
+                if (claimsIdentity.FindFirst(ClaimTypes.Role) != null)
+                {
+                    return claimsIdentity.FindFirst(ClaimTypes.Role).Value;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+
+        }
+
     }
 }

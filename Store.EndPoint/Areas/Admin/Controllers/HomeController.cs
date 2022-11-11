@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Operator")]
     [Area("Admin")]
     public class HomeController : Controller
     {

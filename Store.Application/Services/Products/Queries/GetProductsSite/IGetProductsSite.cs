@@ -39,7 +39,6 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
             var products = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.ProductImages)
-                .Include(p => p.ProductLikes)
                 .AsQueryable();
 
             if (CategoryId != null)
@@ -57,7 +56,11 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                 case Order.MostVisited:
                     products = products.OrderByDescending(p => p.Views).AsQueryable();
                     break;
-                case Order.Bestselling://InComplete !
+                case Order.Bestselling:
+                    products = products.OrderByDescending(
+                        p => _context.OrderDetails.Any(d => d.ProductId == p.ProductId) ?
+                       _context.OrderDetails.Where(d => d.ProductId == p.ProductId)
+                        .Sum(s => s.Count) : 0).AsQueryable();
                     break;
                 case Order.MostPopular:
                     products = products.OrderByDescending(p => p).AsQueryable();
@@ -84,26 +87,50 @@ namespace Store.Application.Services.Products.Queries.GetProductsSite
                         Price = p.Price,
                         ProductId = p.ProductId,
                         ProductTitle = p.ProductTitle,
-                        Stars = p.ProductLikes.Any() ? (int)p.ProductLikes.Select(l => l.Score).Average() : 0,
+                        Stars = _context.Comments.Any(c => c.ProductId == p.ProductId) ? (int)_context.Comments.Average(l => l.Score) : 0,
                         ImageSrc = p.ProductImages.Select(i => i.Src).FirstOrDefault()
                     }).ToList(),
                     RowsCount = rowcount,
-                    CurrentPage=page,
-                    PageSize=pagesize
+                    CurrentPage = page,
+                    PageSize = pagesize
                 },
                 IsSuccess = true
             };
 
         }
     }
+    /// <summary>
+    /// وضعیت مرتب سازی
+    /// </summary>
     public enum Order
     {
+        /// <summary>
+        /// مرتب نشده
+        /// </summary>
         NotOrdered,
+        /// <summary>
+        /// بیشترین بازدید
+        /// </summary>
         MostVisited,
+        /// <summary>
+        /// پرفروش
+        /// </summary>
         Bestselling,
+        /// <summary>
+        /// محبوب
+        /// </summary>
         MostPopular,
+        /// <summary>
+        /// جدیدترین
+        /// </summary>
         Newest,
+        /// <summary>
+        /// ارزانترین
+        /// </summary>
         Cheapest,
+        /// <summary>
+        /// گرانترین
+        /// </summary>
         MostExpensive
     }
 }

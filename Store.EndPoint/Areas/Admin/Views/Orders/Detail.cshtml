@@ -22,6 +22,12 @@
                 ایمیل : @Model.Email
             </p>
             <p class="mb-0">
+                شماره تماس : @Model.PhoneNumber
+            </p>
+            <p class="mb-0">
+                کدپستی : @Model.PostCode
+            </p>
+            <p class="mb-0">
                 کد سفارش : @Model.OrderId
             </p>
             <p class="mb-0">
@@ -39,6 +45,12 @@
             <p>
                 وضعیت سفارش : @Model.OrderState
             </p>
+            @if (Model.Description != null)
+            {
+                <p>
+                    توضیحات : @Model.Description
+                </p>
+            }
         </div>
     </div>
 </div>
@@ -105,8 +117,12 @@
                             <td>@deliverdate</td>
                             <td>
                                 <div class="d-flex order-actions">
-                                    <a href="javascript:;" class=""><i class="bx bxs-edit"></i></a>
+                                    <a href="javascript:;" onclick="ShowChangeOrderDetailModal('@item.OrderDetailId','@item.Count','@item.Description')" class=""><i class="bx bxs-edit"></i></a>
                                     <a href="javascript:;" onclick="ShowChangeOrderDetailStateModal('@item.OrderDetailId')" class="ms-3"><i class="lni lni-tag"></i></a>
+                                    @if (item.Description != null)
+                                    {
+                                        <a href="javascript:;" data-bs-toggle="popover" title data-bs-content="@item.Description" data-bs-original-title="توضیحات بیشتر" class="ms-3"><i class="lni lni-bubble"></i></a>
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -124,88 +140,155 @@
 
 
 @section Modals{
-        <div class="modal fade" id="MyModal" tabindex="-1" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modaltitle">عنوان</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="modalbody">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
-                        <button type="button" class="btn btn-primary" id="btnModal">
-                            ثبت
-                        </button>
-                    </div>
+    <div class="modal fade" id="MyModal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modaltitle">عنوان</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalbody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" id="btnModal">
+                        ثبت
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 }
     @section Scripts{
-        <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
 
-        <script>
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger me-2'
-                },
-                buttonsStyling: false,
-            })
+        $(function () {
+            $('[data-bs-toggle="popover"]').popover();
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        })
+
+    </script>
+    <script>
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger me-2'
+            },
+            buttonsStyling: false,
+        })
         function ChangeOrderDetailState(detailId) {
 
-                var model = {
+            var model = {
                 DetailId: detailId,
                 orderState: $("#OrderDetailState").find('option:selected').val()
-                };
+            };
 
-                // Post Data To Controller
-                $.ajax({
-                    contentType: 'application/x-www-form-urlencoded',
-                    dataType: 'json',
-                    type: "POST",
+            // Post Data To Controller
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
                 url: "ChangeOrderDetailState",
-                    data: model,
-                    success: function (data) {
-                        if (data.isSuccess == true) {
-                            swalWithBootstrapButtons.fire(
-                                'موفق!',
-                                data.message,
-                                'success'
-                            ).then(function (isConfirm) {
-                                location.reload();
-                            });
-                        }
-                        else {
-                            swalWithBootstrapButtons.fire(
-                                'هشدار!',
-                                data.message,
-                                'warning'
-                            );
-                        }
+                data: model,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
                     }
-                });
-                $("#MyModal").modal("hide");
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
+            $("#MyModal").modal("hide");
 
 
-            }
-        function ShowChangeOrderDetailStateModal(id){
-            $.get("/Admin/Orders/ChangeOrderDetailState?orderDetailId="+id, function (result) {
+        }
+        function ShowChangeOrderDetailStateModal(id) {
+            $.get("/Admin/Orders/ChangeOrderDetailState?orderDetailId=" + id, function (result) {
 
                 $("#MyModal").modal();
                 $("#modaltitle").html("تغییر وضعیت سفارش");
                 $("#btnModal").html("تغییر");
                 $("#modalbody").html(result);
-                $("#btnModal").attr("onclick", "ChangeOrderDetailState('"+id+"')");
+                $("#btnModal").attr("onclick", "ChangeOrderDetailState('" + id + "')");
                 $("#MyModal").modal("show");
 
             });
         }
-        </script>
-        
+    </script>
+    <script>
+
+        function ShowChangeOrderDetailModal(detailId, count, description) {
+
+            var model = {
+                DetailId: detailId,
+                ProductCount: count,
+                Description: description
+            }
+            $.post("/Admin/Orders/EditOrderDetailPage", model, function (result) {
+
+                $("#MyModal").modal();
+                $("#modaltitle").html("ویرایش سفارش");
+                $("#btnModal").html("ویرایش");
+                $("#modalbody").html(result);
+                $("#btnModal").attr("onclick", "ChangeOrderDetail('" + detailId + "')");
+                $("#MyModal").modal("show");
+            });
+
+
+
+        }
+        function ChangeOrderDetail(detailId) {
+
+            var model = {
+                OrderDetailId: detailId,
+                Count: $("#OrderDetailCount").val(),
+                Description: $("#Description").val(),
+            };
+
+            // Post Data To Controller
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: "EditOrderDetail",
+                data: model,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
+            $("#MyModal").modal("hide");
+
+
+        }
+    </script>
 }
     @section Css{
-        <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\Orders\Commands\NewFolder1\**" />
+    <EmbeddedResource Remove="Services\Orders\Commands\NewFolder1\**" />
+    <None Remove="Services\Orders\Commands\NewFolder1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

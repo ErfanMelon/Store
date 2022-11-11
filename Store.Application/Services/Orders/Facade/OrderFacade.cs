@@ -3,6 +3,9 @@ using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Orders.Commands.AddOrder;
 using Store.Application.Services.Orders.Commands.ChangeOrderDetailState;
 using Store.Application.Services.Orders.Commands.ChangeOrderState;
+using Store.Application.Services.Orders.Commands.DeleteOrder;
+using Store.Application.Services.Orders.Commands.EditOrder;
+using Store.Application.Services.Orders.Commands.EditOrderDetail;
 using Store.Application.Services.Orders.Queries.GetCustomerOrder;
 using Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin;
 using Store.Application.Services.Orders.Queries.GetCustomerOrders;
@@ -71,6 +74,30 @@ namespace Store.Application.Services.Orders.Facade
             get
             {
                 return _changeOrderDetailStateService = _changeOrderDetailStateService ?? new ChangeOrderDetailStateService(_context);
+            }
+        }
+        private IEditOrderDetailService _editOrderDetailService;
+        public IEditOrderDetailService editOrderDetailService
+        {
+            get
+            {
+                return _editOrderDetailService = _editOrderDetailService ?? new EditOrderDetailService(_context);
+            }
+        }
+        private IEditOrderService _editOrderService;
+        public IEditOrderService editOrderService
+        {
+            get
+            {
+                return _editOrderService = _editOrderService ?? new EditOrderService(_context);
+            }
+        }
+        private IDeleteOrderService _deleteOrderService;
+        public IDeleteOrderService deleteOrderService
+        {
+            get
+            {
+                return _deleteOrderService = _deleteOrderService ?? new DeleteOrderService(_context);
             }
         }
     }

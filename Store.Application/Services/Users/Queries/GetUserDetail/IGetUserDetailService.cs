@@ -5,19 +5,19 @@ using Store.Domain.Entities.Orders;
 
 namespace Store.Application.Services.Users.Queries.GetUserDetail
 {
-    public interface IGetUserDetailService
+    public interface IGetUserDetailServiceAdmin
     {
-        ResultDto<UserDetailDto> Execute(long userId);
+        ResultDto<UserDetailAdminDto> Execute(long userId);
     }
-    public class GetUserDetailService: IGetUserDetailService
+    public class GetUserDetailServiceAdmin : IGetUserDetailServiceAdmin
     {
         private readonly IDataBaseContext _context;
-        public GetUserDetailService(IDataBaseContext context)
+        public GetUserDetailServiceAdmin(IDataBaseContext context)
         {
             _context = context;
         }
 
-        public ResultDto<UserDetailDto> Execute(long userId)
+        public ResultDto<UserDetailAdminDto> Execute(long userId)
         {
             var user = _context.Users.Where(u => u.UserId == userId)
                 .Include(u => u.Role)
@@ -26,7 +26,7 @@ namespace Store.Application.Services.Users.Queries.GetUserDetail
                 .FirstOrDefault();
             if (user!=null)
             {
-                UserDetailDto userDetail = new UserDetailDto
+                UserDetailAdminDto userDetail = new UserDetailAdminDto
                 {
                     Address = user.Address,
                     BoughtCount = user.Orders != null ? user.Orders // product count that user doesn't cancell them
@@ -37,23 +37,23 @@ namespace Store.Application.Services.Users.Queries.GetUserDetail
                     Role = user.Role.RoleName,
                     TotalPaid = user.Orders!=null? user.Orders // total price user spend except refund(for cancelled orders)
                     .Where(o => o.OrderState != OrderState.Cancelled)
-                    .Sum(o => o.OrderDetails.Sum(d => d.Amount) - o.OrderRefund):0,
+                    .Sum(o => o.OrderDetails.Sum(d => d.Amount*d.Count) - o.OrderRefund):0,
                     UserId=user.UserId,
                     UserName=user.UserFullName,
                     Email=user.Email,
                     PhoneNumber=user.PhoneNumber,
                     ZipCode=user.ZipCode
                 };
-                return new ResultDto<UserDetailDto> 
+                return new ResultDto<UserDetailAdminDto> 
                 {
                     Data=userDetail,
                     IsSuccess=true
                 };
             }
-            return new ResultDto<UserDetailDto> {Data=new UserDetailDto(), Message = "کاربری پیدا نشد !" };
+            return new ResultDto<UserDetailAdminDto> {Data=new UserDetailAdminDto(), Message = "کاربری پیدا نشد !" };
         }
     }
-    public class UserDetailDto
+    public class UserDetailAdminDto
     {
         public long UserId { get; set; }
         public string UserName { get; set; }

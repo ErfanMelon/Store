@@ -22,7 +22,7 @@ namespace Store.Persistance.Context
         public DbSet<ProductFeatures> ProductFeatures { get; set; }
         public DbSet<ProductImages> ProductImages { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
-        public DbSet<ProductLikes> ProductLikes { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<ProductsInCart> ProductsInCarts { get; set; }
@@ -43,10 +43,9 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<ProductFeatures>().HasKey(e => e.ProductId);
             modelBuilder.Entity<ProductImages>().HasKey(e => e.ProductId);
             modelBuilder.Entity<ProductBrand>().HasKey(e => e.BrandId);
-            modelBuilder.Entity<ProductLikes>().HasKey(e => e.LikeId);
+            //modelBuilder.Entity<ProductLikes>().HasKey(e => e.LikeId);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-            modelBuilder.Entity<User>().HasOne(u => u.Role).WithOne();
 
             modelBuilder.Entity<Cart>().HasMany(c => c.ItemsInCart).WithOne(i => i.Cart);
             modelBuilder.Entity<RequestPay>().HasKey(e => e.PayId);
@@ -75,7 +74,7 @@ namespace Store.Persistance.Context
             modelBuilder.Entity<Product>().HasQueryFilter(p => !p.IsRemoved);
             modelBuilder.Entity<ProductFeatures>().HasQueryFilter(pf => !pf.IsRemoved);
             modelBuilder.Entity<ProductImages>().HasQueryFilter(pi => !pi.IsRemoved);
-            modelBuilder.Entity<ProductLikes>().HasQueryFilter(pi => !pi.IsRemoved);
+            modelBuilder.Entity<Comment>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<ProductBrand>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<Banner>().HasQueryFilter(pi => !pi.IsRemoved);
             modelBuilder.Entity<Cart>().HasQueryFilter(pi => !pi.IsRemoved);

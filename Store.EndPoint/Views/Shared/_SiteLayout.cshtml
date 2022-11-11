@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Store.EndPoint.Tools
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -56,7 +57,7 @@
                                                 <div class="dropdown-menu">
                                                     <ul class="account-uls mb-0">
                                                         <li class="account-item">
-                                                            <a href="#" class="account-link">پنل کاربری</a>
+                                                            <a href="/user" class="account-link">پنل کاربری</a>
                                                         </li>
                                                         <li class="account-item">
                                                             <a href="/order" class="account-link">سفارشات من</a>
@@ -191,9 +192,18 @@
                                     <div class="row">
                                         <section class="footer-links-col">
                                             <div class="headline-links">
-                                                <a href="#">
+                                               @if (User.Identity.IsAuthenticated && ClaimTool.GetUserRole(User)!="Customer") 
+                                                {
+                                                    <a href="/admin/home/index">
+                                                    ورود به پنل مدیریتی
+                                                </a>
+                                                }
+                                                else
+                                                {
+                                                     <a href="#">
                                                     با دیجی اسمارت
                                                 </a>
+                                                }
                                             </div>
                                             <ul class="footer-menu-ul">
                                                 <li class="menu-item-type-custom">
@@ -361,7 +371,9 @@
 <script src="~/SiteTemplate/assets/js/vendor/owl.carousel.min.js"></script>
 <script src="~/SiteTemplate/assets/js/vendor/jquery.countdown.js"></script>
 <script src="~/SiteTemplate/assets/js/vendor/jquery.nice-select.min.js"></script>
+@RenderSection("Modals",false)
 @RenderSection("Scripts",false)
+
 <!-- main js---------------------------------------------------->
 <script src="~/SiteTemplate/assets/js/main.js"></script>
 </html>

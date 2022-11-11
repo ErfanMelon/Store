@@ -1,6 +1,7 @@
 ﻿using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Fainances.Commands.AddPayRequest;
+using Store.Application.Services.Fainances.Commands.DeletePayRequest;
 using Store.Application.Services.Fainances.Commands.EditPayRequset;
 using Store.Application.Services.Fainances.Queries.GetRequestPays;
 using Store.Application.Services.Fainances.Queries.VaildateRequestPay;
@@ -46,6 +47,13 @@ namespace Store.Application.Services.Fainances.Facade
                 return _getRequestPaysService = _getRequestPaysService ?? new GetRequestPaysService(_context);
             }
         }
-
+        private IDeletePayRequestService _deletePayRequestService;
+        public IDeletePayRequestService deletePayRequestService
+        {
+            get
+            {
+                return _deletePayRequestService = _deletePayRequestService ?? new DeletePayRequestService(_context);
+            }
+        }
     }
 }

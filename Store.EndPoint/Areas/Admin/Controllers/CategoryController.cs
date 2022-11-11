@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.Application.Services.Products.Commands.AddCategory;
 using Store.Application.Services.Products.Commands.EditCategory;
@@ -6,6 +7,7 @@ using Store.EndPoint.Areas.Admin.Models.ViewModels;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Operator")]
     public partial class ProductController : Controller
     {
         public IActionResult CategoryList()

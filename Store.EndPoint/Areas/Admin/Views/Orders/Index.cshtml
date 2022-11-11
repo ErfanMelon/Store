@@ -45,7 +45,7 @@
 									</div>
 								</div>
 							</td>
-							<td><a>اطلاعات کاربر</a></td>
+							<td><a href="/admin/user/detail?userid=@item.UserId">@item.UserName</a></td>
 							<td>
 								@switch (item.OrderState)
 								{
@@ -85,8 +85,9 @@
 							</td>
 							<td>
 								<div class="d-flex order-actions">
-									<a href="javascript:;" class=""><i class="bx bxs-edit"></i></a>
+									<a href="javascript:;" onclick="ShowEditOrderModal('@item.OrderId','@item.Description')" class=""><i class="bx bxs-edit"></i></a>
 									<a href="javascript:;" onclick="ShowChangeOrderStateModal('@item.OrderId')" class="ms-3"><i class="lni lni-tag"></i></a>
+									<a href="javascript:;" onclick="DeleteOrder('@item.OrderId')" class="ms-3"><i class="lni lni-cross-circle"></i></a>
 								</div>
 							</td>
 						</tr>
@@ -196,6 +197,97 @@
 				$("#MyModal").modal("show");
 
 			});
+		}
+		function ShowEditOrderModal(orderid,description){
+			$.get("/Admin/Orders/EditOrder" , function (result) {
+
+				$("#MyModal").modal();
+				$("#modaltitle").html("تغییر سفارش");
+				$("#btnModal").html("تغییر");
+				$("#modalbody").html(result);
+				$("#OrderId").val(orderid).change();
+				$("#Description").val(description).change();
+				$("#btnModal").attr("onclick", "EditOrder()");
+				$("#MyModal").modal("show");
+
+			});
+		}
+		function EditOrder() {
+			var model={
+				orderid : $("#OrderId").val(),
+				description : $("#Description").val(),
+			};
+			$.ajax({
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'json',
+				type: "POST",
+				url: "EditOrder",
+				data: model,
+				success: function (data) {
+					if (data.isSuccess == true) {
+						swalWithBootstrapButtons.fire(
+							'موفق!',
+							data.message,
+							'success'
+						).then(function (isConfirm) {
+							location.reload();
+						});
+					}
+					else {
+						swalWithBootstrapButtons.fire(
+							'هشدار!',
+							data.message,
+							'warning'
+						);
+					}
+				}
+			});
+			$("#MyModal").modal("hide");
+		}
+		function DeleteOrder(orderid){
+			swalWithBootstrapButtons.fire({
+                title: 'حذف سفارش',
+                text: "آیا میخواهید سفارش را حذف کنید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+					
+					$.get("/Admin/Orders/DeleteOrder?orderid="+orderid, function (opt) {
+						if (opt.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+								opt.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    opt.message,
+                                    'warning'
+                                );
+                            }
+				
+
+			});
+                } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'لغو شد',
+                        'شما عملیات را لغو کردید :)',
+                        'error'
+                    )
+                }
+            })
 		}
 	</script>
 

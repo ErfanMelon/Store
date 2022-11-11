@@ -31,8 +31,8 @@ namespace Store.Application.Services.Orders.Commands.AddOrder
                     PayId = requestPay.PayId,
                     User = requestPay.User,
                     OrderState = OrderState.InProccess,
-                    UserAddress=requestPay.User.Address
-                    
+                    UserAddress=requestPay.User.Address,
+                    ZipCode=requestPay.User.ZipCode
                 };
                 _context.Orders.Add(order);
                 List<OrderDetail> orderDetails = new List<OrderDetail>();

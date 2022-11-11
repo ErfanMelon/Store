@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Application.Interfaces.Context;
+using Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin;
 using Store.Common;
 using Store.Common.Dto;
 using Store.Domain.Entities.Orders;
@@ -23,6 +24,9 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin
         public string OrderState { get; set; }
         public int Total { get; set; }
         public List<CustomerOrderDetailAdminDto> OrderDetails { get; set; }
+        public string? PostCode { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Description { get; set; }
     }
     public class CustomerOrderDetailAdminDto
     {
@@ -33,6 +37,7 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin
         public short Count { get; set; }
         public string OrderStateProduct { get; set; }
         public DateTime? DeliveredDate { get; set; }
+        public string Description { get; set; }
     }
 
     public class GetCustomerOrderAdminService: IGetCustomerOrderAdminService
@@ -54,7 +59,7 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin
             {
                 GetCustomerOrderAdminDto result = new GetCustomerOrderAdminDto
                 {
-                    Address=order.User.Address,// Fill Later
+                    Address=order.User.Address,
                     CreationDate=order.InsertTime,
                     DeliveredDate=order.DeliveredDate,
                     Email=order.User.Email,
@@ -63,7 +68,10 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin
                     UserId=order.User.UserId,
                     UserName=order.User.UserFullName,
                     OrderState=EnumHelpers<OrderState>.GetDisplayValue(order.OrderState),
-                    Total=order.RequestPay.Price
+                    Total=order.RequestPay.Price,
+                    PhoneNumber=order.User.PhoneNumber,
+                    PostCode=order.User.ZipCode,
+                    Description=order.Description
                 };
                 List<CustomerOrderDetailAdminDto> productInOrder = order.OrderDetails
                     .Select(d => new CustomerOrderDetailAdminDto
@@ -74,7 +82,8 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin
                         Price=d.Amount*d.Count,
                         ProductId=d.ProductId,
                         ProductName=d.ProductName,
-                        OrderDetailId=d.OrderDetailId
+                        OrderDetailId=d.OrderDetailId,
+                        Description=d.MoreDetail
                     }).ToList();
                 result.OrderDetails = productInOrder;
                 return new ResultDto<GetCustomerOrderAdminDto> { Data = result, IsSuccess = true };

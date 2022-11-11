@@ -1,0 +1,73 @@
+﻿@using Store.Application.Services.Products.Queries.GetProductComments
+@using Store.EndPoint.Tools
+@model GetCommentsDto
+@{
+    Layout = null;
+}
+<ul class="comment-list">
+    @foreach (var item in Model.Comments)
+    {
+        <li>
+            <div class="col-lg-3 pr">
+                <section>
+                    <div class="comments-user-shopping">
+                        @item.UserName
+                        <div class="cell-date">
+                            @item.PostDate.ToShortShamsi()
+                        </div>
+                        <div class="message-light"><i class="fa fa-thumbs-o-up"></i>خرید این محصول را توصیه می‌کنم</div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-9 pl">
+                <div class="article">
+                    <ul class="comment-text">
+                        <div class="header">
+                            <div>@item.CommentTitle</div>
+                            <div class="product-rate pl">
+                                @for (var i = 0; i < item.Stars; i++)
+                                {
+                                    <i class="fa fa-star active"></i>
+
+                                }
+                                @for (var i = 0; i < (5 - item.Stars); i++)
+                                {
+                                    <i class="fa fa-star"></i>
+
+                                }
+                            </div>
+                            <p>@item.Comment</p>
+                        </div>
+                        <div class="comments-evaluation">
+                            <div class="comments-evaluation-positive">
+                                <span>نقاط قوت</span>
+                                <ul>
+                                    @foreach (var p in item.Pros)
+                                    {
+                                        <li>
+                                            @p
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="comments-evaluation-negative">
+                                <span>نقاط قوت</span>
+                                <ul>
+                                   @foreach (var c in item.Cons)
+                                   {
+                                        <li>
+                                            @c
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="footer">
+                                
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    }
+</ul>

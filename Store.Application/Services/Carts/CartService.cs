@@ -125,6 +125,7 @@ namespace Store.Application.Services.Carts
         public ResultDto<CartDto> GetCart(long userId)
         {
             var cart = _context.Carts
+                .Include(u=>u.User)
                  .Include(c => c.ItemsInCart)
                  .ThenInclude(p => p.SelectedProduct)
                  .ThenInclude(p => p.ProductImages)
@@ -163,8 +164,12 @@ namespace Store.Application.Services.Carts
                         Price = item.SelectedProduct.Price,
                         ProductId = item.ProductId,
                         ProductTitle = item.SelectedProduct.ProductTitle,
-                        ProductImg = item.SelectedProduct.ProductImages.FirstOrDefault()?.Src
-                    }).ToList()
+                        ProductImg = item.SelectedProduct.ProductImages.FirstOrDefault()?.Src,
+                    }).ToList(),
+
+                    Address=cart.User!=null?cart.User.Address:"",
+                    PhoneNumber=cart.User != null ? cart.User.PhoneNumber : "",
+                    ZipCode= cart.User != null ? cart.User.ZipCode : ""
                 },
                 IsSuccess = true
             };

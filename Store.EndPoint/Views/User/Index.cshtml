@@ -1,0 +1,58 @@
+﻿@using Store.Application.Services.Users.Queries.GetUserDetailSite
+@using Store.EndPoint.Tools
+@model UserDetailSiteDto
+@{
+    ViewData["Title"] = "اطلاعات کاربری";
+    Layout = "~/Views/Shared/_SiteLayout.cshtml";
+}
+<section class="cart-home">
+    <div class="post-item-cart d-block order-2">
+        <div class="content-page">
+            <div class="cart-form">
+                
+            </div>
+            <div class="cart-collaterals">
+                <div class="totals d-block">
+                    <h3 class="Total-cart-total">مشخصات فردی</h3>
+                    <div class="checkout-summary">
+                        <ul class="checkout-summary-summary">
+                            <li class="cart-subtotal">
+                                <span class="amount">نام و نام خانوادگی</span>
+                                <span> @Model.Name</span>
+                            </li>
+                            <li class="shipping-totals">
+                                <span class="amount">آدرس</span>
+                                <div class="shipping-totals-item">
+                                    <div class="shipping-totals-outline">
+                                        <label for="#" class="shipping-totals-title-row">
+                                            <div class="shipping-totals-title">@Model.Address</div>
+                                        </label>
+                                    </div>
+                                    <div class="shipping-totals-outline">
+                                        <label for="#" class="shipping-totals-title-row">
+                                            <div class="shipping-totals-title">شماره تماس : @Model.PhoneNumber</div>
+                                        </label>
+                                    </div>
+                                    <span class="shipping-destination">کد پستی : @Model.ZipCode</span>
+                                </div>
+                            </li>
+                            <li class="discount-code">
+                                <div class=" align-items-center">
+                                    <div class="col-md-7 pr mt-5">
+                                        <div class="coupon">
+                                            <span class="input-coupon-code">اگر اطلاعات ارسال نادرست است آن را ویرایش کنید</span>
+                                            <a class="btn btn-coupon" href="/user/edit">ویرایش اطلاعات</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

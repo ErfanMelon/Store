@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.HomePages.Commands.AddBanner;
 using Store.Application.Services.HomePages.Commands.DeleteBanner;
@@ -7,6 +8,7 @@ using Store.Domain.Entities.HomePages;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Operator")]
     [Area("Admin")]
     public class HomePageController : Controller
     {

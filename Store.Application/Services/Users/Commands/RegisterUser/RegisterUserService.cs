@@ -30,7 +30,7 @@ namespace Store.Application.Services.Users.Commands.RegisterUser
                 UserFullName = request.FullName,
                 IsActive = true,
                 Address = request.Address,
-                Role = _context.Roles.Find(request.RoleId),
+                RoleId = request.RoleId,
                 PhoneNumber = request.PhoneNumber,
                 ZipCode = request.ZipCode
             };

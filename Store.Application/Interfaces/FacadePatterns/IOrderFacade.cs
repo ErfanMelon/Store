@@ -1,6 +1,9 @@
 ﻿using Store.Application.Services.Orders.Commands.AddOrder;
 using Store.Application.Services.Orders.Commands.ChangeOrderDetailState;
 using Store.Application.Services.Orders.Commands.ChangeOrderState;
+using Store.Application.Services.Orders.Commands.DeleteOrder;
+using Store.Application.Services.Orders.Commands.EditOrder;
+using Store.Application.Services.Orders.Commands.EditOrderDetail;
 using Store.Application.Services.Orders.Queries.GetCustomerOrder;
 using Store.Application.Services.Orders.Queries.GetCustomerOrderAdmin;
 using Store.Application.Services.Orders.Queries.GetCustomerOrders;
@@ -22,5 +25,8 @@ namespace Store.Application.Interfaces.FacadePatterns
         public IGetCustomerOrderAdminService getCustomerOrderAdminService { get; }
         public IChangeOrderStateService changeOrderStateService { get; }
         public IChangeOrderDetailStateService changeOrderDetailStateService { get; }
+        public IEditOrderDetailService editOrderDetailService { get; }
+        public IEditOrderService editOrderService { get; }
+        public IDeleteOrderService deleteOrderService { get; }
     }
 }

@@ -33,7 +33,8 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                             Brand = product.Brand.Brand,
                             Category = GetCategory(product.Category),
                             TotalViews=product.Views,
-                            Stars=GetStars(productid),
+                            //Stars=GetStars(productid),
+                            Stars= _context.Comments.Any(c => c.ProductId == productid)?(int)_context.Comments.Where(c=>c.ProductId==productid).Average(c=>c.Score):0,
                             Description = product.Description,
                             Displayed = product.Displayed,
                             Features = product.ProductFeatures.ToList().Select(f => new GetProductFeatureDto
@@ -59,14 +60,14 @@ namespace Store.Application.Services.Products.Queries.GetProductAdmin
                 return $"{GetCategory(category.ParentCategory)} - {category.CategoryTitle}";
             return category.CategoryTitle;
         }
-        int GetStars(long productid)
-        {
-            var ListRate=_context.ProductLikes.Where(p => p.ProductId == productid).Select(p => p.Score);
-            if (ListRate.Any())
-            {
-                return (int)Math.Round(ListRate.Average(), MidpointRounding.AwayFromZero);
-            }
-            return 0;
-        }
+        //int GetStars(long productid)
+        //{
+        //    var ListRate=_context.ProductLikes.Where(p => p.ProductId == productid).Select(p => p.Score);
+        //    if (ListRate.Any())
+        //    {
+        //        return (int)Math.Round(ListRate.Average(), MidpointRounding.AwayFromZero);
+        //    }
+        //    return 0;
+        //}
     }
 }

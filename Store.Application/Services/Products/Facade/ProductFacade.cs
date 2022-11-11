@@ -5,6 +5,7 @@ using Store.Application.Services.Common.Commands.DeleteFile;
 using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Products.Commands.AddBrand;
 using Store.Application.Services.Products.Commands.AddCategory;
+using Store.Application.Services.Products.Commands.AddComment;
 using Store.Application.Services.Products.Commands.AddProduct;
 using Store.Application.Services.Products.Commands.DeleteBrandService;
 using Store.Application.Services.Products.Commands.DeleteCategory;
@@ -15,6 +16,7 @@ using Store.Application.Services.Products.Queries.GetBrands;
 using Store.Application.Services.Products.Queries.GetCategories;
 using Store.Application.Services.Products.Queries.GetCategory;
 using Store.Application.Services.Products.Queries.GetProductAdmin;
+using Store.Application.Services.Products.Queries.GetProductComments;
 using Store.Application.Services.Products.Queries.GetProductForEdit;
 using Store.Application.Services.Products.Queries.GetProductsAdmin;
 using Store.Application.Services.Products.Queries.GetProductSite;
@@ -168,6 +170,22 @@ namespace Store.Application.Services.Products.Facade
             get
             {
                 return _getBrandsService = _getBrandsService ?? new GetBrandsService(_context);
+            }
+        }
+        private IAddCommentService _addCommentService;
+        public IAddCommentService addCommentService
+        {
+            get
+            {
+                return _addCommentService = _addCommentService ?? new AddCommentService(_context);
+            }
+        }
+        private IGetProductCommentsService _getProductCommentsService;
+        public IGetProductCommentsService getProductCommentsService
+        {
+            get
+            {
+                return _getProductCommentsService = _getProductCommentsService ?? new GetProductCommentsService(_context);
             }
         }
     }

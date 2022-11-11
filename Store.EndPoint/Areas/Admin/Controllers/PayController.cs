@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Store.Application.Interfaces.FacadePatterns;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin,Operator")]
     [Area("Admin")]
     public class PayController : Controller
     {
@@ -16,6 +18,11 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         {
             var result = _requestPayFacade.getRequestPaysService.Execute(page, pagesize);
             return View(result.Data);
+        }
+        public IActionResult DeletePay(Guid payId)
+        {
+            var result = _requestPayFacade.deletePayRequestService.Execute(payId);
+            return Json(result);
         }
     }
 }

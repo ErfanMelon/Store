@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Users.Commands.EditUser;
 using Store.Application.Services.Users.Commands.RegisterUser;
 using Store.Application.Services.Users.Queries.GetUsers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class UserController : Controller
     {
@@ -53,7 +57,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
         }
         public IActionResult Detail(long userId)
         {
-            var resultDetailUser = _userFacade.getUserDetailService.Execute(userId);
+            var resultDetailUser = _userFacade.getUserDetailServiceAdmin.Execute(userId);
             return View(resultDetailUser.Data);
         }
     }

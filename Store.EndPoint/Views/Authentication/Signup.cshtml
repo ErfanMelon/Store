@@ -55,6 +55,18 @@
                                                 <input type="email" class="number-email-input" id="Email">
                                             </div>
                                             <div class="form-account-title">
+                                                <label for="email-phone">آدرس  </label>
+                                                <input type="text" class="number-email-input" id="Address">
+                                            </div>
+                                            <div class="form-account-title">
+                                                <label for="email-phone">شماره تماس  </label>
+                                                <input type="tel" class="number-email-input" id="Phone">
+                                            </div>
+                                            <div class="form-account-title">
+                                                <label for="email-phone">کدپستی  </label>
+                                                <input type="number" class="number-email-input" id="ZipCode">
+                                            </div>
+                                            <div class="form-account-title">
                                                 <label for="password">رمز عبور</label>
                                                 <input type="password" class="password-input" id="Password">
                                             </div>
@@ -118,11 +130,18 @@
         var Password = $("#Password").val();
         var RePassword = $("#RePassword").val();
 
+        var Address = $("#Address").val();
+        var Phone = $("#Phone").val();
+        var ZipCode = $("#ReZipCodePassword").val();
+
         var postData = {
             'FullName': FullName,
             'Email': Email,
             'Password': Password,
             'RePassword': RePassword,
+            'Address':Address,
+            'Phone':Phone,
+            'ZipCode':ZipCode
         };
 
         $.ajax({

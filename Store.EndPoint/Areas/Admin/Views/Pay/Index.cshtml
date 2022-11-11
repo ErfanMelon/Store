@@ -43,7 +43,7 @@
 									</div>
 								</div>
 							</td>
-							<td><a>اطلاعات کاربر</a></td>
+							<td><a href="/admin/user/detail?userid=@item.UserId">@item.UserName</a></td>
 							<td>
 								@item.Price.ToString("n0") تومان
 							</td>
@@ -74,6 +74,8 @@
 									{
 										<a href="/Admin/Orders/Detail?orderId=@item.OrderId" class="ms-3"><i class="bx bx-cart"></i></a>
 									}
+																		<a href="javascript:;" onclick="DeletePay('@item.PayId')" class="ms-3"><i class="lni lni-cross-circle"></i></a>
+
 								</div>
 							</td>
 						</tr>
@@ -104,3 +106,64 @@
                 </div>
 					</div>
 				</div>
+@section Css{
+	<link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+				@section Scripts{
+	<script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+					<script>
+		const swalWithBootstrapButtons = Swal.mixin({
+			customClass: {
+				confirmButton: 'btn btn-success',
+				cancelButton: 'btn btn-danger me-2'
+			},
+			buttonsStyling: false,
+		})
+		function DeletePay(payid) {
+			swalWithBootstrapButtons.fire({
+				title: 'حذف پرداخت',
+				text: "آیا میخواهید پرداخت را حذف کنید؟",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonClass: 'me-2',
+				confirmButtonText: 'بله حذف شود',
+				cancelButtonText: 'خیر',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.value) {
+
+					$.get("/Admin/Pay/DeletePay?payid=" + payid, function (opt) {
+						if (opt.isSuccess == true) {
+							swalWithBootstrapButtons.fire(
+								'موفق!',
+								opt.message,
+								'success'
+							).then(function (isConfirm) {
+								location.reload();
+							});
+						}
+						else {
+							swalWithBootstrapButtons.fire(
+								'هشدار!',
+								opt.message,
+								'warning'
+							);
+						}
+
+
+					});
+				} else if (
+					// Read more about handling dismissals
+					result.dismiss === Swal.DismissReason.cancel
+				) {
+					swalWithBootstrapButtons.fire(
+						'لغو شد',
+						'شما عملیات را لغو کردید :)',
+						'error'
+					)
+				}
+			})
+		}
+					</script>
+				}

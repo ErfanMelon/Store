@@ -1,4 +1,5 @@
-﻿using Store.Application.Interfaces.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Application.Interfaces.Context;
 using Store.Common;
 using Store.Common.Dto;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Store.Application.Services.Fainances.Queries.GetRequestPays
         public ResultDto<RequestPayDto> Execute(int page, int pagesize)
         {
             var requestpays = _context.RequestPays
+                .Include(r=>r.User)
                 .Select(r => new PayDetailDto
                 {
                     Authority = r.Authority,
@@ -29,7 +31,8 @@ namespace Store.Application.Services.Fainances.Queries.GetRequestPays
                     Price = r.Price,
                     RefId = r.RefId,
                     UserId = r.UserId,
-                    OrderId = _context.Orders.Where(o => o.PayId == r.PayId).Any() ? _context.Orders.Where(o => o.PayId == r.PayId).First().OrderId : 0l
+                    OrderId = _context.Orders.Where(o => o.PayId == r.PayId).Any() ? _context.Orders.Where(o => o.PayId == r.PayId).First().OrderId : 0l,
+                    UserName=r.User.UserFullName
                 }).ToPaged(page, pagesize, out int rows);
             return new ResultDto<RequestPayDto>
             {
@@ -55,6 +58,7 @@ namespace Store.Application.Services.Fainances.Queries.GetRequestPays
     {
         public Guid PayId { get; set; }
         public long UserId { get; set; }
+        public string UserName { get; set; }
         public int Price { get; set; }
         public bool IsPay { get; set; }
         public DateTime? PayDate { get; set; }

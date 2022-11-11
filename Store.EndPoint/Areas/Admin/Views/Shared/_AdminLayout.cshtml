@@ -1,4 +1,6 @@
-﻿<!doctype html>
+﻿@using Store.EndPoint.Tools
+@using Store.Common.Roles
+<!doctype html>
 <html lang="en" dir="rtl">
 
 
@@ -57,7 +59,9 @@
 						<li> <a href="/admin/HomePage/AddBanner"><i class="bx bx-left-arrow-alt"></i>* افزودن بنر جدید</a></li>
 					</ul>
 				</li>
-				<li class="menu-label">ادمین</li>
+				@if(ClaimTool.GetUserRole(User)=="Admin")
+				{
+					<li class="menu-label">ادمین</li>
 				<li>
 					<a href="javascript:;" class="has-arrow">
 						<div class="parent-icon"><i class='bx bx-user'></i>
@@ -69,7 +73,11 @@
 					<li> <a href="/admin/user/create"><i class="bx bx-left-arrow-alt"></i>* کاربر جدید</a></li>
 					</ul>
 				</li>
-				<li class="menu-label">اپراتور</li>
+				}
+				
+				@if (ClaimTool.GetUserRole(User)=="Admin" ||ClaimTool.GetUserRole(User)=="Operator")
+				{
+					<li class="menu-label">اپراتور</li>
 				<li>
 					<a href="javascript:;" class="has-arrow">
 						<div class="parent-icon">
@@ -107,6 +115,7 @@
 						<li> <a href="/admin/pay/index"><i class="bx bx-left-arrow-alt"></i>لیست پرداختی ها</a></li>
 					</ul>
 				</li>
+				}
 			</ul>
 			<!--end navigation-->
 		</div>
@@ -489,10 +498,10 @@
 					<div class="user-box dropdown">
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
 							role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="~/admintemplate/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+							<img src="~/SiteTemplate/assets/images/man.png" class="user-img" alt="user avatar">
 							<div class="user-info ps-3">
-								<p class="user-name mb-0">پریسا توکلی</p>
-								<p class="designattion mb-0">طراح وب</p>
+								<p class="user-name mb-0">@User.Identity.Name</p>
+								<p class="designattion mb-0">@ClaimTool.GetUserRole(User)</p>
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
@@ -514,8 +523,9 @@
 							<li>
 								<div class="dropdown-divider mb-0"></div>
 							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i
-										class='bx bx-log-out-circle'></i><span>خروج</span></a>
+							<li>
+								<a class="dropdown-item" href="/authentication/SignOut">
+									<i class='bx bx-log-out-circle'></i><span>خروج</span></a>
 							</li>
 						</ul>
 					</div>

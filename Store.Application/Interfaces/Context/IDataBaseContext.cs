@@ -16,7 +16,7 @@ namespace Store.Application.Interfaces.Context
          DbSet<ProductFeatures> ProductFeatures { get; set; }
          DbSet<ProductImages> ProductImages { get; set; }
          DbSet<ProductBrand> ProductBrands { get; set; }
-         DbSet<ProductLikes> ProductLikes { get; set; }
+         DbSet<Comment> Comments { get; set; }
          DbSet<Banner> Banners { get; set; }
          DbSet<Cart> Carts { get; set; }
          DbSet<ProductsInCart> ProductsInCarts { get; set; }

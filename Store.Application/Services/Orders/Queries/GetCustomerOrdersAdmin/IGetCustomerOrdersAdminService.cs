@@ -1,4 +1,5 @@
-﻿using Store.Application.Interfaces.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Application.Interfaces.Context;
 using Store.Application.Services.Orders.Queries.GetCustomerOrders;
 using Store.Common;
 using Store.Common.Dto;
@@ -21,9 +22,11 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrdersAdmin
     {
         public long OrderId { get; set; }
         public long UserId { get; set; }
+        public string UserName { get; set; }
         public string OrderState { get; set; }
         public DateTime OrderCreation { get; set; }
         public int PaidPrice { get; set; }
+        public string? Description { get; set; }
     }
     public class GetCustomerOrdersAdminService : IGetCustomerOrdersAdminService
     {
@@ -35,7 +38,9 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrdersAdmin
 
         public ResultDto<CustomerOrdersAdminDto> Execute(OrderState? orderState, string? SearchKey, int page, int pagesize)
         {
-            var orders = _context.Orders.AsQueryable();
+            var orders = _context.Orders
+                .Include(o=>o.User)
+                .AsQueryable();
             if (orderState != null)
             {
                 orders = orders.Where(o => o.OrderState == orderState).AsQueryable();
@@ -54,6 +59,8 @@ namespace Store.Application.Services.Orders.Queries.GetCustomerOrdersAdmin
                 OrderState = EnumHelpers<OrderState>.GetDisplayValue(o.OrderState),
                 PaidPrice = o.RequestPay.Price,
                 UserId = o.UserId,
+                UserName=o.User.UserFullName,
+                Description=o.Description
 
             }).ToPaged(page, pagesize, out int rowCount).ToList();
             if (orders.Any())

@@ -197,6 +197,9 @@ namespace Store.Persistance.Migrations
                     b.Property<DateTime?>("DeliveredDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime2");
 
@@ -227,6 +230,10 @@ namespace Store.Persistance.Migrations
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("OrderId");
 
@@ -259,6 +266,9 @@ namespace Store.Persistance.Migrations
 
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("bit");
+
+                    b.Property<string>("MoreDetail")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("OrderId")
                         .HasColumnType("bigint");
@@ -299,8 +309,7 @@ namespace Store.Persistance.Migrations
 
                     b.Property<string>("CategoryTitle")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime2");
@@ -322,6 +331,60 @@ namespace Store.Persistance.Migrations
                     b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Store.Domain.Entities.Products.Comment", b =>
+                {
+                    b.Property<long>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CommentId"), 1L, 1);
+
+                    b.Property<string>("Cons")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("InsertTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Pros")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RemoveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserComment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Store.Domain.Entities.Products.Product", b =>
@@ -412,7 +475,7 @@ namespace Store.Persistance.Migrations
                         {
                             BrandId = 1,
                             Brand = "متفرقه",
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8646),
+                            InsertTime = new DateTime(2022, 11, 7, 17, 50, 42, 415, DateTimeKind.Local).AddTicks(6998),
                             IsRemoved = false
                         });
                 });
@@ -489,44 +552,6 @@ namespace Store.Persistance.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("Store.Domain.Entities.Products.ProductLikes", b =>
-                {
-                    b.Property<long>("LikeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("LikeId"), 1L, 1);
-
-                    b.Property<DateTime>("InsertTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsRemoved")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("RemoveTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("LikeId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductLikes");
-                });
-
             modelBuilder.Entity("Store.Domain.Entities.Users.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -559,21 +584,21 @@ namespace Store.Persistance.Migrations
                         new
                         {
                             RoleId = 1,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8277),
+                            InsertTime = new DateTime(2022, 11, 7, 17, 50, 42, 415, DateTimeKind.Local).AddTicks(6725),
                             IsRemoved = false,
                             RoleName = "Admin"
                         },
                         new
                         {
                             RoleId = 2,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8479),
+                            InsertTime = new DateTime(2022, 11, 7, 17, 50, 42, 415, DateTimeKind.Local).AddTicks(6913),
                             IsRemoved = false,
                             RoleName = "Operator"
                         },
                         new
                         {
                             RoleId = 3,
-                            InsertTime = new DateTime(2022, 11, 3, 13, 15, 40, 530, DateTimeKind.Local).AddTicks(8517),
+                            InsertTime = new DateTime(2022, 11, 7, 17, 50, 42, 415, DateTimeKind.Local).AddTicks(6952),
                             IsRemoved = false,
                             RoleName = "Customer"
                         });
@@ -631,8 +656,7 @@ namespace Store.Persistance.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("RoleId")
-                        .IsUnique();
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -723,6 +747,25 @@ namespace Store.Persistance.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("Store.Domain.Entities.Products.Comment", b =>
+                {
+                    b.HasOne("Store.Domain.Entities.Products.Product", "Product")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Store.Domain.Entities.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Store.Domain.Entities.Products.Product", b =>
                 {
                     b.HasOne("Store.Domain.Entities.Products.ProductBrand", "Brand")
@@ -764,30 +807,11 @@ namespace Store.Persistance.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Store.Domain.Entities.Products.ProductLikes", b =>
-                {
-                    b.HasOne("Store.Domain.Entities.Products.Product", "Product")
-                        .WithMany("ProductLikes")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Store.Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Store.Domain.Entities.Users.User", b =>
                 {
                     b.HasOne("Store.Domain.Entities.Users.Role", "Role")
-                        .WithOne()
-                        .HasForeignKey("Store.Domain.Entities.Users.User", "RoleId")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -811,16 +835,21 @@ namespace Store.Persistance.Migrations
 
             modelBuilder.Entity("Store.Domain.Entities.Products.Product", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("ProductFeatures");
 
                     b.Navigation("ProductImages");
-
-                    b.Navigation("ProductLikes");
                 });
 
             modelBuilder.Entity("Store.Domain.Entities.Products.ProductBrand", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Store.Domain.Entities.Users.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Store.Domain.Entities.Users.User", b =>

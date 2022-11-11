@@ -28,42 +28,16 @@ namespace Store.EndPoint.Controllers
         [HttpPost]
         public IActionResult Signup(SignupViewModel request)
         {
-            //if (string.IsNullOrWhiteSpace(request.FullName) ||
-            //    string.IsNullOrWhiteSpace(request.Email) ||
-            //    string.IsNullOrWhiteSpace(request.Password) ||
-            //    string.IsNullOrWhiteSpace(request.RePassword))
-            //{
-            //    return Json(new ResultDto { IsSuccess = false, Message = "لطفا تمامی موارد رو ارسال نمایید" });
-            //}
-
-            //if (User.Identity.IsAuthenticated == true)
-            //{
-            //    return Json(new ResultDto { IsSuccess = false, Message = "شما به حساب کاربری خود وارد شده اید! و در حال حاضر نمیتوانید ثبت نام مجدد نمایید" });
-            //}
-            //if (request.Password != request.RePassword)
-            //{
-            //    return Json(new ResultDto { IsSuccess = false, Message = "رمز عبور و تکرار آن برابر نیست" });
-            //}
-            //if (request.Password.Length < 8)
-            //{
-            //    return Json(new ResultDto { IsSuccess = false, Message = "رمز عبور باید حداقل 8 کاراکتر باشد" });
-            //}
-
-            string emailRegex = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}$";
-
-            var match = Regex.Match(request.Email, emailRegex, RegexOptions.IgnoreCase);
-            if (!match.Success)
-            {
-                return Json(new ResultDto { IsSuccess = true, Message = "ایمیل خودرا به درستی وارد نمایید" });
-            }
-
             var signeupResult = _userFacade.registerUserService.Execute(new RegisterUserDto
             {
                 Email = request.Email,
                 FullName = request.FullName,
                 Password = request.Password,
                 RePassword = request.RePassword,
-                RoleId = 3
+                RoleId = 3,
+                Address=request.Address,
+                PhoneNumber=request.Phone,
+                ZipCode=request.ZipCode
             });
 
             if (signeupResult.IsSuccess == true)
@@ -107,7 +81,7 @@ namespace Store.EndPoint.Controllers
                 new Claim(ClaimTypes.NameIdentifier,signupResult.Data.UserId.ToString()),
                 new Claim(ClaimTypes.Email, Email),
                 new Claim(ClaimTypes.Name, signupResult.Data.Name),
-                new Claim(ClaimTypes.Role, signupResult.Data.Role.ToString() ),
+                new Claim(ClaimTypes.Role, signupResult.Data.Role ),
             };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
