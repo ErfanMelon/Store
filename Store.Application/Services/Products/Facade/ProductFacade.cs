@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Common.Commands.DeleteFile;
@@ -28,14 +29,12 @@ namespace Store.Application.Services.Products.Facade
     {
         private readonly IDataBaseContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
-        private readonly IUploadFileService _uploadFileService;
-        private readonly IDeleteFileService _deleteFileService;
-        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment, IUploadFileService uploadFileService, IDeleteFileService deleteFileService)
+        private readonly IMediator _mediator;
+        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment , IMediator mediator)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
-            _uploadFileService = uploadFileService;
-            _deleteFileService = deleteFileService;
+            _mediator = mediator;
         }
 
         private IAddCategoryService _addCategoryService;
@@ -86,7 +85,7 @@ namespace Store.Application.Services.Products.Facade
         {
             get
             {
-                return _addProductService = _addProductService ?? new AddProductService(_context, _uploadFileService);
+                return _addProductService = _addProductService ?? new AddProductService(_context, _mediator);
             }
         }
 
@@ -120,7 +119,7 @@ namespace Store.Application.Services.Products.Facade
         {
             get
             {
-                return _editProductService = _editProductService ?? new EditProductService(_context, _uploadFileService, _deleteFileService);
+                return _editProductService = _editProductService ?? new EditProductService(_context, _mediator);
             }
         }
         private IGetProductEditService _getProductEditService;

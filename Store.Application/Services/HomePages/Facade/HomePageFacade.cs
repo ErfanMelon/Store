@@ -1,6 +1,6 @@
-﻿using Store.Application.Interfaces.Context;
+﻿using MediatR;
+using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
-using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.HomePages.Commands.AddBanner;
 using Store.Application.Services.HomePages.Commands.ChangeBannerState;
 using Store.Application.Services.HomePages.Commands.DeleteBanner;
@@ -12,19 +12,19 @@ namespace Store.Application.Services.HomePages.Facade
     public class HomePageFacade:IHomePageFacade
     {
         private readonly IDataBaseContext _context;
-        private readonly IUploadFileService _uploadFileService;
-        public HomePageFacade(IDataBaseContext context, IUploadFileService uploadFileService)
+        private readonly IMediator _mediator;
+        public HomePageFacade(IDataBaseContext context, IMediator mediator)
         {
             _context = context;
-            _uploadFileService = uploadFileService;
+            _mediator = mediator;
         }
-        
+
         private IAddBannerService _addBannerService;
         public IAddBannerService addBannerService
         {
             get
             {
-                return _addBannerService = _addBannerService ?? new AddBannerService(_context, _uploadFileService);
+                return _addBannerService = _addBannerService ?? new AddBannerService(_context,_mediator);
             }
         }
 

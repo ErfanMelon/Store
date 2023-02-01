@@ -1,19 +1,22 @@
-﻿using Store.Application.Interfaces.Context;
+﻿using MediatR;
+using Store.Application.Interfaces.Context;
 using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Validations.Product;
 using Store.Common.Dto;
 using Store.Domain.Entities.Products;
+using static Store.Common.UploadPath;
 
 namespace Store.Application.Services.Products.Commands.AddProduct
 {
     public class AddProductService : IAddProductService
     {
         private readonly IDataBaseContext _dataBaseContext;
-        private readonly IUploadFileService _uploadFileService;
-        public AddProductService(IDataBaseContext dataBaseContext, IUploadFileService uploadFileService)
+        private readonly IMediator _mediator;
+
+        public AddProductService(IDataBaseContext dataBaseContext,IMediator mediator)
         {
             _dataBaseContext = dataBaseContext;
-            _uploadFileService = uploadFileService;
+            _mediator = mediator;
         }
 
         public ResultDto Execute(RequestProductDto request)
@@ -42,7 +45,7 @@ namespace Store.Application.Services.Products.Commands.AddProduct
             var images = new List<ProductImages>();
             foreach (var item in request.Images)
             {
-                var uploadedimg = _uploadFileService.Execute(item, UploadFileType.ProductImage);
+                var uploadedimg = _mediator.Send(new UploadFileCommand(item, UploadFileType.ProductImage)).Result;
                 images.Add(new ProductImages
                 {
                     Product = product,
