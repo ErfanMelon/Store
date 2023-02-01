@@ -1,17 +1,15 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Store.Application;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Carts;
-using Store.Application.Services.Common.Commands.DeleteFile;
-using Store.Application.Services.Common.Commands.UploadFile;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
 using Store.Application.Services.Fainances.Facade;
 using Store.Application.Services.HomePages.Facade;
 using Store.Application.Services.Orders.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
-using Store.Common;
 using Store.Common.Roles;
 using Store.EndPoint.Tools;
 using Store.Persistance.Context;
@@ -26,8 +24,7 @@ var connectionstring = builder.Configuration.GetSection("ConnectionString").Valu
 builder.Services.AddEntityFrameworkSqlServer().AddDbContext<DataBaseContext>(option => option.UseSqlServer(connectionstring));
 builder.Services.AddScoped<IDataBaseContext, DataBaseContext>();
 
-builder.Services.AddScoped <IUploadFileService, UploadFileService> ();
-builder.Services.AddScoped <IDeleteFileService, DeleteFileService> ();
+builder.Services.AddApplicationServices();
 
 builder.Services.AddScoped<IUserFacade, UserFacade>();
 
@@ -83,13 +80,17 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
-            name: "areas",
-            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-          );
+app.UseEndpoints(endpoint =>
+{
+    endpoint.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+              );
+    endpoint.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+    
+});
 
 app.Run();
