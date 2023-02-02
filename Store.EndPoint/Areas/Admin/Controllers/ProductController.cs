@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.Application.Interfaces.FacadePatterns;
@@ -6,6 +7,7 @@ using Store.Application.Services.Products.Commands.AddCategory;
 using Store.Application.Services.Products.Commands.AddProduct;
 using Store.Application.Services.Products.Commands.EditCategory;
 using Store.Application.Services.Products.Commands.EditProduct;
+using Store.Application.Services.Products.Queries.GetBrands;
 using Store.EndPoint.Areas.Admin.Models.ViewModels;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
@@ -14,17 +16,17 @@ namespace Store.EndPoint.Areas.Admin.Controllers
     [Area("Admin")]
     public partial class ProductController : Controller
     {
-
+        private readonly IMediator _mediator;
         private readonly IProductFacade _productFacade;
-        public ProductController(IProductFacade productFacade)
+        public ProductController(IProductFacade productFacade, IMediator mediator)
         {
             _productFacade = productFacade;
+            _mediator = mediator;
         }
 
         public IActionResult AddProduct()
         {
-            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent!=null), "CategoryId", "CategoryTitle");
-            ViewBag.Brands = new SelectList(_productFacade.getBrandsService.Execute().Data, "BrandId", "BrandName");
+            ViewBagsData(); 
             return View();
         }
         [HttpPost]
@@ -65,13 +67,19 @@ namespace Store.EndPoint.Areas.Admin.Controllers
             var product = _productFacade.getProductEditService.Execute(productId);
             if (product.IsSuccess)
             {
-                ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
-                ViewBag.Brands = new SelectList(_productFacade.getBrandsService.Execute().Data, "BrandId", "BrandName");
+                ViewBagsData();
                 TempData["ProductId"] = productId;
                 return View(product.Data);
             }
             return BadRequest();
         }
+
+        private void ViewBagsData()
+        {
+            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
+            ViewBag.Brands = new SelectList(_mediator.Send(new GetBrandsQuery()).Result.Data, "BrandId", "BrandName");
+        }
+
         [HttpPost]
         public IActionResult EditProduct(RequestEditProductDto request, List<RequestFeatureDto> Features)
         {

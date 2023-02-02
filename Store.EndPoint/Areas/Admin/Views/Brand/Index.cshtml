@@ -1,0 +1,200 @@
+﻿@model ResultDto<List<BrandBreifDto>>
+@{
+    ViewData["Title"] = "برند ها";
+}
+@section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+
+<h6 class="mb-0 text-uppercase">لیست برند محصولات</h6>
+<hr>
+<div class="card">
+    <div class="card-body">
+        @if(Model.IsSuccess)
+        {
+            <table class="table mb-0 table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">برند</th>
+                        <th scope="col">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <th scope="row">@item.BrandId</th>
+                            <td>@item.BrandName</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="DeleteBrand('@item.BrandId','@item.BrandName')">حذف</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>@Model.Message</p>
+        }
+    </div>
+</div>
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CreateBrandModal">برند جدید</button>
+
+@section Modals{
+    <div class="modal fade" id="CreateBrandModal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modaltitle">برند جدید</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalbody">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row row-cols-auto g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="BrandName">نام برند</label>
+                                    <input class="form-control form-control-sm mb-3" id="BrandName" type="text" placeholder="مثلا شیائومی">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" onclick="AddBrand($('#CreateBrandModal #BrandName').val())" id="btnModal">
+                        افزودن برند
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    @section Scripts{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger me-2'
+            },
+            buttonsStyling: false,
+        })
+    </script>
+    <script>
+        function DeleteBrand(brandId,brandName) {
+            swalWithBootstrapButtons.fire({
+                title: 'حذف',
+                text: 'آیا میخواهید '+brandName+' را حذف کنید؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+
+                    var postData = {
+                        BrandId: brandId,
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',
+                        url: '@Url.Action("Delete","Brand")',
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            swalWithBootstrapButtons.fire(
+                                'خطا',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+        function AddBrand(brandName) {
+            swalWithBootstrapButtons.fire({
+                title: 'افزودن',
+                text: "آیا میخواهید برند را اضافه کنید؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+
+                    var postData = {
+                        BrandName: brandName
+                    };
+
+                    // Post Data To Controller
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',
+                        url: '@Url.Action("Create","Brand")',
+                        data: postData,
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            swalWithBootstrapButtons.fire(
+                                'خطا',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
+

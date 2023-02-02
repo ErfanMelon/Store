@@ -34,9 +34,6 @@ namespace Store.Application.Interfaces.FacadePatterns
         public IGetProductEditService getProductEditService { get; }
         public IGetProductsSite getProductsSite { get; }
         public IGetProductSiteService getProductSiteService { get; }
-        public IAddBrandService addBrandService { get; }
-        public IDeleteBrandService deleteBrandService { get; }
-        public IGetBrandsService getBrandsService { get; }
         public IAddCommentService addCommentService { get; }
         public IGetProductCommentsService getProductCommentsService { get; }
     }

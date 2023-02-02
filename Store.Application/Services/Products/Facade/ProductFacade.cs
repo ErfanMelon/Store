@@ -2,13 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
-using Store.Application.Services.Common.Commands.DeleteFile;
-using Store.Application.Services.Common.Commands.UploadFile;
-using Store.Application.Services.Products.Commands.AddBrand;
 using Store.Application.Services.Products.Commands.AddCategory;
 using Store.Application.Services.Products.Commands.AddComment;
 using Store.Application.Services.Products.Commands.AddProduct;
-using Store.Application.Services.Products.Commands.DeleteBrandService;
 using Store.Application.Services.Products.Commands.DeleteCategory;
 using Store.Application.Services.Products.Commands.DeleteProduct;
 using Store.Application.Services.Products.Commands.EditCategory;
@@ -30,7 +26,7 @@ namespace Store.Application.Services.Products.Facade
         private readonly IDataBaseContext _context;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IMediator _mediator;
-        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment , IMediator mediator)
+        public ProductFacade(IDataBaseContext context, IHostingEnvironment hostingEnvironment, IMediator mediator)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
@@ -144,31 +140,6 @@ namespace Store.Application.Services.Products.Facade
             get
             {
                 return _getProductSiteService = _getProductSiteService ?? new GetProductSiteService(_context);
-            }
-        }
-
-        private IAddBrandService _addBrandService;
-        public IAddBrandService addBrandService
-        {
-            get
-            {
-                return _addBrandService = _addBrandService ?? new AddBrandService(_context);
-            }
-        }
-        private IDeleteBrandService _deleteBrandService;
-        public IDeleteBrandService deleteBrandService
-        {
-            get
-            {
-                return _deleteBrandService = _deleteBrandService ?? new DeleteBrandService(_context);
-            }
-        }
-        private IGetBrandsService _getBrandsService;
-        public IGetBrandsService getBrandsService
-        {
-            get
-            {
-                return _getBrandsService = _getBrandsService ?? new GetBrandsService(_context);
             }
         }
         private IAddCommentService _addCommentService;
