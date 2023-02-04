@@ -33,49 +33,6 @@ namespace Store.Application.Services.Products.Facade
             _mediator = mediator;
         }
 
-        private IAddCategoryService _addCategoryService;
-        public IAddCategoryService addCategoryService
-        {
-            get
-            {
-                return _addCategoryService = _addCategoryService ?? new AddCategoryService(_context);
-            }
-        }
-
-        private IGetCategoriesService _getCategoriesService;
-        public IGetCategoriesService getCategoriesService
-        {
-            get
-            {
-                return _getCategoriesService = _getCategoriesService ?? new GetCategoriesService(_context);
-            }
-        }
-
-        private IEditCategoryService _editCategoryService;
-        public IEditCategoryService editCategoryService
-        {
-            get
-            {
-                return _editCategoryService = _editCategoryService ?? new EditCategoryService(_context);
-            }
-        }
-
-        private IDeleteCategoryService _deleteCategoryService;
-        public IDeleteCategoryService deleteCategoryService
-        {
-            get
-            {
-                return _deleteCategoryService = _deleteCategoryService ?? new DeleteCategoryService(_context);
-            }
-        }
-        private IGetCategoryDetailService _getCategoryDetailService;
-        public IGetCategoryDetailService getCategoryDetailService
-        {
-            get
-            {
-                return _getCategoryDetailService = _getCategoryDetailService ?? new GetCategoryDetailService(_context);
-            }
-        }
         private IAddProductService _addProductService;
         public IAddProductService addProductService
         {
