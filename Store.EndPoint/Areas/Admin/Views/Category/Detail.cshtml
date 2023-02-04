@@ -1,0 +1,47 @@
+﻿@model ResultDto<CategoryDto>
+<div class="card">
+    <div class="card-body">
+       @if(Model.IsSuccess)
+       {
+            <div class="row row-cols-auto g-3">
+                <div class="col-md-6">
+                    <label class="form-label">نام دسته بندی</label>
+                    <label class="form-label">@Model.Data.CategoryTitle</label>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">دسته بندی والد</label>
+                    <div class="bootstrap-tagsinput">
+                        @if (Model.Data.Parent != null)
+                        {
+                            <span class="badge rounded-pill bg-light text-dark"> @Model.Data.Parent.CategoryTitle</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger"> ندارد </span>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">دسته بندی های زیرمجموعه</label>
+                    <div class="bootstrap-tagsinput">
+                        @if (Model.Data.Children?.Any() ?? false)
+                        {
+                            foreach (var item in Model.Data.Children)
+                            {
+                                <span class="badge rounded-pill bg-warning text-dark">@item.CategoryTitle</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger"> ندارد </span>
+                        }
+                    </div>
+                </div>
+            </div>
+       }
+       else
+       {
+           <p>@Model.Message</p>
+       }
+    </div>
+</div>

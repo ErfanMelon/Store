@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.HomePages.Queries.GetBannersSite;
+using Store.Application.Services.Products.Queries.GetCategories;
 using Store.EndPoint.Models;
 using System.Diagnostics;
 
@@ -11,15 +13,17 @@ namespace Store.EndPoint.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHomePageFacade _homePageFacade;
         private readonly IProductFacade _productFacade;
-        public HomeController(ILogger<HomeController> logger,IHomePageFacade homePageFacade, IProductFacade productFacade)
+        private readonly IMediator _mediator;
+        public HomeController(ILogger<HomeController> logger, IHomePageFacade homePageFacade, IProductFacade productFacade, IMediator mediator)
         {
             _logger = logger;
             _homePageFacade = homePageFacade;
             _productFacade = productFacade;
+            _mediator = mediator;
         }
         public IActionResult Index()
         {
-            ViewBag.Categories = _productFacade.getCategoriesService.Execute().Data.Select(c=>c.CategoryId).ToList();
+            ViewBag.Categories = _mediator.Send(new GetCategoriesQuery()).Result.Data.Select(c=>c.CategoryId).ToList();
             //return RedirectToAction("Index", "Product");
             return View(_homePageFacade.getBannersSiteService.Execute().Data);
         }

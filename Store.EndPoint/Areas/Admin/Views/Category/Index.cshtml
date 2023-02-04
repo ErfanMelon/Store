@@ -1,0 +1,313 @@
+﻿@model ResultDto<List<CategoryBriefDto>>
+@{
+    ViewData["Title"] = "دسته بندی ها";
+}
+<h6 class="mb-0 text-uppercase">لیست دسته بندی محصولات</h6>
+<hr>
+<div class="card">
+    <div class="card-body">
+        @if (Model.IsSuccess)
+        {
+            <table class="table mb-0 table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">عنوان دسته بندی</th>
+                        <th scope="col">دسته بندی اصلی</th>
+                        <th scope="col">عملیات ها</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Data)
+                    {
+                        <tr>
+                            <th scope="row">@item.CategoryId</th>
+                            <td>@item.CategoryTitle</td>
+                            <td>
+                                @{
+                                    string parentname = item.Parent != null ? item.Parent.CategoryTitle : "-";
+                                    long parentid = item.Parent != null ? item.Parent.CategoryId : 0;
+                                }
+                                @parentname
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-outline-danger" onclick="DeleteCategory('@item.CategoryId','@item.CategoryTitle')">حذف</button>
+                                    <button type="button" class="btn btn-outline-warning" onclick="EditPage('@item.CategoryId')">ویرایش</button>
+                                    <button type="button" class="btn btn-outline-info" onclick="DetailCategory('@item.CategoryId')">جزئیات</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>@Model.Message</p>
+        }
+    </div>
+</div>
+<button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#CreateCategoryModal">دسته بندی جدید</button>
+
+@section Modals{
+    <div class="modal fade" id="CreateCategoryModal" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ایجاد دسته بندی</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-auto g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="CategoryTitle">نام دسته بندی</label>
+                            <input class="form-control form-control-sm mb-3" id="CategoryTitle" type="text" placeholder="مثلا لوازم الکترونیک">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="ParentCategoryId">زیر مجموعه دسته بندی</label>
+                            <select class="form-select form-select-sm mb-3" id="ParentCategoryId" asp-items="@ViewBag.Categorylist">
+                                <option value="0"> بدون دسته </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" onclick="CreateCategory($('#CreateCategoryModal #CategoryTitle').val(),$('#CreateCategoryModal #ParentCategoryId').find(':selected').val())">
+                        افزودن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="EditCategoryModal" tabindex="-1" aria-hidden="true" style="display: none;">
+       @* <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">ویرایش دسته بندی</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-auto g-3">
+                        <div class="col-md-6">
+                            <input type="hidden" id="CategoryId" />
+                            <label class="form-label" for="CategoryTitle">نام دسته بندی</label>
+                            <input class="form-control form-control-sm mb-3" id="CategoryTitle" type="text" placeholder="مثلا لوازم الکترونیک">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="ParentCategoryId">زیر مجموعه دسته بندی</label>
+                            <select class="form-select form-select-sm mb-3" id="ParentCategoryId" asp-items="@ViewBag.Categorylist">
+                                <option value="0"> بدون دسته </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" onclick="EditCategory($('#EditCategoryModal #CategoryId').val(),$('#EditCategoryModal #CategoryTitle').val(),$('#EditCategoryModal #ParentCategoryId').find(':selected').val())">
+                        ویرایش
+                    </button>
+                </div>
+            </div>
+        </div>*@
+    </div>
+}
+    @section Scripts{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger me-2'
+            },
+            buttonsStyling: false,
+        });
+        function CreateCategory(categoryTitle, parentCategoryId) {
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("Create","Category")',
+                data: {
+                    CategoryTitle: categoryTitle,
+                    ParentCategoryId: parentCategoryId
+                },
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    swalWithBootstrapButtons.fire(
+                        'خطا',
+                        errorMessage,
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function DetailCategory(categoryId) {
+            $.post('@Url.Action("Detail","Category")', { CategoryId: categoryId }, function (result) {
+                Swal.fire({
+                    title: 'جزئیات دسته بندی',
+                    html: result,
+                    confirmButtonText: 'بستن',
+                    confirmButtonClass: 'btn btn-primary',
+                });
+            });
+        }
+
+
+        function EditCategory(categoryId, categoryTitle, parentCategoryId) {
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("Edit","Category")',
+                data: {
+                    CategoryId: categoryId,
+                    CategoryTitle: categoryTitle,
+                    ParentCategoryId: parentCategoryId
+                },
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swalWithBootstrapButtons.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                    }
+                    else {
+                        swalWithBootstrapButtons.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    swalWithBootstrapButtons.fire(
+                        'خطا',
+                        errorMessage,
+                        'error'
+                    );
+                }
+            });
+        }
+        function EditPage(categoryId){
+            $.get('@Url.Action("Edit","Category")', {id:categoryId}, function (result) {
+                $('#EditCategoryModal').html(result);
+                $('#EditCategoryModal').modal('show');
+            });
+        }
+        //function EditCategory() {
+
+        //    var model = {
+        //        CategoryId: $("#CategoryId").val(),
+        //        CategoryTitle: $("#Edit_CategoryTitle").val(),
+        //        ParentCategoryId: $("#Edit_ParentCategoryId").val()
+        //    }
+        //    // Post Data To Controller
+        //    $.ajax({
+        //        contentType: 'application/x-www-form-urlencoded',
+        //        dataType: 'json',
+        //        type: "POST",
+        //        url: "EditCategory",
+        //        data: model,
+        //        success: function (data) {
+        //            if (data.isSuccess == true) {
+        //                swalWithBootstrapButtons.fire(
+        //                    'موفق!',
+        //                    data.message,
+        //                    'success'
+        //                ).then(function (isConfirm) {
+        //                    location.reload();
+        //                });
+        //            }
+        //            else {
+        //                swalWithBootstrapButtons.fire(
+        //                    'هشدار!',
+        //                    data.message,
+        //                    'warning'
+        //                );
+        //            }
+        //        }
+        //    });
+        //    $("#MyModal").modal("hide");
+        //}
+    </script>
+    <script>
+        function DeleteCategory(categoryid, categoryTitle) {
+            swalWithBootstrapButtons.fire({
+                title: 'حذف',
+                text: 'آیا میخواهید ' + categoryTitle + ' را حذف کنید ؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',
+                        url: '@Url.Action("Delete","Category")',
+                        data: {
+                            CategoryId: categoryid,
+                        },
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            swalWithBootstrapButtons.fire(
+                                'خطا',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}
+    @section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+

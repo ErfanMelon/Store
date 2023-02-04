@@ -1,0 +1,45 @@
+﻿@model ResultDto<CategoryDto>
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">ویرایش دسته بندی</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        @if (Model.IsSuccess)
+        {
+            <div class="modal-body">
+                <div class="row row-cols-auto g-3">
+                    <div class="col-md-6">
+                        <input type="hidden" asp-for="Data.CategoryId" id="CategoryId" />
+                        <label class="form-label" for="CategoryTitle">نام دسته بندی</label>
+                        <input class="form-control form-control-sm mb-3" asp-for="Data.CategoryTitle" id="CategoryTitle" type="text" placeholder="مثلا لوازم الکترونیک">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="ParentCategoryId">زیر مجموعه دسته بندی</label>
+                        <select class="form-select form-select-sm mb-3" id="ParentCategoryId" asp-for="Data.Parent.CategoryId" asp-items="@ViewBag.Categorylist">
+                            <option value="0"> بدون دسته </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                <button type="button" class="btn btn-primary" onclick="EditCategory($('#EditCategoryModal #CategoryId').val(),$('#EditCategoryModal #CategoryTitle').val(),$('#EditCategoryModal #ParentCategoryId').find(':selected').val())">
+                    ویرایش
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="modal-body">
+                <div class="row row-cols-auto g-3">
+                    <p>@Model.Message</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        }
+
+    </div>
+</div>

@@ -1,65 +1,69 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.Application.Services.Products.Commands.AddCategory;
+using Store.Application.Services.Products.Commands.DeleteCategory;
 using Store.Application.Services.Products.Commands.EditCategory;
+using Store.Application.Services.Products.Queries.GetCategories;
+using Store.Application.Services.Products.Queries.GetCategory;
 using Store.EndPoint.Areas.Admin.Models.ViewModels;
 
-namespace Store.EndPoint.Areas.Admin.Controllers
-{
-    [Authorize(Roles = "Admin,Operator")]
-    public partial class ProductController : Controller
-    {
-        public IActionResult CategoryList()
-        {
-            return View(_productFacade.getCategoriesService.Execute());
-        }
+namespace Store.EndPoint.Areas.Admin.Controllers;
 
-        public IActionResult AddCategory()
-        {
-            ViewBag.Categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent==null), "CategoryId", "CategoryTitle");
-            return PartialView();
-        }
-        [HttpPost]
-        public IActionResult AddCategory(CategoryViewModel viewModel)
-        {
-            var resultAddCategory = _productFacade.addCategoryService.Execute(new AddCategoryDto
-            {
-                CategoryTitle = viewModel.CategoryTitle,
-                ParentCategoryId = viewModel.ParentCategoryId,
-            });
-            return Json(resultAddCategory);
-        }
-        [HttpPost]
-        public IActionResult EditCategoryPage(CategoryViewModel viewModel)
-        {
-            var categorylist = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent == null), "CategoryId", "CategoryTitle");
-            ViewBag.Categorylist = categorylist;
-            TempData["CurrentParentCategory"] = viewModel.ParentCategoryId != 0 ? categorylist.FirstOrDefault(p => p.Value == viewModel.ParentCategoryId.ToString()).Text : "-";
-            return PartialView("EditCategory", viewModel);
-        }
-        [HttpPost]
-        public IActionResult EditCategory(CategoryViewModel viewModel)
-        {
-            var resultEditCategory = _productFacade.editCategoryService.Execute(new EditCategoryDto
-            {
-                CategoryId = viewModel.CategoryId,
-                CategoryTitle = viewModel.CategoryTitle,
-                ParentCategoryId = viewModel.ParentCategoryId,
-            });
-            return Json(resultEditCategory);
-        }
-        [HttpPost]
-        public IActionResult DeleteCategory(long categoryId)
-        {
-            var res = _productFacade.deleteCategoryService.Execute(categoryId);
-            return Json(res);
-        }
-        [HttpPost]
-        public IActionResult DetailCategory(long categoryId)
-        {
-            var res = _productFacade.getCategoryDetailService.Execute(categoryId);
-            return PartialView(res.Data);
-        }
+[Area("Admin")]
+[Authorize(Roles = "Admin,Operator")]
+public partial class CategoryController : Controller
+{
+    private readonly IMediator _mediator;
+
+    public CategoryController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var result = await _mediator.Send(new GetCategoriesQuery());
+        await LoadCategories();
+        return View(result);
+    }
+
+    private async Task LoadCategories()
+    {
+        var categories = await _mediator.Send(new GetCategoriesQuery());
+        ViewBag.Categorylist = new SelectList(categories.Data.Where(c => c.Parent == null), "CategoryId", "CategoryTitle");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(AddCategoryCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
+    public async Task<IActionResult> Edit(long id)
+    {
+        await LoadCategories();
+        var result = await _mediator.Send(new GetCategoryQuery(id));
+        return PartialView(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditCategoryCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(DeleteCategoryCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Detail(GetCategoryQuery query)
+    {
+        var result = await _mediator.Send(query);
+        return PartialView(result);
     }
 }

@@ -8,6 +8,7 @@ using Store.Application.Services.Products.Commands.AddProduct;
 using Store.Application.Services.Products.Commands.EditCategory;
 using Store.Application.Services.Products.Commands.EditProduct;
 using Store.Application.Services.Products.Queries.GetBrands;
+using Store.Application.Services.Products.Queries.GetCategories;
 using Store.EndPoint.Areas.Admin.Models.ViewModels;
 
 namespace Store.EndPoint.Areas.Admin.Controllers
@@ -76,7 +77,7 @@ namespace Store.EndPoint.Areas.Admin.Controllers
 
         private void ViewBagsData()
         {
-            ViewBag.Categories = new SelectList(_productFacade.getCategoriesService.Execute().Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
+            ViewBag.Categories = new SelectList(_mediator.Send(new GetCategoriesQuery()).Result.Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
             ViewBag.Brands = new SelectList(_mediator.Send(new GetBrandsQuery()).Result.Data, "BrandId", "BrandName");
         }
 
