@@ -32,57 +32,6 @@ namespace Store.Application.Services.Products.Facade
             _hostingEnvironment = hostingEnvironment;
             _mediator = mediator;
         }
-
-        private IAddProductService _addProductService;
-        public IAddProductService addProductService
-        {
-            get
-            {
-                return _addProductService = _addProductService ?? new AddProductService(_context, _mediator);
-            }
-        }
-
-        private IGetProductsAdminService _getProductsAdminService;
-        public IGetProductsAdminService getProductsAdminService
-        {
-            get
-            {
-                return _getProductsAdminService = _getProductsAdminService ?? new GetProductsAdminService(_context);
-            }
-        }
-        private IDeleteProductService _deleteProductService;
-        public IDeleteProductService deleteProductService
-        {
-            get
-            {
-                return _deleteProductService = _deleteProductService ?? new DeleteProductService(_context);
-            }
-        }
-
-        private IGetProductAdminService _getProductAdminService;
-        public IGetProductAdminService getProductAdminService
-        {
-            get
-            {
-                return _getProductAdminService = _getProductAdminService ?? new GetProductAdminService(_context);
-            }
-        }
-        private IEditProductService _editProductService;
-        public IEditProductService editProductService
-        {
-            get
-            {
-                return _editProductService = _editProductService ?? new EditProductService(_context, _mediator);
-            }
-        }
-        private IGetProductEditService _getProductEditService;
-        public IGetProductEditService getProductEditService
-        {
-            get
-            {
-                return _getProductEditService = _getProductEditService ?? new GetProductEditService(_context);
-            }
-        }
         private IGetProductsSite _getProductsSite;
         public IGetProductsSite getProductsSite
         {

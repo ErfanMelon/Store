@@ -1,10 +1,6 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
-@using Store.Application.Services.Products.Commands.AddProduct
-@model RequestProductDto
+﻿@model AddProductCommand
 @{
-    ViewData["Title"] = "افزوردن محصول جدید";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "محصول جدید";
 }
 @section Css{
 
@@ -21,17 +17,16 @@
                     <div class="col-lg-8">
                         <div class="border border-3 p-4 rounded">
                             <div class="mb-3">
-                                <label for="inputProductTitle" class="form-label">عنوان محصول</label>
-                                <input type="text" class="form-control" id="inputProductTitle" placeholder="عنوان محصول را وارد کنید">
+                                <label for="ProductTitle" class="form-label">عنوان محصول</label>
+                                <input type="text" asp-for="ProductTitle" class="form-control" id="ProductTitle" placeholder="عنوان محصول را وارد کنید">
                             </div>
                             <div class="mb-3">
-                                <label for="inputProductDescription" class="form-label">توضیحات</label>
-                                <textarea class="form-control" id="inputProductDescription" rows="3"></textarea>
+                                <label for="ProductDescription" class="form-label">توضیحات</label>
+                                <textarea class="form-control" asp-for="Description" id="ProductDescription" rows="3"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="image-uploadify" class="form-label">تصویر محصول</label>
-                                <input id="image-uploadify" type="file" asp-for="Images" accept=".xlsx,.xls,image/*,.doc,audio/*,.docx,video/*,.ppt,.pptx,.txt,.pdf" multiple="" style="display: none;">
-
+                                <input id="image-uploadify" type="file" asp-for="Images" accept="image/*" multiple="" style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -39,28 +34,28 @@
                         <div class="border border-3 p-4 rounded">
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="inputPrice" class="form-label">قیمت</label>
-                                    <input type="number" class="form-control" id="inputPrice" placeholder="0">
+                                    <label for="Price" class="form-label">قیمت</label>
+                                    <input type="number" asp-for="Price" class="form-control" id="Price" placeholder="0">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="inputInventory" class="form-label">تعداد موجود</label>
-                                    <input type="number" class="form-control" id="inputInventory" placeholder="0">
+                                    <label for="Inventory" class="form-label">تعداد موجود</label>
+                                    <input type="number" asp-for="Inventory" class="form-control" id="Inventory" placeholder="0">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="inputBrand" class="form-label">برند</label>
-                                    <select class="form-select" id="inputBrand" asp-items="@ViewBag.Brands">
+                                    <label for="Brand" class="form-label">برند</label>
+                                    <select class="form-select" asp-for="BrandId" id="Brand" asp-items="@ViewBag.Brands">
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    
+
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="inputDisplayOnSite">
-                                        <label class="form-check-label" for="inputDisplayOnSite">نمایش در سایت</label>
+                                        <input class="form-check-input" asp-for="Displayed" type="checkbox" id="DisplayOnSite">
+                                        <label class="form-check-label" for="DisplayOnSite">نمایش در سایت</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <label for="inputCategory" class="form-label">دسته بندی</label>
-                                    <select class="form-select" id="inputCategory" asp-items="@ViewBag.Categories">
+                                    <label for="Category" class="form-label">دسته بندی</label>
+                                    <select class="form-select" id="Category" asp-for="CategoryId" asp-items="@ViewBag.Categories">
                                     </select>
                                 </div>
                                 <div class="col-12">
@@ -112,12 +107,12 @@
     </div>
     @section Scripts{
     <script src="~/admintemplate/assets/plugins/drag-and-drop/dist/imageuploadify.min.js"></script>
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#image-uploadify').imageuploadify();
         })
     </script>
-    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
         $("#btnAddFeature").on("click", function () {
 
@@ -145,25 +140,24 @@
     </script>
     <script>
         $("#btnAddProduct").on("click", function () {
-            //Data For Post To Controller
+
             var fdata = new FormData();
-            fdata.append("ProductTitle", $("#inputProductTitle").val());
-            fdata.append("BrandId", $("#inputBrand").find('option:selected').val());
-            fdata.append("Description", $("#inputProductDescription").val());
-            fdata.append("Price", $("#inputPrice").val());
-            fdata.append("Inventory", $("#inputInventory").val());
-            if ($('#inputDisplayOnSite').is(":checked"))
-            {
-            fdata.append("Displayed",true);
+            fdata.append("ProductTitle", $("#ProductTitle").val());
+            fdata.append("BrandId", $("#Brand").find('option:selected').val());
+            fdata.append("Description", $("#ProductDescription").val());
+            fdata.append("Price", $("#Price").val());
+            fdata.append("Inventory", $("#Inventory").val());
+            if ($('#DisplayOnSite').is(":checked")) {
+                fdata.append("Displayed", true);
             }
-            fdata.append("CategoryId", $("#inputCategory").find('option:selected').val());
+            fdata.append("CategoryId", $("#Category").find('option:selected').val());
 
             // Images
             var productImages = document.getElementById("image-uploadify");
 
             if (productImages.files.length > 0) {
                 for (var i = 0; i < productImages.files.length; i++) {
-                    fdata.append('Images-' + i, productImages.files[i]);
+                    fdata.append('Images[' + i + ']', productImages.files[i]);
                 }
             }
             // Features
@@ -175,14 +169,14 @@
             }).get();
 
             $.each(dataFeaturesViewModel, function (i, val) {
-                fdata.append('[' + i + '].Feature', val.Feature);
-                fdata.append('[' + i + '].Value', val.Value);
+                fdata.append('ProductFeatures[' + i + '].Feature', val.Feature);
+                fdata.append('ProductFeatures[' + i + '].Value', val.Value);
 
             });
 
             $.ajax({
                 type: "POST",
-                url: 'AddProduct',
+                url: '@Url.Action("Create","Product")',
                 contentType: false,
                 processData: false,
                 data: fdata,
@@ -195,7 +189,7 @@
                             data.message,
                             'success'
                         ).then(function (isConfirm) {
-                            window.location.href = "/admin/product/ProductList";
+                            window.location.href = '@Url.Action("Index","Product")';
 
                         });
                     }

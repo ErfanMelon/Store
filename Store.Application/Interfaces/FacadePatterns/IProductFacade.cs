@@ -21,12 +21,6 @@ namespace Store.Application.Interfaces.FacadePatterns
 {
     public interface IProductFacade
     {
-        public IAddProductService addProductService { get; }
-        public IGetProductsAdminService getProductsAdminService { get; }
-        public IDeleteProductService deleteProductService { get; }
-        public IGetProductAdminService getProductAdminService { get; }
-        public IEditProductService editProductService { get; }
-        public IGetProductEditService getProductEditService { get; }
         public IGetProductsSite getProductsSite { get; }
         public IGetProductSiteService getProductSiteService { get; }
         public IAddCommentService addCommentService { get; }

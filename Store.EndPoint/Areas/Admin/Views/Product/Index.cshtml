@@ -1,10 +1,6 @@
-﻿@addTagHelper *, LazZiya.TagHelpers
-
-@using Store.Application.Services.Products.Queries.GetProductsAdmin
-@model GetProductsAdminDto
+﻿@model ResultDto<PaginationDto<ProductAdminDto>>
 @{
     ViewData["Title"] = "لیست محصولات";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 @section Css{
     <link href="~/admintemplate/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -51,7 +47,7 @@
                     //Click On Yes
 
                     var postData = {
-                        'productid': id,
+                        ProductId: id,
                     };
 
                     // Post Data To Controller
@@ -59,7 +55,7 @@
                         contentType: 'application/x-www-form-urlencoded',
                         dataType: 'json',
                         type: "POST",
-                        url: "DeleteProduct",
+                        url: '@Url.Action("Delete","Product")',
                         data: postData,
                         success: function (data) {
                             if (data.isSuccess == true) {
@@ -68,7 +64,7 @@
                                     data.message,
                                     'success'
                                 ).then(function (isConfirm) {
-                                    location.reload();
+                                    window.location.href='@Url.Action("Index","Product")';
                                 });
                             }
                             else {
@@ -110,7 +106,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var item in Model.products)
+                                @foreach (var item in Model.Data.Items)
                                 {
                                     <tr role="row" class="odd">
                                         <td class="sorting_1">@item.ProductTitle</td>
@@ -119,7 +115,7 @@
                                         <td>
                                             <div class="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" class="btn btn-danger" onclick="DeleteProduct('@item.ProductId')">حذف</button>
-                                                <a class="btn btn-primary" href="/admin/product/DetailProduct?productid=@item.ProductId">جزئیات</a>
+                                                <a class="btn btn-primary" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">جزئیات</a>
                                             </div>
                                         </td>
                                     </tr>
@@ -137,22 +133,23 @@
                     </div>
                 </div>
                 <div class="text-center pagination round-pagination">
-                    <paging total-records="Model.RowsCount"
-                            page-no="Model.CurrentPage"
-                            page-size="Model.PageSize"
+                    <paging total-records="Model.Data.RowsCount"
+                            page-no="Model.Data.Page"
+                            page-size="Model.Data.PageSize"
                             show-prev-next="true"
                             sr-text-first="ابتدا"
                             sr-text-last="انتها"
                             sr-text-next="بعدی"
                             sr-text-previous="قبلی"
-                            show-total-pages="false"
+                            show-total-pages="true"
+                            text-total-pages="صفحه"
                             show-total-records="true"
-                            show-page-size-nav="false"
+                            text-total-records="محصول"
+                            show-page-size-nav="true"
                             show-first-numbered-page="true"
                             show-last-numbered-page="true"
                             query-string-key-page-no="Page"
                             query-string-key-page-size="PageSize"
-                            
                             gap-size="2">
                     </paging>
 

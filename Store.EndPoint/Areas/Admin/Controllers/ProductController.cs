@@ -2,97 +2,94 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Store.Application.Interfaces.FacadePatterns;
-using Store.Application.Services.Products.Commands.AddCategory;
 using Store.Application.Services.Products.Commands.AddProduct;
-using Store.Application.Services.Products.Commands.EditCategory;
+using Store.Application.Services.Products.Commands.DeleteProduct;
 using Store.Application.Services.Products.Commands.EditProduct;
 using Store.Application.Services.Products.Queries.GetBrands;
 using Store.Application.Services.Products.Queries.GetCategories;
-using Store.EndPoint.Areas.Admin.Models.ViewModels;
+using Store.Application.Services.Products.Queries.GetProductAdmin;
+using Store.Application.Services.Products.Queries.GetProductForEdit;
+using Store.Application.Services.Products.Queries.GetProductsAdmin;
 
-namespace Store.EndPoint.Areas.Admin.Controllers
+namespace Store.EndPoint.Areas.Admin.Controllers;
+
+[Authorize(Roles = "Admin,Operator")]
+[Area("Admin")]
+public class ProductController : Controller
 {
-    [Authorize(Roles = "Admin,Operator")]
-    [Area("Admin")]
-    public partial class ProductController : Controller
+    private readonly IMediator _mediator;
+    public ProductController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
-        private readonly IProductFacade _productFacade;
-        public ProductController(IProductFacade productFacade, IMediator mediator)
-        {
-            _productFacade = productFacade;
-            _mediator = mediator;
-        }
+        _mediator = mediator;
+    }
 
-        public IActionResult AddProduct()
-        {
-            ViewBagsData(); 
-            return View();
-        }
-        [HttpPost]
-        public IActionResult AddProduct(RequestProductDto request, List<RequestFeatureDto> Features)
-        {
-            List<IFormFile> images = new List<IFormFile>();
-            
-            foreach (var file in Request.Form.Files)
-            {
-                images.Add(file);
-            }
-            request.Images = images;
-            request.ProductFeatures = Features;
+    public IActionResult Create()
+    {
+        ViewBagsData();
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> Create(AddProductCommand command)
+    {
+        FormFileCollection images = new FormFileCollection();
 
-            var resultAddProduct = _productFacade.addProductService.Execute(request);
-            return Json(resultAddProduct);
+        foreach (var file in Request.Form.Files)
+        {
+            images.Add(file);
         }
+        command.Images = images;
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
 
-        public IActionResult ProductList(int page = 1, int pagesize = 10,string searchKey=null)
+    public async Task<IActionResult> Index(int page = 1, int pagesize = 10, string searchKey = null)
+    {
+        var result = await _mediator.Send(new GetProductsAdminQuery(page, pagesize, searchKey));
+        return View(result);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Delete(DeleteProductCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
+    public async Task<IActionResult> Detail(long id)
+    {
+        var product = await _mediator.Send(new GetProductAdminQuery(id));
+        if (product.IsSuccess == false)
         {
-            return View(_productFacade.getProductsAdminService.Execute(page, pagesize,searchKey).Data);
-        }
-        public IActionResult DeleteProduct(long productid)
-        {
-            return Json(_productFacade.deleteProductService.Execute(productid));
-        }
-        public IActionResult DetailProduct(long productid)
-        {
-            var product = _productFacade.getProductAdminService.Execute(productid);
-            if (product.IsSuccess == false)
-            {
-                return BadRequest();
-            }
-            return View(product.Data);
-        }
-        public IActionResult EditProduct(long productId)
-        {
-            var product = _productFacade.getProductEditService.Execute(productId);
-            if (product.IsSuccess)
-            {
-                ViewBagsData();
-                TempData["ProductId"] = productId;
-                return View(product.Data);
-            }
             return BadRequest();
         }
-
-        private void ViewBagsData()
+        return View(product.Data);
+    }
+    public async Task<IActionResult> Edit(long id)
+    {
+        var product = await _mediator.Send(new GetProductForEditQuery(id));
+        if (product.IsSuccess)
         {
-            ViewBag.Categories = new SelectList(_mediator.Send(new GetCategoriesQuery()).Result.Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
-            ViewBag.Brands = new SelectList(_mediator.Send(new GetBrandsQuery()).Result.Data, "BrandId", "BrandName");
+            ViewBagsData();
+            return View(product.Data);
         }
+        return BadRequest();
+    }
 
-        [HttpPost]
-        public IActionResult EditProduct(RequestEditProductDto request, List<RequestFeatureDto> Features)
+    private void ViewBagsData()
+    {
+        ViewBag.Categories = new SelectList(_mediator.Send(new GetCategoriesQuery()).Result.Data.Where(c => c.Parent != null), "CategoryId", "CategoryTitle");
+        ViewBag.Brands = new SelectList(_mediator.Send(new GetBrandsQuery()).Result.Data, "BrandId", "BrandName");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditProductCommand command)
+    {
+        FormFileCollection images = new FormFileCollection();
+
+        foreach (var file in Request.Form.Files)
         {
-            List<IFormFile> images = new List<IFormFile>();
-            foreach (var file in Request.Form.Files)
-            {
-                images.Add(file);
-            }
-            request.Images = images;
-            request.ProductFeatures = Features;
-            var resultEditProduct = _productFacade.editProductService.Execute(request);
-            return Json(resultEditProduct);
+            images.Add(file);
         }
+        command.Images = images;
+        var result = await _mediator.Send(command);
+        return Json(result);
     }
 }
