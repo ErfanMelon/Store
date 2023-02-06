@@ -1,9 +1,10 @@
-﻿@{
+﻿@model SearchViewModel
+@{
     Layout = null;
 }
 
 <form asp-action="Index" asp-controller="Product" class="form-search" method="get">
-    <input type="search" class="header-search-input" name="SearchKey" placeholder="نام کالا، برند و یا دسته مورد نظر خود را جستجو کنید…">
+    <input type="search" class="header-search-input" asp-for="SearchKey" placeholder="نام کالا، برند و یا دسته مورد نظر خود را جستجو کنید…">
     <div class="action-btns">
         <button class="btn btn-search" type="submit">
             <i class="fa fa-search"></i>
@@ -11,8 +12,7 @@
         <div class="search-filter">
             <div class="form-ui">
                 <div class="custom-select-ui">
-                    <select class="right" name="CategoryId" asp-items="@ViewBag.Categories">
-                        <option>همه دسته ها</option>
+                    <select class="right" asp-for="CategoryId" asp-items="@Model.Categories">
                     </select>
                 </div>
             </div>

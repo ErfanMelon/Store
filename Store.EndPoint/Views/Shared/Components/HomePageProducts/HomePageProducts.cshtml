@@ -1,5 +1,4 @@
-﻿@using Store.Application.Services.Products.Queries.GetProductsSite
-@model ResultGetProductsSiteDto
+﻿@model ResultDto<PaginationDto<ProductsSiteDto>>
 @{
     Layout = null;
 }
@@ -12,47 +11,54 @@
             </header>
             <div class="product-carousel owl-carousel owl-theme owl-rtl owl-loaded owl-drag">
                 <div class="owl-stage-outer">
-                    <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 2234px;">
-                        @foreach (var item in Model.Products.Take(4))
-                        {
-                            <div class="owl-item active" style="width: 309.083px; margin-left: 10px;">
-                                <div class="item">
-                                    <a href="~/product/detail/@item.ProductId" class="d-block hover-img-link">
-                                        <img src="~/@item.ImageSrc" class="img-fluid" alt="">
-                                    </a>
-                                    <h2 class="post-title">
-                                        <a href="~/product/detail/@item.ProductId">
-                                            @item.ProductTitle
+                    @if (Model.IsSuccess)
+                    {
+                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 2234px;">
+                            @foreach (var item in Model.Data.Items.Take(4))
+                            {
+                                <div class="owl-item active" style="width: 309.083px; margin-left: 10px;">
+                                    <div class="item">
+                                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="d-block hover-img-link">
+                                            <img src="~/@item.ImageSrc" class="img-fluid" alt="">
                                         </a>
-                                    </h2>
-                                    <div class="price">
-                                        @*                                    <del><span>۷,۵۰۰,۰۰۰<span>تومان</span></span></del>
+                                        <h2 class="post-title">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">
+                                                @item.ProductTitle
+                                            </a>
+                                        </h2>
+                                        <div class="price">
+                                            @*                                    <del><span>۷,۵۰۰,۰۰۰<span>تومان</span></span></del>
                                     *@                                    <ins><span>@item.Price.ToString("n0")<span>تومان</span></span></ins>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
-                        @foreach (var item in Model.Products.Skip(4))
-                        {
-                            <div class="owl-item" style="width: 309.083px; margin-left: 10px;">
-                                <div class="item">
-                                    <a href="~/product/detail/@item.ProductId" class="d-block hover-img-link">
-                                        <img src="~/@item.ImageSrc" class="img-fluid" alt="">
-                                    </a>
-                                    <h2 class="post-title">
-                                        <a href="~/product/detail/@item.ProductId">
-                                            @item.ProductTitle
+                            }
+                            @foreach (var item in Model.Data.Items.Skip(4))
+                            {
+                                <div class="owl-item" style="width: 309.083px; margin-left: 10px;">
+                                    <div class="item">
+                                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="d-block hover-img-link">
+                                            <img src="~/@item.ImageSrc" class="img-fluid" alt="">
                                         </a>
-                                    </h2>
-                                    <div class="price">
-                                        @*                                    <del><span>۷,۵۰۰,۰۰۰<span>تومان</span></span></del>
+                                        <h2 class="post-title">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">
+                                                @item.ProductTitle
+                                            </a>
+                                        </h2>
+                                        <div class="price">
+                                            @*                                    <del><span>۷,۵۰۰,۰۰۰<span>تومان</span></span></del>
                                     *@                                    <ins><span>@item.Price.ToString("n0")<span>تومان</span></span></ins>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
 
-                    </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>@Model.Message</p>
+                    }
                 </div>
                 <div class="owl-nav">
                     <button type="button" role="presentation" class="owl-prev disabled">

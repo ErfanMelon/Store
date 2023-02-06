@@ -4,12 +4,12 @@
 }
 @section Css{
     <link href="~/sitetemplate/assets/css/vendor/lightgallery.css" rel="stylesheet" />
-                    <link href="~/remodal-1.1.1/src/remodal.css" rel="stylesheet" />
+    <link href="~/remodal-1.1.1/src/remodal.css" rel="stylesheet" />
     <link href="~/remodal-1.1.1/src/remodal-default-theme.css" rel="stylesheet" />
     <link href="~/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }
-    
-<input type="hidden" value="@Model.ProductId" id="productid" />
+
+    <input type="hidden" value="@Model.ProductId" id="productid" />
     <div class="container-main">
         <div class="d-block">
             <div class="page-content page-row">
@@ -32,7 +32,7 @@
                                         <div class="gallery-item">
                                             <div>
                                                 <ul class="gallery-actions">
-                                                    
+
                                                     <li class="Three-dimensional">
                                                         <a href="#" class="btn-option btn-Three-dimensional" data-toggle="modal" data-target="#more-product">
                                                             <i class="mdi mdi-more"></i>
@@ -59,7 +59,7 @@
                                                         </div>
                                                     </div>
                                                 </li>
-                                               
+
                                             </ul>
                                         </div>
                                     </div>
@@ -113,11 +113,11 @@
                                     <div class="product-rate">
                                         @for (var i = 1; i <= Model.Stars; i++)
                                         {
-                                             <i class="fa fa-star active"></i>
+                                            <i class="fa fa-star active"></i>
                                         }
-                                        @for (var i = 1; i <= (5-(Model.Stars)); i++)
+                                        @for (var i = 1; i <= (5 - (Model.Stars)); i++)
                                         {
-                                             <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                         }
                                     </div>
                                 </div>
@@ -150,8 +150,8 @@
                                             @foreach (var item in Model.Features.Take(5))
                                             {
                                                 <li>
-                                                    <span>@item.Feature: </span>
-                                                    <span>@item.FeatureValue</span>
+                                                    <span>@item.Item1: </span>
+                                                    <span>@item.Item2</span>
                                                 </li>
                                             }
 
@@ -159,11 +159,11 @@
                                         </ul>
                                     </div>
                                     @*<div class="product-price-survey-question">
-                                        آیا قیمت مناسب‌تری سراغ دارید؟
-                                        <div class="answers">
-                                            <a href="#" class="product-price-survery-answer price-yes btn btn-secondary">بلی</a>
-                                            <a href="#" class="product-price-survery-answer price-no btn btn-secondary">خیر</a>
-                                        </div>
+                                    آیا قیمت مناسب‌تری سراغ دارید؟
+                                    <div class="answers">
+                                    <a href="#" class="product-price-survery-answer price-yes btn btn-secondary">بلی</a>
+                                    <a href="#" class="product-price-survery-answer price-no btn btn-secondary">خیر</a>
+                                    </div>
                                     </div>*@
                                 </div>
                                 <div class="col=lg-6 col-md-6 col-xs-12 pr">
@@ -269,7 +269,7 @@
                             نظرات کاربران
                         </a>
                     </li>
-                    
+
                 </ul>
             </div>
             <div class="col-lg">
@@ -308,11 +308,11 @@
 
                                             <li class="params-list-item">
                                                 <div class="params-list-key">
-                                                    <span class="block"> @item.Feature  </span>
+                                                    <span class="block"> @item.Item1  </span>
                                                 </div>
                                                 <div class="params-list-value">
                                                     <span class="block">
-                                                        @item.FeatureValue
+                                                        @item.Item2
                                                     </span>
                                                 </div>
                                             </li>
@@ -387,7 +387,7 @@
                                                 شما به عنوان مالک محصول ثبت خواهد شد.
                                             </p>
                                             <button type="button" data-remodal-target="modal" href="#modal" class="btn-add-comment btn btn-secondary">افزودن نظر جدید</button>
-                                          
+
                                         </div>
                                     </div>
                                     <div class="product-comment-list">
@@ -396,7 +396,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -407,36 +407,36 @@
     @if (!User.Identity.IsAuthenticated)
     {
         <div class="remodal" data-remodal-id="modal">
-        <button data-remodal-action="close" class="remodal-close"></button>
-        <h1>افزودن نظر</h1>
-        <p>
-برای افزودن نظر ابتدا باید به حساب خود وارد شوید        </p>
-        <br>
-            <a  href="/authentication/signup" class="remodal-cancel">ثبت نام</a>
-            <a  href="/authentication/signin" class="remodal-confirm">ورود</a>
-    </div>
+            <button data-remodal-action="close" class="remodal-close"></button>
+            <h1>افزودن نظر</h1>
+            <p>
+                برای افزودن نظر ابتدا باید به حساب خود وارد شوید
+            </p>
+            <br>
+            <a href="/authentication/signup" class="remodal-cancel">ثبت نام</a>
+            <a href="/authentication/signin" class="remodal-confirm">ورود</a>
+        </div>
     }
     else
     {
         <div class="remodal" data-remodal-id="modal">
-        <button data-remodal-action="close" class="remodal-close"></button>
-        <h1>افزودن نظر</h1>
-        <p>
-            <div>
-                <p>عنوان نظر</p>
-                <input type="text" id="comment_title" placeholder="عنوان نظر را اینجا بنویس"/>
-                <p>نظر</p>
-                <textarea id="comment_content" placeholder="نظر شما درمورد محصول"></textarea>
-                <p>میزان رضایت از محصول</p>
-                <select id="comment_rate" asp-items="@ViewBag.RateOptions">
-
-                </select>
-                <p>نقاط قوت محصول</p>
-                <input type="text" id="txtgood"/>
-                <button id="btnAddGood">افزودن</button>
-                <p>نقاط ضعف محصول</p>
-                <input type="text" id="txtbad"/>
-                <button id="btnAddBad">افزودن</button>
+            <button data-remodal-action="close" class="remodal-close"></button>
+            <h1>افزودن نظر</h1>
+            <p>
+                <div>
+                    <p>عنوان نظر</p>
+                    <input type="text" id="comment_title" placeholder="عنوان نظر را اینجا بنویس" />
+                    <p>نظر</p>
+                    <textarea id="comment_content" placeholder="نظر شما درمورد محصول"></textarea>
+                    <p>میزان رضایت از محصول</p>
+                    <select id="comment_rate" asp-items="@ViewBag.RateOptions">
+                    </select>
+                    <p>نقاط قوت محصول</p>
+                    <input type="text" id="txtgood" />
+                    <button id="btnAddGood">افزودن</button>
+                    <p>نقاط ضعف محصول</p>
+                    <input type="text" id="txtbad" />
+                    <button id="btnAddBad">افزودن</button>
                     <table class="table table-borderless" id="tbl_goodpoints">
                         <thead>
                             <tr>
@@ -457,12 +457,12 @@
                         <tbody>
                         </tbody>
                     </table>
-            </div>
-      </p>
-        <br>
+                </div>
+            </p>
+            <br>
             <button data-remodal-action="cancel" class="remodal-cancel">صرف نظر</button>
             <button data-remodal-action="confirm" onclick="AddComment()" class="remodal-confirm">ثبت نظر</button>
-    </div>
+        </div>
     }
 }
     @section Scripts
@@ -519,11 +519,11 @@
         });
     </script>
     <script>
-        function AddComment(){
-            var dt=new FormData();
+        function AddComment() {
+            var dt = new FormData();
 
-            dt.append("ProductId",'@Model.ProductId');
-            dt.append("CommentTitle",$("#comment_title").val());
+            dt.append("ProductId", '@Model.ProductId');
+            dt.append("CommentTitle", $("#comment_title").val());
             dt.append("Comment", $("#comment_content").val());
             dt.append("Stars", $("#comment_rate").find('option:selected').val());
 
@@ -540,10 +540,10 @@
             $.each(ConsViewModel, function (i, val) {
                 dt.append('Cons[' + i + ']', val);
             });
-            
-            
 
-                $.ajax({
+
+
+            $.ajax({
                 url: '/product/AddComment',
                 type: 'POST',
                 dataType: 'json',
@@ -579,8 +579,8 @@
                 }
 
             });
-            
-            
+
+
         }
     </script>
 }

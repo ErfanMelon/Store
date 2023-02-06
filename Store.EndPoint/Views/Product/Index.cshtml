@@ -1,5 +1,4 @@
-﻿@addTagHelper *, LazZiya.TagHelpers
-@model Store.Application.Services.Products.Queries.GetProductsSite.ResultGetProductsSiteDto
+﻿@model ResultDto<PaginationDto<ProductsSiteDto>>
 @{
     ViewData["Title"] = "محصولات";
 }
@@ -14,92 +13,148 @@
             <div class="nav-sort-tabs-res">
                 <ul class="nav sort-tabs-options" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="~/product?Searchkey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=MostVisited" role="tab" aria-controls="Most-visited" aria-selected="true">پربازدیدترین</a>
+                        <a class="nav-link active"
+                           asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.MostVisited"
+                           role="tab" aria-controls="Most-visited"
+                           aria-selected="true">پربازدیدترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=Bestselling" role="tab" aria-controls="Bestselling" aria-selected="false">پرفروش&zwnj;ترین&zwnj;</a>
+                        <a asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.Bestselling" 
+                           class="nav-link" role="tab" aria-controls="Bestselling" 
+                           aria-selected="false">پرفروش&zwnj;ترین&zwnj;</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=MostPopular" role="tab" aria-controls="Most-Popular" aria-selected="false">محبوب&zwnj;ترین</a>
+                        <a asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.MostPopular"
+                           class="nav-link"
+                           role="tab" aria-controls="Most-Popular" 
+                           aria-selected="false">محبوب&zwnj;ترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=Newest" role="tab" aria-controls="newest" aria-selected="false">جدیدترین</a>
+                        <a asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.Newest"
+                           class="nav-link"
+                           role="tab" aria-controls="newest"
+                           aria-selected="false">جدیدترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=Cheapest" role="tab" aria-controls="cheapest" aria-selected="false">ارزان&zwnj;ترین</a>
+                        <a asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.Cheapest"
+                           class="nav-link"
+                           role="tab" aria-controls="cheapest"
+                           aria-selected="false">ارزان&zwnj;ترین</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="~/product?SearchKey=@Context.Request.Query["SearchKey"]&CategoryId=@Context.Request.Query["CategoryId"]&page=@Context.Request.Query["page"]&pagesize=@Context.Request.Query["pagesize"]&ordering=MostExpensive" role="tab" aria-controls="most-expensive" aria-selected="false">گران&zwnj;ترین</a>
+                        <a asp-controller="Product" asp-action="Index"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-CategoryId="@Context.Request.Query["CategoryId"]"
+                           asp-route-SearchKey="@Context.Request.Query["SearchKey"]"
+                           asp-route-page="@Context.Request.Query["page"]"
+                           asp-route-pagesize="@Context.Request.Query["pagesize"]"
+                           asp-route-ordering="@Arrange.MostExpensive"
+                           class="nav-link"
+                           role="tab" aria-controls="most-expensive" 
+                           aria-selected="false">گران&zwnj;ترین</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="product-items">
-            <div class="tab-content" id="myTabContent">
+        @if (Model.IsSuccess)
+        {
+            <div class="product-items">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="Most-visited" role="tabpanel" aria-labelledby="Most-visited-tab">
+                        <div class="row">
+                            @foreach (var item in Model.Data.Items)
+                            {
+                                <div class="col-lg-3 col-md-3 col-xs-12 order-1 d-block mb-3">
+                                    <section class="product-box product product-type-simple">
+                                        <div class="thumb">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId" class="d-block">
 
+                                                <div class="product-rate">
 
-
-
-                <div class="tab-pane fade show active" id="Most-visited" role="tabpanel" aria-labelledby="Most-visited-tab">
-                    <div class="row">
-                        @foreach (var item in Model.Products)
-                        {
-                            <div class="col-lg-3 col-md-3 col-xs-12 order-1 d-block mb-3">
-                                <section class="product-box product product-type-simple">
-                                    <div class="thumb">
-                                        <a href="~/product/detail/@item.ProductId" class="d-block">
-
-                                            <div class="product-rate">
-
-                                                @for (int i = 1; i <= item.Stars; i++)
-                                                {
-                                                    <i class="fa fa-star active"></i>
-                                                }
-                                                @for (int i = 1; i <= (5 - item.Stars); i++)
-                                                {
-                                                    <i class="fa fa-star"></i>
-                                                }
-                                            </div>
-                                            <img src="~/@item.ImageSrc">
-                                        </a>
-                                    </div>
-                                    <div class="title">
-                                        <a href="~/product/detail/@item.ProductId">  @item.ProductTitle</a>
-                                    </div>
-                                    <div class="price">
-                                        <span class="amount">
-                                            @item.Price.ToString("n0")
-                                            <span>تومان</span>
-                                        </span>
-                                    </div>
-                                </section>
-                            </div>
-                        }
+                                                    @for (int i = 1; i <= item.Stars; i++)
+                                                    {
+                                                        <i class="fa fa-star active"></i>
+                                                    }
+                                                    @for (int i = 1; i <= (5 - item.Stars); i++)
+                                                    {
+                                                        <i class="fa fa-star"></i>
+                                                    }
+                                                </div>
+                                                <img src="~/@item.ImageSrc">
+                                            </a>
+                                        </div>
+                                        <div class="title">
+                                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">  @item.ProductTitle</a>
+                                        </div>
+                                        <div class="price">
+                                            <span class="amount">
+                                                @item.Price.ToString("n0")
+                                                <span>تومان</span>
+                                            </span>
+                                        </div>
+                                    </section>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
-
-
             </div>
-        </div>
-        <div class="pagination-product">
-            <nav aria-label="Page navigation example">
-                <paging total-records="@Model.RowsCount"
-                        page-no="@int.TryParse(Context.Request.Query["page"], out int pageNumber)?pageNumber:1"
-                        page-size="@int.TryParse(Context.Request.Query["pagesize"], out int pageSize)?pageSize:10"
+            <div class="pagination-product">
+                <nav aria-label="Page navigation example">
+                    <paging total-records="Model.Data.RowsCount"
+                        page-no="Model.Data.Page"
+                        page-size="Model.Data.PageSize"
                         show-prev-next="true"
                         show-total-pages="false"
                         show-total-records="false"
                         show-page-size-nav="true"
                         show-first-numbered-page="true"
                         show-last-numbered-page="true"
-                        query-string-key-page-no="Page"
-                        query-string-key-page-size="PageSize"
+                        query-string-key-page-no="page"
+                        query-string-key-page-size="pagesize"
                         query-string-value="@@(Request.QueryString.Value)"
                         gap-size="2">
-                </paging>
+                    </paging>
 
-            </nav>
-        </div>
+                </nav>
+            </div>
+        }
+        else
+        {
+            <div class="product-items">
+                <p>@Model.Message</p>
+            </div>
+        }
     </div>
 </div>
 
