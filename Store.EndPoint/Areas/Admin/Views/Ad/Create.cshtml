@@ -1,0 +1,86 @@
+﻿@model AddBannerCommand
+@{
+    ViewData["Title"] = "افزودن بنر جدید ";
+}
+<form method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-body">
+            <div class="row row-cols-auto g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="bannerimg">عکس</label>
+                    <input class="form-control form-control-sm mb-3" asp-for="Image" id="bannerImage" type="file">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="BannerLink">لینک</label>
+                    <input class="form-control form-control-sm mb-3" id="BannerLink" asp-for="Link" type="url" placeholder="لینک">
+                </div>
+                <div class="col-md-6">
+                    <input class="form-check-input" type="checkbox" asp-for="DisplayOnSite" id="ShowInSite">
+                    <label class="form-label" for="ShowInSite">نمایش در سایت</label>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="BannerLocation">موقعیت</label>
+                    <select asp-for="BannerLocation" class="form-select form-select-sm mb-3" id="BannerLocation" asp-items="@Html.GetEnumSelectList<BannerLocation>()">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <button class="form-control form-control-sm mb-3" id="btnAddBanner" type="submit">ایجاد بنر</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts
+    {
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    <script>
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+
+            var formData = new FormData();
+            formData.append("DisplayOnSite", $('#ShowInSite').is(":checked"));
+            formData.append("Link", $('#BannerLink').val());
+            formData.append("BannerLocation", $("#BannerLocation").find('option:selected').val());
+
+            var bannerImage = document.getElementById("bannerImage");
+            if (bannerImage.files.length > 0) {
+                formData.append("Image", bannerImage.files[0]);
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create","Ad")',
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            window.location.href = '@Url.Action("Index","Ad")';
+                        });
+                    }
+                    else {
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            });
+        });
+    </script>
+}
+@section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}

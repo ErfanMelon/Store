@@ -1,64 +1,71 @@
-﻿@addTagHelper *, LazZiya.TagHelpers
-@using Store.Application.Services.HomePages.Queries.GetBanners
-@using Store.Domain.Entities.HomePages
-@model ResultGetBanners
+﻿@model ResultDto<PaginationDto<BannerDto>>
 @{
     ViewData["Title"] = "بنر ها";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h6 class="mb-0 text-uppercase">لیست بنر ها</h6>
 <hr>
 <div class="card">
     <div class="card-body">
         <div class="row row-cols-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-2">
-            @foreach (var item in Model.Banners)
+            @if (Model.IsSuccess && Model.Data.Items.Any())
             {
-                <div class="col">
-                    <div class="card bg-dark text-white">
-                        <img src="~/@item.ImageSrc" class="card-img" alt="...">
-                        <div class="card-img-overlay">
-                            <h5 class="card-title text-white">موقعیت بنر @Enum.GetName(typeof(BannerLocation),item.BannerLocation)</h5>
-                            <p class="card-text">برای دیدن لینک <span><a href="@item.Link">کلیک</a></span> کنید</p>
-                            <p class="card-text">
-                                <button type="button" onclick="DeleteBanner('@item.Id')" class="btn btn-outline-primary">
-                                    <i class="bx bx-trash-alt me-0"></i>
-                                </button>
-                                @if (!item.Display)
-                                {
-                                    <button type="button" class="btn btn-success" onclick="ChangeDisplayBanner('@item.Id')">نمایش</button>
+                <div class="row">
+                    @foreach (var item in Model.Data.Items)
+                    {
+                        <div class="col">
+                            <div class="card bg-dark text-white">
+                                <img src="~/@item.ImageSrc" class="card-img" alt="...">
+                                <div class="card-img-overlay">
+                                    <h5 class="card-title text-white">موقعیت بنر @Enum.GetName(typeof(BannerLocation),item.BannerLocation)</h5>
+                                    <p class="card-text">برای دیدن لینک <span><a href="@item.Link">کلیک</a></span> کنید</p>
+                                    <p class="card-text">
+                                        <button type="button" onclick="DeleteBanner('@item.Id')" class="btn btn-outline-primary">
+                                            <i class="bx bx-trash-alt me-0"></i>
+                                        </button>
+                                        @if (!item.Display)
+                                        {
+                                            <button type="button" class="btn btn-success" onclick="ChangeDisplayBanner('@item.Id')">نمایش</button>
 
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-danger" onclick="ChangeDisplayBanner('@item.Id')">پنهان</button>
-                                }
-                            </p>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-danger" onclick="ChangeDisplayBanner('@item.Id')">پنهان</button>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+                    }
+                </div>
+
+                <div class="row">
+                    <div class="text-center pagination round-pagination">
+                        <paging total-records="Model.Data.RowsCount"
+                            page-no="Model.Data.Page"
+                            page-size="Model.Data.PageSize"
+                            show-prev-next="true"
+                            sr-text-first="ابتدا"
+                            sr-text-last="انتها"
+                            sr-text-next="بعدی"
+                            sr-text-previous="قبلی"
+                            show-total-pages="false"
+                            show-total-records="true"
+                            show-page-size-nav="true"
+                            show-first-numbered-page="true"
+                            show-last-numbered-page="true"
+                            query-string-key-page-no="Page"
+                            query-string-key-page-size="PageSize"
+                            gap-size="2">
+                        </paging>
                     </div>
                 </div>
             }
+            else
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
         </div>
     </div>
-</div>
-<div class="text-center pagination round-pagination">
-    <paging total-records="Model.RowsCount"
-            page-no="Model.CurrentPage"
-            page-size="Model.PageSize"
-            show-prev-next="true"
-            sr-text-first="ابتدا"
-            sr-text-last="انتها"
-            sr-text-next="بعدی"
-            sr-text-previous="قبلی"
-            show-total-pages="false"
-            show-total-records="true"
-            show-page-size-nav="true"
-            show-first-numbered-page="true"
-            show-last-numbered-page="true"
-            query-string-key-page-no="Page"
-            query-string-key-page-size="PageSize"
-            gap-size="2">
-    </paging>
-
 </div>
 @section Scripts{
     <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
@@ -86,7 +93,7 @@
                     //Click On Yes
 
                     var postData = {
-                        'bannerId': bannerid,
+                        BannerId: bannerid,
                     };
 
                     // Post Data To Controller
@@ -94,7 +101,7 @@
                         contentType: 'application/x-www-form-urlencoded',
                         dataType: 'json',
                         type: "POST",
-                        url: "DeleteBanner",
+                        url: '@Url.Action("Delete","Ad")',
                         data: postData,
                         success: function (data) {
                             if (data.isSuccess == true) {
@@ -129,7 +136,7 @@
         }
         function ChangeDisplayBanner(bannerid) {
             var postData = {
-                'bannerId': bannerid,
+                BannerId: bannerid,
             };
 
             // Post Data To Controller
@@ -137,7 +144,7 @@
                 contentType: 'application/x-www-form-urlencoded',
                 dataType: 'json',
                 type: "POST",
-                url: "ChangeBannerState",
+                url: '@Url.Action("ChangeVisibility","Ad")',
                 data: postData,
                 success: function (data) {
                     if (data.isSuccess == true) {
@@ -161,7 +168,7 @@
         }
     </script>
 }
-    @section Css{
+@section Css{
     <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }
 

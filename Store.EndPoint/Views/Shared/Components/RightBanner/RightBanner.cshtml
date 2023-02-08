@@ -1,0 +1,32 @@
+﻿@model ResultDto<List<BannerSiteDto>>
+@{
+    Layout = null;
+}
+
+@if (Model.IsSuccess && Model.Data.Any())
+{
+    <div class="col-lg-3 col-md-3 col-xs-12 pr">
+        <div class="adplacement-container-column mt-4">
+            @foreach (var item in Model.Data)
+            {
+                <a href="@item.Link" class="adplacement-item img-banner">
+                    <div class="adplacement-sponsored-box">
+                        <img src="~/@item.ImgSrc">
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-lg-3 col-md-3 col-xs-12 pr">
+        <div class="adplacement-container-column mt-4">
+            <a asp-controller="Home" asp-action="Index" class="adplacement-item img-banner">
+                <div class="adplacement-sponsored-box">
+                    <img src="~/sitetemplate/assets/images/adplacement/a-3.jpg" />
+                </div>
+            </a>
+        </div>
+    </div>
+}

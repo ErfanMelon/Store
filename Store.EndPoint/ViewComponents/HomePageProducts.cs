@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Store.Application.Services.Products.Queries.GetCategories;
 using Store.Application.Services.Products.Queries.GetCategory;
 using Store.Application.Services.Products.Queries.GetProductsSite;
 
@@ -12,9 +13,14 @@ public class HomePageProducts : ViewComponent
     {
         _mediator = mediator;
     }
-    public IViewComponentResult Invoke(long categoryId)
+    public async Task<IViewComponentResult> InvokeAsync(long categoryId)
     {
-        ViewBag.Category = _mediator.Send(new GetCategoryQuery(categoryId)).Result.Data?.CategoryTitle;
+        var category = await _mediator.Send(new GetCategoryQuery(categoryId));
+
+        if (!category.IsSuccess)
+            return null;
+
+        ViewBag.Category= category.Data.CategoryTitle;
         return View("HomePageProducts", _mediator.Send(new GetProductsSiteQuery(1, 8, categoryId)).Result);
     }
 }

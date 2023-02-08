@@ -1,6 +1,4 @@
-﻿@using Store.EndPoint.Tools
-@using Store.Common.Roles
-<!doctype html>
+﻿<!doctype html>
 <html lang="en" dir="rtl">
 
 
@@ -54,9 +52,9 @@
 						<div class="menu-title">داشبورد</div>
 					</a>
 					<ul>
-						<li> <a href="/admin/home/index"><i class="bx bx-left-arrow-alt"></i>صفحه اصلی</a></li>
-						<li> <a href="/admin/HomePage/index"><i class="bx bx-left-arrow-alt"></i>بنر ها</a></li>
-						<li> <a href="/admin/HomePage/AddBanner"><i class="bx bx-left-arrow-alt"></i>* افزودن بنر جدید</a></li>
+						<li> <a asp-action="Index" asp-controller="Home"><i class="bx bx-left-arrow-alt"></i>صفحه اصلی</a></li>
+						<li> <a asp-action="Index" asp-controller="Ad"><i class="bx bx-left-arrow-alt"></i>بنر ها</a></li>
+						<li> <a asp-action="Create" asp-controller="Ad"><i class="bx bx-left-arrow-alt"></i>* افزودن بنر جدید</a></li>
 					</ul>
 				</li>
 				@if(ClaimTool.GetUserRole(User)=="Admin")

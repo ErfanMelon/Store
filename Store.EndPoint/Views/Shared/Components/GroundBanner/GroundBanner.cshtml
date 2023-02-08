@@ -1,0 +1,49 @@
+﻿@model ResultDto<List<BannerSiteDto>>
+@{
+    Layout = null;
+}
+
+@if (Model.IsSuccess && Model.Data.Any())
+{
+    @foreach (var item in Model.Data)
+    {
+        <div class="col-6 col-lg-3 pr">
+            <a href="@item.Link" class="adplacement-item">
+                <div class="adplacement-sponsored_box">
+                    <img src="~/@item.ImgSrc">
+                </div>
+            </a>
+        </div>
+    }
+}
+else
+{
+    <div class="col-6 col-lg-3 pr">
+        <a asp-action="Index" asp-controller="Home" class="adplacement-item">
+            <div class="adplacement-sponsored_box">
+                <img src="~/sitetemplate/assets/images/adplacement/a-4.jpg" />
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 pr">
+        <a asp-action="Index" asp-controller="Home" class="adplacement-item">
+            <div class="adplacement-sponsored_box">
+                <img src="~/sitetemplate/assets/images/adplacement/a-5.jpg" />
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 pr">
+        <a asp-action="Index" asp-controller="Home" class="adplacement-item">
+            <div class="adplacement-sponsored_box">
+                <img src="~/sitetemplate/assets/images/adplacement/a-6.jpg" />
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 pr">
+        <a asp-action="Index" asp-controller="Home" class="adplacement-item">
+            <div class="adplacement-sponsored_box">
+                <img src="~/sitetemplate/assets/images/adplacement/a-7.jpg" />
+            </div>
+        </a>
+    </div>
+}
