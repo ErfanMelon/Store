@@ -376,4 +376,25 @@
 
 <!-- main js---------------------------------------------------->
 <script src="~/SiteTemplate/assets/js/main.js"></script>
+<script> // js For Cart
+    function DeleteProductFromCart(productId) {
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("Edit","Cart")',
+                data: { ProductId: productId, ProductCount: 0 },
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        location.reload();
+                    }
+                    else {
+
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    alert(errorMessage);
+                }
+            });
+        }
+</script>
 </html>

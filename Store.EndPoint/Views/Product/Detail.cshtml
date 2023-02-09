@@ -1,4 +1,4 @@
-﻿@model Store.Application.Services.Products.Queries.GetProductSite.GetProductSiteDto
+﻿@model GetProductSiteDto
 @{
     ViewData["Title"] = "جزئیات محصول";
 }
@@ -18,8 +18,8 @@
                         <i class="mdi mdi-home"></i>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">خانه</a></li>
-                                <li class="breadcrumb-item"><a href="#">@Model.Category</a></li>
+                                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">خانه</a></li>
+                                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Product" asp-route-CategoryId="@Model.CategoryId">@Model.Category</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
                             </ol>
                         </nav>
@@ -472,9 +472,20 @@
     <script src="~/sweetalert2/sweetalert2.min.js"></script>
     <script>
         function AddToCart() {
-            var count = $("#countproduct").val();
-            var id = @Model.ProductId;
-            window.location.href = "/cart/AddToCart?productid=" + id + "&count=" + count;
+            $.ajax({
+                dataType: 'json',
+                type: 'POST',
+                url: '@Url.Action("Edit","Cart")',
+                data: { ProductId: @Model.ProductId, ProductCount: $("#countproduct").val() },
+                success: function (data) {
+                    if(data.isSuccess){
+                        location.reload();
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+
+                }
+            });
         }
     </script>
     <script src="~/remodal-1.1.1/src/remodal.js"></script>

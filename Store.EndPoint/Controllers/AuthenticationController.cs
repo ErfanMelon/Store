@@ -1,22 +1,27 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Store.Application.Interfaces.FacadePatterns;
+using Store.Application.Services.Carts.Commands.AttachUserToCart;
 using Store.Application.Services.Users.Commands.LoginUser;
 using Store.Application.Services.Users.Commands.RegisterUser;
-using Store.Common.Dto;
 using Store.EndPoint.Models.AuthenticationViewModel;
+using Store.EndPoint.Tools;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 
 namespace Store.EndPoint.Controllers
 {
     public class AuthenticationController : Controller
     {
         private readonly IUserFacade _userFacade;
-        public AuthenticationController(IUserFacade userFacade)
+        private readonly IMediator _mediator;
+        private readonly Tools.ICookieManager _cookieManager;
+        public AuthenticationController(IUserFacade userFacade, IMediator mediator, Tools.ICookieManager cookieManager)
         {
             _userFacade = userFacade;
+            _mediator = mediator;
+            _cookieManager = cookieManager;
         }
 
         [HttpGet]
@@ -26,7 +31,7 @@ namespace Store.EndPoint.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signup(SignupViewModel request)
+        public async Task<IActionResult> Signup(SignupViewModel request)
         {
             var signeupResult = _userFacade.registerUserService.Execute(new RegisterUserDto
             {
@@ -35,9 +40,9 @@ namespace Store.EndPoint.Controllers
                 Password = request.Password,
                 RePassword = request.RePassword,
                 RoleId = 3,
-                Address=request.Address,
-                PhoneNumber=request.Phone,
-                ZipCode=request.ZipCode
+                Address = request.Address,
+                PhoneNumber = request.Phone,
+                ZipCode = request.ZipCode
             });
 
             if (signeupResult.IsSuccess == true)
@@ -57,7 +62,11 @@ namespace Store.EndPoint.Controllers
                 {
                     IsPersistent = true
                 };
-                HttpContext.SignInAsync(principal, properties);
+
+                await HttpContext.SignInAsync(principal, properties);
+
+                Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+                await _mediator.Send(new AttachUserToCartCommand(signeupResult.Data.UserId, browserid));
 
             }
             return Json(signeupResult);
@@ -71,7 +80,7 @@ namespace Store.EndPoint.Controllers
         }
 
         [HttpPost]
-        public IActionResult Signin(string Email, string Password, string url = "/")
+        public async Task<IActionResult> Signin(string Email, string Password, string url = "/")
         {
             var signupResult = _userFacade.userLoginService.Execute(new RequestLoginDto { Username = Email, Password = Password });
             if (signupResult.IsSuccess == true)
@@ -90,7 +99,11 @@ namespace Store.EndPoint.Controllers
                     IsPersistent = true,
                     ExpiresUtc = DateTime.Now.AddDays(5),
                 };
-                HttpContext.SignInAsync(principal, properties);
+
+                await HttpContext.SignInAsync(principal, properties);
+
+                Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+                await _mediator.Send(new AttachUserToCartCommand(signupResult.Data.UserId, browserid));
 
             }
             return Json(signupResult);

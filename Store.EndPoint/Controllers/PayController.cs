@@ -1,8 +1,9 @@
 ﻿using Dto.Payment;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Application.Interfaces.FacadePatterns;
-using Store.Application.Services.Carts;
+using Store.Application.Services.Carts.Queries.GetCart;
 using Store.Application.Services.Fainances.Commands.AddPayRequest;
 using Store.Application.Services.Fainances.Commands.EditPayRequset;
 using Store.EndPoint.Tools;
@@ -13,18 +14,18 @@ namespace Store.EndPoint.Controllers
     [Authorize]
     public class PayController : Controller
     {
+        private readonly IMediator _mediator;
         private readonly IRequestPayFacade _requestPayFacade;
-        private readonly ICartService _cartService;
         private readonly IOrderFacade _orderFacade;
 
         private readonly Payment _payment;
         private readonly Authority _authority;
         private readonly Transactions _transactions;
-        public PayController(IRequestPayFacade requestPayFacade, ICartService cartService, IOrderFacade orderFacade)
+        public PayController(IRequestPayFacade requestPayFacade, IOrderFacade orderFacade, IMediator mediator)
         {
             _requestPayFacade = requestPayFacade;
-            _cartService = cartService;
             _orderFacade = orderFacade;
+            _mediator = mediator;
 
             #region ZarinPalCodes
             var expose = new Expose();
@@ -38,12 +39,12 @@ namespace Store.EndPoint.Controllers
         public async Task<IActionResult> Index()
         {
             long userId = ClaimTool.GetUserId(User).Value;
-            var CustomerCart = _cartService.GetCart(userId).Data;
-            if (CustomerCart != null && CustomerCart.TotalPrice > 0)
+            var CustomerCart =await _mediator.Send(new GetCartQuery(userId));
+            if (CustomerCart.IsSuccess && CustomerCart.Data.TotalPrice > 0)
             {
                 var request = _requestPayFacade.addPayRequestService.Execute(new PayRequestDto
                 {
-                    CartId = CustomerCart.CartId,
+                    CartId = CustomerCart.Data.CartId,
                     TransportPrice = 0,// other fees to add
                     UserId = userId
                 });

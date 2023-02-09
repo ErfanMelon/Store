@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Store.Application;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
-using Store.Application.Services.Carts;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
 using Store.Application.Services.Fainances.Facade;
 using Store.Application.Services.Orders.Facade;
@@ -31,7 +30,6 @@ builder.Services.AddScoped<IProductFacade, ProductFacade>();
 
 builder.Services.AddScoped<IGetMenuCategoriesService, GetMenuCategoriesService>();
 
-builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<Store.EndPoint.Tools.ICookieManager, CookieManager>();
 builder.Services.AddScoped<IRequestPayFacade, RequestPayFacade>();
 builder.Services.AddScoped<IOrderFacade, OrderFacade>();

@@ -1,52 +1,60 @@
-﻿using Store.EndPoint.Tools;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Store.Application.Services.Carts;
+using Store.Application.Services.Carts.Commands.AttachUserToCart;
+using Store.Application.Services.Carts.Commands.EditCartProduct;
+using Store.Application.Services.Carts.Queries.GetCart;
+using Store.EndPoint.Tools;
 
-namespace Store.EndPoint.Controllers
+namespace Store.EndPoint.Controllers;
+
+public class CartController : Controller
 {
-    public class CartController : Controller
+    private readonly IMediator _mediator;
+    private readonly ICookieManager _cookieManager;
+    public CartController(ICookieManager cookieManager, IMediator mediator)
     {
-        private readonly ICartService _cartService;
-        private readonly ICookieManager _cookieManager;
-        public CartController(ICartService cartService,ICookieManager cookieManager)
-        {
-            _cartService = cartService;
-            _cookieManager = cookieManager;
-        }
-        public IActionResult Index()
-        {
-            Guid browserid = _cookieManager.GetBrowserId(HttpContext);
-            if (User.Identity.IsAuthenticated)
-            {
-                long userId = ClaimTool.GetUserId(User).Value;
-                _cartService.JoinCartToUser(browserid, userId);
-                return View(_cartService.GetCart(userId).Data);
-            }
-            return View(_cartService.GetCart(browserid).Data);
-        }
-        public IActionResult Add(long id)
-        {
-            Guid browserid = _cookieManager.GetBrowserId(HttpContext);
-            _cartService.EditProductCart(browserid, id, 1);
-            return RedirectToAction("Index");
-        }
-        public IActionResult Remove(long id)
-        {
-            Guid browserid = _cookieManager.GetBrowserId(HttpContext);
-            _cartService.EditProductCart(browserid, id, -1);
-            return RedirectToAction("Index");
-        }
-        public IActionResult AddToCart(long productid,short count)
-        {
-            Guid browserid = _cookieManager.GetBrowserId(HttpContext);
-            _cartService.AddToCart(browserid, productid,count);
-            return RedirectToAction("Index");
-        }
-        public IActionResult RemoveFromCart(long productid)
-        {
-            Guid browserid = _cookieManager.GetBrowserId(HttpContext);
-            _cartService.DeleteFromCart(browserid, productid);
-            return RedirectToAction("Index");
-        }
+        _cookieManager = cookieManager;
+        _mediator = mediator;
     }
+    public async Task<IActionResult> Index()
+    {
+        Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+        var userId = ClaimTool.GetUserId(User);
+
+        var cart = await _mediator.Send(new GetCartQuery(browserid, userId));
+        return View(cart);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditCartProductCommand command)
+    {
+        command.BrowserId = _cookieManager.GetBrowserId(HttpContext);
+        command.UserId = ClaimTool.GetUserId(User);
+
+        var result = await _mediator.Send(command);
+        return Json(result);
+    }
+    //public async Task<IActionResult> Add(long id)
+    //{
+    //    Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+    //    _cartService.EditProductCart(browserid, id, 1);
+    //    return RedirectToAction("Index");
+    //}
+    //public async Task<IActionResult> Remove(long id)
+    //{
+    //    Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+    //    _cartService.EditProductCart(browserid, id, -1);
+    //    return RedirectToAction("Index");
+    //}
+    //public async Task<IActionResult> AddToCart(long productid, short count)
+    //{
+    //    Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+    //    _cartService.AddToCart(browserid, productid, count);
+    //    return RedirectToAction("Index");
+    //}
+    //public async Task<IActionResult> RemoveFromCart(long productid)
+    //{
+    //    Guid browserid = _cookieManager.GetBrowserId(HttpContext);
+    //    _cartService.DeleteFromCart(browserid, productid);
+    //    return RedirectToAction("Index");
+    //}
 }

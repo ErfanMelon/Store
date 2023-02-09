@@ -12,6 +12,7 @@ public class GetProductSiteDto
     public long ProductId { get; set; }
     public string ProductName { get; set; }
     public string Category { get; set; }
+    public long CategoryId { get; set; }
     public string Brand { get; set; }
     public int Price { get; set; }
     public string Description { get; set; }
@@ -56,6 +57,7 @@ public class GetProductSiteQuery : IRequest<ResultDto<GetProductSiteDto>>
                 ProductName = product.ProductTitle,
                 Brand = product.Brand.Brand,
                 Category = GetCategory(product.Category),
+                CategoryId=product.Category.CategoryId,
                 Description = product.Description,
                 Price = product.Price,
                 Features = GetFeatures(product.ProductFeatures),
