@@ -1,0 +1,297 @@
+﻿@model ResultDto<GetCustomerOrderAdminDto>
+@{
+    ViewData["Title"] = "جزئیات خرید";
+}
+@section Css{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+@if (Model.IsSuccess)
+{
+    <div class="card radius-10">
+        <div class="d-flex align-items-center">
+            <img src="~/admintemplate/assets/images/avatars/avatar-5.png" class="align-self-center rounded-circle p-1 border" width="90" height="90" alt="...">
+            <div class="flex-grow-1 ms-3">
+                <h5 class="mt-0">@Model.Data.UserName</h5>
+                <p>
+                    آدرس : @Model.Data.Address
+                </p>
+                @{
+                    string orderdeliverdate = Model.Data.DeliveredDate != null ? Model.Data.DeliveredDate.Value.ToShortShamsi() : "تحویل داده نشده";
+                }
+                <p class="mb-0">
+                    ایمیل : @Model.Data.Email
+                </p>
+                <p class="mb-0">
+                    شماره تماس : @Model.Data.PhoneNumber
+                </p>
+                <p class="mb-0">
+                    کدپستی : @Model.Data.PostCode
+                </p>
+                <p class="mb-0">
+                    کد سفارش : @Model.Data.OrderId
+                </p>
+                <p class="mb-0">
+                    کد خرید : @Model.Data.PayId
+                </p>
+                <p class="mb-0">
+                    تاریخ ثبت : @Model.Data.CreationDate.ToShortShamsi()
+                </p>
+                <p class="mb-0">
+                    مبلغ پرداخت شده : @Model.Data.Total.ToString("n0")
+                </p>
+                <p class="mb-0">
+                    تاریخ تحویل : @orderdeliverdate
+                </p>
+                <p>
+                    وضعیت سفارش : @Model.Data.OrderState
+                </p>
+                @if (Model.Data.Description != null)
+                {
+                    <p>
+                        توضیحات : @Model.Data.Description
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>محصول</th>
+                            <th>قیمت پرداختی</th>
+                            <th>تعداد</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ دریافت</th>
+                            <th>عمل ها</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data.OrderDetails)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-2">
+                                            <a href="/admin/product/DetailProduct?productid=@item.ProductId"><h6 class="mb-0 font-14">@item.ProductName</h6></a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.Price.ToString("n0") تومان</td>
+                                <td>@item.Count</td>
+                                <td>
+                                    @switch (item.OrderStateProduct)
+                                    {
+                                        case "تحویل داده شده":
+                                            <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                                <i class="bx bxs-circle me-1"></i>تحویل داده شد
+                                            </div>
+                                            break;
+                                        case "درحال پردازش":
+                                            <div class="badge rounded-pill text-info bg-light-info p-2 text-uppercase px-3">
+                                                <i class="bx bxs-circle align-middle me-1"></i>درحال پردازش
+                                            </div>
+                                            break;
+                                        case "لغو شده":
+                                            <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
+                                                <i class="bx bxs-circle align-middle me-1"></i>لغو شده
+                                            </div>
+                                            break;
+                                        case "درحال ارسال":
+                                            <div class="badge rounded-pill text-warning bg-light-warning p-2 text-uppercase px-3">
+                                                <i class="bx bxs-circle align-middle me-1"></i>در حال ارسال
+                                            </div>
+                                            break;
+                                        default:
+                                            <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                                <i class="bx bxs-circle me-1"></i>@item.OrderStateProduct
+                                            </div>
+                                            break;
+                                    }
+                                </td>
+                                @{
+                                    string deliverdate = item.DeliveredDate != null ? item.DeliveredDate.Value.ToShortShamsi() : "تحویل داده نشده";
+                                }
+                                <td>@deliverdate</td>
+                                <td>
+                                    <div class="d-flex order-actions">
+                                        <a href="javascript:;"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#EditOrderDetailModal"
+                                   onclick="OrderDetail('@item.OrderDetailId','@item.Count','@item.Description')">
+                                            <i class="bx bxs-edit"></i>
+                                        </a>
+                                        <a href="javascript:;"
+                                        data-bs-toggle="modal"
+                                   data-bs-target="#ToggleOrderDetailModal"
+                                   onclick="ToggleOrderDetailClick('@item.OrderDetailId')"
+                                   class="ms-3"><i class="lni lni-tag"></i></a>
+
+                                        @if (item.Description != null)
+                                        {
+                                            <a href="javascript:;" data-bs-toggle="popover" data-bs-content="@item.Description" data-bs-original-title="توضیحات بیشتر" class="ms-3"><i class="lni lni-bubble"></i></a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger">@Model.Message</p>
+}
+
+
+
+
+
+
+
+@section Modals{
+    <div class="modal fade" id="EditOrderDetailModal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modaltitle">ویرایش جزئیات سفارش</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalbody">
+                    <input type="hidden" id="OrderDetailId">
+                    <div class="row row-cols-auto g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="OrderDetailCount">تعداد سفارش این کالا</label>
+                            <input id="OrderCount" class="form-control mb-3" type="number">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="Description">توضیح سفارش این کالا</label>
+                            <textarea class="form-control" id="Description" placeholder="توضیحات" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" id="btnModal" onclick="EditOrderDetail()">
+                        ثبت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ToggleOrderDetailModal" tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modaltitle">عنوان</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalbody">
+                    <div class="row row-cols-auto g-3">
+                        <div class="col-md-6">
+                            <input type="hidden" id="OrderDetailId">
+                            <label class="form-label" for="OrderDetailState">وضعیت سفارش این کالا</label>
+                            <select class="form-select form-select-sm mb-3" id="OrderDetailState" aria-label="مثال ورودی انتخاب کوچک" asp-items="@ViewBag.OrderStates">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="button" class="btn btn-primary" id="btnModal" onclick="ToggleOrderDetail()">
+                        ثبت
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    @section Scripts{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+
+        $(function () {
+            $('[data-bs-toggle="popover"]').popover();
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        })
+
+        function OrderDetail(id, count, description) {
+            $('#EditOrderDetailModal #OrderDetailId').val(id);
+            $('#EditOrderDetailModal #OrderCount').val(count);
+            $('#EditOrderDetailModal #Description').val(description);
+        }
+        function EditOrderDetail() {
+            var model = {
+                OrderDetailId: $('#EditOrderDetailModal #OrderDetailId').val(),
+                Count: $('#EditOrderDetailModal #OrderCount').val(),
+                Description: $('#EditOrderDetailModal #Description').val()
+            };
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: '@Url.Action("EditOrderDetail","Order")',
+                data: model,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                        $("#EditOrderDetailModal").modal("hide");
+                    }
+                    else {
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
+        }
+        function ToggleOrderDetailClick(id){
+            $('#ToggleOrderDetailModal #OrderDetailId').val(id);
+        }
+        function ToggleOrderDetail(){
+            var model={
+                OrderDetailId:$('#ToggleOrderDetailModal #OrderDetailId').val(),
+                State: $('#ToggleOrderDetailModal #OrderDetailState').find('option:selected').val()
+            };
+            $.ajax({
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: 'json',
+                type: "POST",
+                url: '@Url.Action("ToggleOrderDetail","Order")',
+                data: model,
+                success: function (data) {
+                    if (data.isSuccess == true) {
+                        swal.fire(
+                            'موفق!',
+                            data.message,
+                            'success'
+                        ).then(function (isConfirm) {
+                            location.reload();
+                        });
+                        $("#ToggleOrderDetailModal").modal("hide");
+                    }
+                    else {
+                        swal.fire(
+                            'هشدار!',
+                            data.message,
+                            'warning'
+                        );
+                    }
+                }
+            });
+        }
+    </script>
+}

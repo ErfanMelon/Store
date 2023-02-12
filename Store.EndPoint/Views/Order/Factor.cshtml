@@ -1,80 +1,85 @@
-﻿@using Store.Application.Services.Orders.Queries.GetCustomerOrder
-@model List<CustomerOrdersProductDto>
+﻿@model ResultDto<List<CustomerOrdersProductDto>>
 @{
     ViewData["Title"] = "لیست محصولات سفارش";
-    Layout = "~/Views/Shared/_SiteLayout.cshtml";
 }
 
 <section class="cart-home">
     <div class="post-item-cart d-block order-2">
         <div class="content-page">
-            <div class="cart-form">
-                <form action="#" class="c-form">
-                    <table class="table-cart cart table table-borderless ">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="product-cart-quantity">محصول</th>
-                                <th scope="col" class="product-cart-price">تعداد خریداری شده</th>
-                                <th scope="col" class="product-cart-Total">وضعیت محصول</th>
-                                <th scope="col" class="product-cart-quantity">قیمت پرداخت شده</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach (var item in Model)
-                            {
-
+            @if(Model.IsSuccess)
+            {
+                    <div class="cart-form">
+                    <form action="#" class="c-form">
+                        <table class="table-cart cart table table-borderless ">
+                            <thead>
                                 <tr>
-                                    <th scope="row" class="product-cart-name">
-                                        <div class="product-thumbnail-img">
-                                            <a href="/product/detail?id=@item.ProductId">
-                                                <img src="~/@item.ProductImg">
-                                            </a>
-                                        </div>
-                                        <div class="product-title">
-                                            <a href="/product/detail?id=@item.ProductId">
-                                                @item.ProductName
-                                            </a>
-
-                                        </div>
-                                    </th>
-
-                                    
-                                    <td class="product-cart-price">
-                                        @item.Count عدد
-                                    </td>
-                                    <td class="product-cart-Total">
-                                        @item.OrderStateProduct
-                                    </td>
-                                    <td class="product-cart-quantity">
-                                        @{
-                                            string price = (item.Price * item.Count).ToString("n0");
-                                        }
-                                        @price
-                                    </td>
+                                    <th scope="col" class="product-cart-quantity">محصول</th>
+                                    <th scope="col" class="product-cart-price">تعداد خریداری شده</th>
+                                    <th scope="col" class="product-cart-Total">وضعیت محصول</th>
+                                    <th scope="col" class="product-cart-quantity">قیمت پرداخت شده</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="cart-collaterals">
-                    <div class="totals d-block">
-                        <h3 class="Total-cart-total">مجموع هزینه ها</h3>
-                        <div class="checkout-summary">
-                            <ul class="checkout-summary-summary">
-                                <li class="order-total">
-                                    <span class="amount"> مجموع</span>
-                                @{
-                                    int total = Model.Sum(p => p.Price * p.Count);
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.Data)
+                                {
+
+                                        <tr>
+                                            <th scope="row" class="product-cart-name">
+                                                <div class="product-thumbnail-img">
+                                                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId">
+                                                        <img src="~/@item.ProductImg">
+                                                    </a>
+                                                </div>
+                                                <div class="product-title">
+                                                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@item.ProductId">
+                                                    @item.ProductName
+                                                    </a>
+
+                                                </div>
+                                            </th>
+
+
+                                            <td class="product-cart-price">
+                                            @item.Count عدد
+                                            </td>
+                                            <td class="product-cart-Total">
+                                            @item.OrderStateProduct
+                                            </td>
+                                            <td class="product-cart-quantity">
+                                            @{
+                                                string price = (item.Price * item.Count).ToString("n0");
+                                            }
+                                            @price
+                                            </td>
+                                        </tr>
                                 }
-                                    <span> @total.ToString("n0") تومان</span>
-                                </li>
-                                
-                            </ul>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="cart-collaterals">
+                        <div class="totals d-block">
+                            <h3 class="Total-cart-total">مجموع هزینه ها</h3>
+                            <div class="checkout-summary">
+                                <ul class="checkout-summary-summary">
+                                    <li class="order-total">
+                                        <span class="amount"> مجموع</span>
+                                    @{
+                                        int total = Model.Data.Sum(p => p.Price * p.Count);
+                                    }
+                                        <span> @total.ToString("n0") تومان</span>
+                                    </li>
+
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
+            }
+            else
+            {
+                <p class="text-danger">@Model.Message</p>
+            }
         </div>
     </div>
 </section>

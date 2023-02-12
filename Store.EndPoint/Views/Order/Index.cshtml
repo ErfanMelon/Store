@@ -1,52 +1,56 @@
-﻿@using Store.Application.Services.Orders.Queries.GetCustomerOrders
-@using Store.EndPoint.Tools
-@model List<CustomerOrdersDto>
+﻿@model ResultDto<List<CustomerOrdersDto>>
 @{
     ViewData["Title"] = "لیست سفارشات";
-    Layout = "~/Views/Shared/_SiteLayout.cshtml";
 }
 
 <section class="cart-home">
     <div class="post-item-cart d-block order-2">
         <div class="content-page">
             <div class="cart-form">
-                <form action="#" class="c-form">
-                    <table class="table-cart cart table table-borderless ">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="product-cart-quantity">شماره فاکتور</th>
-                                <th scope="col" class="product-cart-quantity">تاریخ ثبت سفارش</th>
-                                <th scope="col" class="product-cart-price">وضعیت سفارش</th>
-                                <th scope="col" class="product-cart-price">مبلغ پرداختی</th>
-                                <th scope="col" class="product-cart-Total">محصولات در این سفارش</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach (var item in Model)
-                            {
-
+                @if(Model.IsSuccess)
+                {
+                    <form action="#" class="c-form">
+                        <table class="table-cart cart table table-borderless ">
+                            <thead>
                                 <tr>
-                                    <td class="product-cart-quantity">
-                                        @item.PayId
-                                    </td>
-                                    <td class="product-cart-quantity">
-                                        @item.OrderCreation.ToShortShamsi()
-                                    </td>
-                                    <td class="product-cart-price">
-                                        @item.OrderState
-                                    </td>
-                                    <td class="product-cart-price">
-                                        @item.PaidPrice.ToString("n0")
-                                    </td>
-                                    <td class="product-cart-Total">
-                                        <a href="/order/factor?orderId=@item.OrderId" class="card-checkout">مشاهده محصولات</a>
-                                    </td>
+                                    <th scope="col" class="product-cart-quantity">شماره فاکتور</th>
+                                    <th scope="col" class="product-cart-quantity">تاریخ ثبت سفارش</th>
+                                    <th scope="col" class="product-cart-price">وضعیت سفارش</th>
+                                    <th scope="col" class="product-cart-price">مبلغ پرداختی</th>
+                                    <th scope="col" class="product-cart-Total">محصولات در این سفارش</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </form>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.Data)
+                                {
+
+                                    <tr>
+                                        <td class="product-cart-quantity">
+                                            @item.PayId
+                                        </td>
+                                        <td class="product-cart-quantity">
+                                            @item.OrderCreation.ToShortShamsi()
+                                        </td>
+                                        <td class="product-cart-price">
+                                            @item.OrderState
+                                        </td>
+                                        <td class="product-cart-price">
+                                            @item.PaidPrice.ToString("n0")
+                                        </td>
+                                        <td class="product-cart-Total">
+                                            <a asp-action="Factor" asp-controller="Order" asp-route-id="@item.OrderId" class="card-checkout">مشاهده محصولات</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                }
+                else
+                {
+                    <p class="text-danger">@Model.Message</p>
+                }
             </div>
 
         </div>
