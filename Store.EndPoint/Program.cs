@@ -4,7 +4,6 @@ using Store.Application;
 using Store.Application.Interfaces.Context;
 using Store.Application.Interfaces.FacadePatterns;
 using Store.Application.Services.Common.Queries.GetMenuCategories;
-using Store.Application.Services.Fainances.Facade;
 using Store.Application.Services.Products.Facade;
 using Store.Application.Services.Users.FacadePattern;
 using Store.Common.Roles;
@@ -30,7 +29,6 @@ builder.Services.AddScoped<IProductFacade, ProductFacade>();
 builder.Services.AddScoped<IGetMenuCategoriesService, GetMenuCategoriesService>();
 
 builder.Services.AddScoped<Store.EndPoint.Tools.ICookieManager, CookieManager>();
-builder.Services.AddScoped<IRequestPayFacade, RequestPayFacade>();
 
 
 

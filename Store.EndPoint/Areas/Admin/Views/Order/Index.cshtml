@@ -292,7 +292,7 @@
             }).then((result) => {
                 if (result.value) {
 
-                    $.get('@Url.Action("Delete","Order")', { OrderId: orderid }, function (opt) {
+                    $.post('@Url.Action("Delete","Order")', { OrderId: orderid }, function (opt) {
                         if (opt.isSuccess == true) {
                             swalWithBootstrapButtons.fire(
                                 'موفق!',

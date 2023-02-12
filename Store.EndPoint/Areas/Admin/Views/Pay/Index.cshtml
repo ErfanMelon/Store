@@ -1,169 +1,177 @@
-﻿
-@addTagHelper *, LazZiya.TagHelpers
-@using Store.Application.Services.Fainances.Queries.GetRequestPays
-@using Store.EndPoint.Tools
-@model RequestPayDto
+﻿@model ResultDto<PaginationDto<PayDetailDto>>
 @{
     ViewData["Title"] = "لیست پرداختی ها";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="card">
-					<div class="card-body">
-		<form>
-			<div class="d-lg-flex align-items-center mb-4 gap-3">
-			<div class="position-relative">
-				<input name="SearchKey" type="text" class="form-control ps-5 radius-30" placeholder="جستجوی سفارش"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
-			</div>
-			<div class="ms-auto"><button href="javascript:;" type="submit" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="lni lni-search"></i>جستجو</button></div>
-		</div>
-		</form>
-						<div class="table-responsive">
-							<table class="table mb-0">
-								<thead class="table-light">
-									<tr>
-										<th>#شماره فاکتور</th>
-										<th>کاربر</th>
-										<th>مبلغ</th>
-										<th>تاریخ پرداخت</th>
-										<th>Authority</th>
-						<th>RefId</th>
-										<th>وضعیت پرداخت</th>
-										<th>عمل ها</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach (var item in Model.Pays)
-					{
-						<tr>
-							<td>
-								<div class="d-flex align-items-center">
-																	<div class="ms-2">
-										<h6 class="mb-0 font-14">@item.PayId</h6>
-									</div>
-								</div>
-							</td>
-							<td><a href="/admin/user/detail?userid=@item.UserId">@item.UserName</a></td>
-							<td>
-								@item.Price.ToString("n0") تومان
-							</td>
-							@{
-								string paiddate = item.PayDate.HasValue ? item.PayDate.Value.ToShortShamsi() : "پرداخت نشده";
-							}
-							<td>@paiddate</td>
-							<td>@item.Authority</td>
-							<td>@item.RefId</td>
-							
-							<td>
-								@if (item.IsPay)
-								{
-									<div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
-									<i class="bx bx-coin-stack me-1"></i>پرداخت شده
-								</div>
-								}
-								else
-								{
-									<div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
-										<i class="bx bx-no-entry me-1"></i>پرداخت نشده
-								</div>
-								}
-								</td>
-							<td>
-								<div class="d-flex order-actions">
-									@if (item.OrderId!=0)
-									{
-										<a href="/Admin/Orders/Detail?orderId=@item.OrderId" class="ms-3"><i class="bx bx-cart"></i></a>
-									}
-																		<a href="javascript:;" onclick="DeletePay('@item.PayId')" class="ms-3"><i class="lni lni-cross-circle"></i></a>
-
-								</div>
-							</td>
-						</tr>
-					}
-								</tbody>
-							</table>
-						</div>
-						<div class="text-center pagination round-pagination">
-                    <paging total-records="Model.RowsCount"
-                            page-no="Model.CurrentPage"
-                            page-size="Model.PageSize"
-                            show-prev-next="true"
-                            sr-text-first="ابتدا"
-                            sr-text-last="انتها"
-                            sr-text-next="بعدی"
-                            sr-text-previous="قبلی"
-                            show-total-pages="false"
-                            show-total-records="true"
-                            show-page-size-nav="true"
-                            show-first-numbered-page="true"
-                            show-last-numbered-page="true"
-                            query-string-key-page-no="Page"
-                            query-string-key-page-size="PageSize"
-							query-string-value="@@(Request.QueryString.Value)"
-                            gap-size="2">
-                    </paging>
-
+@if (Model.IsSuccess)
+{
+    <div class="card">
+        <div class="card-body">
+            <form>
+                <div class="d-lg-flex align-items-center mb-4 gap-3">
+                    <div class="position-relative">
+                        <input name="SearchKey" type="text" class="form-control ps-5 radius-30" placeholder="جستجوی سفارش"> <span class="position-absolute top-50 product-show translate-middle-y"><i class="bx bx-search"></i></span>
+                    </div>
+                    <div class="ms-auto"><button href="javascript:;" type="submit" class="btn btn-primary radius-30 mt-2 mt-lg-0"><i class="lni lni-search"></i>جستجو</button></div>
                 </div>
-					</div>
-				</div>
-@section Css{
-	<link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+            </form>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#شماره فاکتور</th>
+                            <th>کاربر</th>
+                            <th>مبلغ</th>
+                            <th>تاریخ پرداخت</th>
+                            <th>Authority</th>
+                            <th>RefId</th>
+                            <th>وضعیت پرداخت</th>
+                            <th>عمل ها</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Data.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="ms-2">
+                                            <h6 class="mb-0 font-14">@item.PayId</h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><a href="/admin/user/detail?userid=@item.UserId">@item.UserName</a></td>
+                                <td>
+                                    @item.Price.ToString("n0") تومان
+                                </td>
+                                @{
+                                    string paiddate = item.PayDate.HasValue ? item.PayDate.Value.ToShortShamsi() : "پرداخت نشده";
+                                }
+                                <td>@paiddate</td>
+                                <td>@item.Authority</td>
+                                <td>@item.RefId</td>
+
+                                <td>
+                                    @if (item.IsPay)
+                                    {
+                                        <div class="badge rounded-pill text-success bg-light-success p-2 text-uppercase px-3">
+                                            <i class="bx bx-coin-stack me-1"></i>پرداخت شده
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge rounded-pill text-danger bg-light-danger p-2 text-uppercase px-3">
+                                            <i class="bx bx-no-entry me-1"></i>پرداخت نشده
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex order-actions">
+                                        @if (item.OrderId != 0)
+                                        {
+                                            <a asp-action="Detail" asp-controller="Order" asp-route-id="@item.OrderId" class="ms-3"><i class="bx bx-cart"></i></a>
+                                        }
+                                        <a href="javascript:;" onclick="Delete('@item.PayId')" class="ms-3"><i class="lni lni-cross-circle"></i></a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center pagination round-pagination">
+                <paging total-records="Model.Data.RowsCount"
+                    page-no="Model.Data.Page"
+                    page-size="Model.Data.PageSize"
+                    show-prev-next="true"
+                    sr-text-first="ابتدا"
+                    sr-text-last="انتها"
+                    sr-text-next="بعدی"
+                    sr-text-previous="قبلی"
+                    show-total-pages="false"
+                    show-total-records="true"
+                    show-page-size-nav="true"
+                    show-first-numbered-page="true"
+                    show-last-numbered-page="true"
+                    query-string-key-page-no="Page"
+                    query-string-key-page-size="PageSize"
+                    query-string-value="@@(Request.QueryString.Value)"
+                    gap-size="2">
+                </paging>
+
+            </div>
+        </div>
+    </div>
 }
-				@section Scripts{
-	<script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+else
+{
+    <p class="text-danger">@Model.Message</p>
+}
+@section Css
+{
+    <link href="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+}
+@section Scripts
+{
+    <script src="~/admintemplate/assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 
-					<script>
-		const swalWithBootstrapButtons = Swal.mixin({
-			customClass: {
-				confirmButton: 'btn btn-success',
-				cancelButton: 'btn btn-danger me-2'
-			},
-			buttonsStyling: false,
-		})
-		function DeletePay(payid) {
-			swalWithBootstrapButtons.fire({
-				title: 'حذف پرداخت',
-				text: "آیا میخواهید پرداخت را حذف کنید؟",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonClass: 'me-2',
-				confirmButtonText: 'بله حذف شود',
-				cancelButtonText: 'خیر',
-				reverseButtons: true
-			}).then((result) => {
-				if (result.value) {
-
-					$.get("/Admin/Pay/DeletePay?payid=" + payid, function (opt) {
-						if (opt.isSuccess == true) {
-							swalWithBootstrapButtons.fire(
-								'موفق!',
-								opt.message,
-								'success'
-							).then(function (isConfirm) {
-								location.reload();
-							});
-						}
-						else {
-							swalWithBootstrapButtons.fire(
-								'هشدار!',
-								opt.message,
-								'warning'
-							);
-						}
-
-
-					});
-				} else if (
-					// Read more about handling dismissals
-					result.dismiss === Swal.DismissReason.cancel
-				) {
-					swalWithBootstrapButtons.fire(
-						'لغو شد',
-						'شما عملیات را لغو کردید :)',
-						'error'
-					)
-				}
-			})
-		}
-					</script>
-				}
+    <script>
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger me-2'
+            },
+            buttonsStyling: false,
+        })
+        function Delete(payId) {
+            swalWithBootstrapButtons.fire({
+                title: 'حذف',
+                text: 'آیا میخواهید پرداخت را حذف کنید ؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonClass: 'me-2',
+                confirmButtonText: 'بله حذف شود',
+                cancelButtonText: 'خیر',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    //Click On Yes
+                    $.ajax({
+                        dataType: 'json',
+                        type: 'POST',
+                        url: '@Url.Action("Delete","Pay")',
+                        data: {
+                            id: payId,
+                        },
+                        success: function (data) {
+                            if (data.isSuccess == true) {
+                                swalWithBootstrapButtons.fire(
+                                    'موفق!',
+                                    data.message,
+                                    'success'
+                                ).then(function (isConfirm) {
+                                    location.reload();
+                                });
+                            }
+                            else {
+                                swalWithBootstrapButtons.fire(
+                                    'هشدار!',
+                                    data.message,
+                                    'warning'
+                                );
+                            }
+                        },
+                        error: function (jqXhr, textStatus, errorMessage) {
+                            swalWithBootstrapButtons.fire(
+                                'خطا',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}
